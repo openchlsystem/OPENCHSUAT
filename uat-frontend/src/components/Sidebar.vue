@@ -37,13 +37,40 @@
           <i class="bi bi-people-fill me-2"></i> User Management
         </router-link>
       </li>
-      
-      <!-- Admin Only Pages -->
       <li v-if="userRole === 'admin'" class="nav-item">
         <router-link class="nav-link" to="/admin/functionalities" :class="{ active: isActive('/admin/functionalities') }">
           <i class="bi bi-tools me-2"></i> Functionality Management
         </router-link>
       </li>
+
+      <!-- Tester Pages -->
+      <li v-if="userRole === 'tester'" class="nav-item">
+        <router-link class="nav-link" to="/tester/dashboard" :class="{ active: isActive('/tester/dashboard') }">
+          <i class="bi bi-speedometer2 me-2"></i> Tester Dashboard
+        </router-link>
+      </li>
+      <li v-if="userRole === 'tester'" class="nav-item">
+        <router-link class="nav-link" to="/tester/assigned-tests" :class="{ active: isActive('/tester/assigned-tests') }">
+          <i class="bi bi-list-check me-2"></i> Assigned Tests
+        </router-link>
+      </li>
+      <li v-if="userRole === 'tester'" class="nav-item">
+        <router-link class="nav-link" to="/tester/test-execution/1" :class="{ active: isActive('/tester/test-execution') }">
+          <i class="bi bi-play-btn me-2"></i> Test Execution
+        </router-link>
+      </li>
+      <li v-if="userRole === 'tester'" class="nav-item">
+        <router-link class="nav-link" to="/tester/defect-report" :class="{ active: isActive('/tester/defect-report') }">
+          <i class="bi bi-flag me-2"></i> Defect Report
+        </router-link>
+      </li>
+      <li v-if="userRole === 'tester'" class="nav-item">
+        <router-link class="nav-link" to="/tester/test-history" :class="{ active: isActive('/tester/test-history') }">
+          <i class="bi bi-clock-history me-2"></i> Test History
+        </router-link>
+      </li>
+
+      <!-- Reports (Available to Admin & Viewer) -->
       <li v-if="userRole === 'admin' || userRole === 'viewer'" class="nav-item">
         <router-link class="nav-link" to="/reports/defects" :class="{ active: isActive('/reports/defects') }">
           <i class="bi bi-bug me-2"></i> Defects Dashboard
@@ -75,9 +102,10 @@ const router = useRouter();
 const userRole = JSON.parse(localStorage.getItem('user'))?.role || 'viewer';
 
 const isActive = (route) => {
-  return router.currentRoute.value.path === route;
+  return router.currentRoute.value.path.startsWith(route);
 };
 </script>
+
 
 <style scoped>
 /* Sidebar container */

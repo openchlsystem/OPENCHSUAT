@@ -1,10 +1,10 @@
 <template>
-  <div class="d-flex">
+  <div class="dashboard-container">
     <!-- Sidebar Component -->
     <Sidebar />
 
     <!-- Main Dashboard Content -->
-    <div class="tester-dashboard flex-fill">
+    <div class="tester-dashboard">
       <div class="container-fluid">
         <!-- Row for Heading -->
         <div class="row">
@@ -16,25 +16,31 @@
         </div>
 
         <!-- Dashboard Cards (Status Overview) -->
-        <div class="row g-4">
-          <DashboardCard 
-            title="Total Assigned Tests" 
-            :count="stats.assignedTests" 
-            icon="bi-list-check" 
-            class="bg-primary text-white shadow-sm"
-          />
-          <DashboardCard 
-            title="Tests In Progress" 
-            :count="stats.inProgressTests" 
-            icon="bi-clock-history" 
-            class="bg-warning text-dark shadow-sm"
-          />
-          <DashboardCard 
-            title="Completed Tests" 
-            :count="stats.completedTests" 
-            icon="bi-check-circle" 
-            class="bg-success text-white shadow-sm"
-          />
+        <div class="row gap-4">
+          <div class="col-md-4">
+            <DashboardCard 
+              title="Total Assigned Tests" 
+              :count="stats.assignedTests" 
+              icon="bi-list-check" 
+              class="bg-primary text-white shadow-sm"
+            />
+          </div>
+          <div class="col-md-4">
+            <DashboardCard 
+              title="Tests In Progress" 
+              :count="stats.inProgressTests" 
+              icon="bi-clock-history" 
+              class="bg-warning text-dark shadow-sm"
+            />
+          </div>
+          <div class="col-md-4">
+            <DashboardCard 
+              title="Completed Tests" 
+              :count="stats.completedTests" 
+              icon="bi-check-circle" 
+              class="bg-success text-white shadow-sm"
+            />
+          </div>
         </div>
 
         <!-- Quick Actions (Navigation) -->
@@ -57,7 +63,7 @@
 <script setup>
 import { ref } from 'vue';
 import DashboardCard from '@/components/DashboardCard.vue';
-import Sidebar from '@/components/Sidebar.vue'; // Import Sidebar
+import Sidebar from '@/components/Sidebar.vue';
 
 const stats = ref({
   assignedTests: 10,
@@ -67,12 +73,20 @@ const stats = ref({
 </script>
 
 <style scoped>
+/* Ensure the sidebar and content are displayed side by side */
+.dashboard-container {
+  display: flex;
+}
+
+/* Sidebar Styling */
 .tester-dashboard {
+  margin-left: 250px; /* Adjust for sidebar width */
   padding: 20px;
   background-color: #f8f9fa;
   min-height: 100vh;
 }
 
+/* Heading Styling */
 .text-primary {
   color: #007bff;
 }
@@ -87,10 +101,12 @@ h4 {
   font-weight: 500;
 }
 
-.row g-4 {
+/* Fix Row Gap */
+.row.gap-4 {
   gap: 20px;
 }
 
+/* Button Styling */
 .btn {
   padding: 10px 20px;
   font-size: 1rem;
@@ -101,16 +117,8 @@ h4 {
   transform: scale(1.05);
 }
 
+/* Shadow Styling */
 .shadow-sm {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-/* Styling for Sidebar */
-.d-flex {
-  display: flex;
-}
-
-.flex-fill {
-  flex: 1;
 }
 </style>

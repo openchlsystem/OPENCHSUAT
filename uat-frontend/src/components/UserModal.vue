@@ -1,100 +1,122 @@
 <template>
-    <b-modal 
-      :show="show" 
-      @update:show="handleShowUpdate"  
-      title="Manage User" 
-      @ok="save"
-    >
-      <div>
-        <div class="mb-3">
-          <label class="form-label">Name</label>
-          <input 
-            v-model="formData.name"
-            type="text"
-            class="form-control"
-            placeholder="Enter full name"
-          />
-        </div>
-  
-        <div class="mb-3">
-          <label class="form-label">Email</label>
-          <input 
-            v-model="formData.email"
-            type="email"
-            class="form-control"
-            placeholder="Enter email address"
-          />
-        </div>
-  
-        <div class="mb-3">
-          <label class="form-label">Role</label>
-          <select v-model="formData.role" class="form-control">
-            <option value="Admin">Admin</option>
-            <option value="Tester">Tester</option>
-            <option value="Viewer">Viewer</option>
-          </select>
-        </div>
-  
-        <div class="mb-3">
-          <label class="form-label">Password</label>
-          <input 
-            v-model="formData.password"
-            type="password"
-            class="form-control"
-            placeholder="Enter password"
-          />
-        </div>
-  
-        <div class="mb-3">
-          <label class="form-label">Status</label>
-          <select v-model="formData.status" class="form-control">
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
-          </select>
-        </div>
+  <b-modal 
+    :model-value="showModal" 
+    @update:modelValue="$emit('update:showModal', $event)"
+    :title="modalTitle"
+    centered
+    size="md"
+    @hidden="resetForm"
+    hide-footer
+  >
+    <form @submit.prevent="handleSubmit">
+      <div class="mb-3">
+        <label class="form-label">Name</label>
+        <input 
+          v-model="formData.name" 
+          type="text" 
+          class="form-control"
+          placeholder="Enter full name"
+          required
+        />
       </div>
-    </b-modal>
-  </template>
-  
-  <script setup>
-  import { defineProps, defineEmits, watch, ref } from 'vue';
-  
-  const props = defineProps({
-    show: Boolean,
-    userData: Object,
-  });
-  
-  const emit = defineEmits(['update:show', 'save']);
-  
-  const formData = ref({
+
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input 
+          v-model="formData.email" 
+          type="email" 
+          class="form-control"
+          placeholder="Enter email"
+          required
+        />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Role</label>
+        <select v-model="formData.role" class="form-select" required>
+          <option value="Admin">Admin</option>
+          <option value="Tester">Tester</option>
+          <option value="Viewer">Viewer</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input 
+          v-model="formData.password" 
+          type="password" 
+          class="form-control"
+          placeholder="Enter password"
+          :required="!formData.id"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Status</label>
+        <select v-model="formData.status" class="form-select" required>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="d-flex justify-content-end">
+        <button 
+          type="button" 
+          class="btn btn-secondary me-2" 
+          @click="$emit('update:showModal', false)"
+        >
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-dark">
+          {{ formData.id ? 'Update' : 'Create' }}
+        </button>
+      </div>
+    </form>
+  </b-modal>
+</template>
+
+<script setup>
+import { ref, defineProps, defineEmits, watch } from 'vue';
+
+const props = defineProps({
+  showModal: Boolean,
+  modalTitle: String,
+  userData: Object
+});
+
+const emit = defineEmits(['update:showModal', 'submit']);
+
+const formData = ref({
+  id: null,
+  name: '',
+  email: '',
+  role: 'Tester',
+  password: '',
+  status: 'Active'
+});
+
+watch(() => props.userData, (newValue) => {
+  if (newValue) {
+    formData.value = { ...newValue, password: '' };
+  }
+}, { immediate: true });
+
+const handleSubmit = () => {
+  emit('submit', formData.value);
+};
+
+const resetForm = () => {
+  formData.value = {
     id: null,
     name: '',
     email: '',
     role: 'Tester',
-    password: '',  // New field for password
-    status: 'Active',
-  });
-  
-  // Watch for changes in userData
-  watch(() => props.userData, (newValue) => {
-    if (newValue) {
-      formData.value = { ...newValue, password: '' };  // Reset password field for security
-    } else {
-      formData.value = { id: null, name: '', email: '', role: 'Tester', password: '', status: 'Active' };
-    }
-  }, { deep: true, immediate: true });
-  
-  const save = () => {
-    emit('save', formData.value);
-    emit('update:show', false);  // Close the modal after saving
+    password: '',
+    status: 'Active'
   };
-  
-  // Handle modal visibility update
-  const handleShowUpdate = (newVal) => {
-    emit('update:show', newVal);  // Emit update:show to handle visibility change
-  };
-  </script>
-  
-  <style scoped>
-  </style>
-  
+};
+</script>
+
+<style scoped>
+</style>
