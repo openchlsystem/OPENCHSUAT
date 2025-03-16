@@ -1,6 +1,21 @@
 <template>
-  <h1>Welcome to UAT Test Tool</h1>
-</template>
-
-<script setup>
-</script>
+    <div>
+      <HeroSection />
+    </div>
+  </template>
+  
+  <script>
+  import HeroSection from '@/components/HeroSection.vue';
+  
+  export default {
+    name: 'HomeView',
+    components: {
+      HeroSection,
+    },
+  };
+  </script>
+  
+  <style scoped>
+  /* Add any additional styling here for the HomeView */
+  </style>
+  
