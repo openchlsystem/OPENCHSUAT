@@ -42,7 +42,7 @@
 
 <script setup>
 import { onMounted, computed } from 'vue';
-import { useAdminDashboardStore } from '@/store/adminDashboard';
+import { useAdminDashboardStore } from '@/store/AdminDashboard.js';
 import DashboardCard from '@/components/DashboardCard.vue';
 import PerformanceChart from '@/components/PerformanceChart.vue';
 import RecentActivity from '@/components/RecentActivity.vue';
