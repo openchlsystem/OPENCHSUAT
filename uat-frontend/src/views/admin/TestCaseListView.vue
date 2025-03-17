@@ -1,104 +1,120 @@
 <template>
-    <div class="container">
-      <div class="d-flex justify-content-between align-items-center my-4">
-        <h2 class="fw-bold">Test Case Management</h2>
-        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addTestCaseModal">
-          + Add Test Case
-        </button>
-      </div>
-  
-      <!-- Filter Section -->
-      <div class="row mb-4">
-        <div class="col-md-4">
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Search test cases"
-            v-model="search"
-          />
-        </div>
-        <div class="col-md-4">
-          <select class="form-select" v-model="filterSystem">
-            <option value="">All Systems</option>
-            <option v-for="system in systems" :key="system.id" :value="system.id">
-              {{ system.name }}
-            </option>
-          </select>
-        </div>
-        <div class="col-md-4">
-          <select class="form-select" v-model="filterFunctionality">
-            <option value="">All Functionalities</option>
-            <option v-for="func in functionalities" :key="func.id" :value="func.id">
-              {{ func.name }}
-            </option>
-          </select>
-        </div>
-      </div>
-  
-      <!-- Test Cases List -->
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Title</th>
-            <th>System</th>
-            <th>Functionality</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(testCase, index) in filteredTestCases" :key="testCase.id">
-            <td>{{ index + 1 }}</td>
-            <td>{{ testCase.title }}</td>
-            <td>{{ getSystemName(testCase.systemId) }}</td>
-            <td>{{ getFunctionalityName(testCase.functionalityId) }}</td>
-            <td>
-              <button class="btn btn-warning me-2" @click="editTestCase(testCase)">Edit</button>
-              <button class="btn btn-danger" @click="deleteTestCase(testCase.id)">Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-  
-      <!-- Modal -->
-      <TestCaseModal
-        id="addTestCaseModal"
-        :testCase="selectedTestCase"
-        :systems="systems"
-        :functionalities="functionalities"
-        @add-test-case="addTestCase"
-        @update-test-case="updateTestCase"
+  <div class="container">
+    <div class="d-flex justify-content-between mb-3">
+      <h3>Test Cases</h3>
+     <!-- <button class="btn btn-primary" @click="openModal()">+ New Test Case</button> -->
+    </div>
+
+    <!-- ✅ Search Filter -->
+    <div class="mb-3">
+      <input
+        type="text"
+        class="form-control"
+        v-model="filterText"
+        placeholder="Search..."
       />
     </div>
-  </template>
-  
-  <script>
-  import TestCaseModal from '@/components/TestCaseModal.vue';
-  
-  export default {
-    components: { TestCaseModal },
-    data() {
-      return {
-        testCases: [],
-        systems: [{ id: 1, name: 'Helpline System' }],
-        functionalities: [{ id: 1, name: 'Login' }],
-        selectedTestCase: null,
-        search: '',
-        filterSystem: '',
-        filterFunctionality: '',
-      };
-    },
-    computed: {
-      filteredTestCases() {
-        return this.testCases.filter((tc) => {
-          return (
-            (!this.filterSystem || tc.systemId === this.filterSystem) &&
-            (!this.filterFunctionality || tc.functionalityId === this.filterFunctionality) &&
-            (!this.search || tc.title.toLowerCase().includes(this.search.toLowerCase()))
-          );
-        });
-      },
-    },
-  };
-  </script>
-  
+
+    <!-- ✅ Test Cases Table -->
+    <TestCaseTable
+      :filteredTestCases="filteredTestCases"
+      @edit="editTestCase"
+      @delete="deleteTestCase"
+      @assign="assignTestCase"
+    />
+
+    <!-- ✅ Create/Edit Modal -->
+    <TestCaseModal
+      :isEdit="isEdit"
+      :testCase="selectedTestCase"
+      @save="saveTestCase"
+      :testers="testers"
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref, computed, onMounted } from 'vue';
+import axios from 'axios';
+import TestCaseModal from '@/components/TestCaseModal.vue';
+import TestCaseTable from '@/components/TestCaseTable.vue';
+
+const testCases = ref([]);
+const testers = ref([]);
+const filterText = ref('');
+const isEdit = ref(false);
+const selectedTestCase = ref(null);
+
+const filteredTestCases = computed(() => {
+  return testCases.value.filter(testCase =>
+    testCase.title.toLowerCase().includes(filterText.value.toLowerCase())
+  );
+});
+
+// ✅ Fetch test cases from backend
+const fetchTestCases = async () => {
+  try {
+    const response = await axios.get('/api/testcases/');
+    testCases.value = response.data;
+  } catch (error) {
+    console.error('Error fetching test cases:', error);
+  }
+};
+
+// ✅ Fetch testers from backend
+const fetchTesters = async () => {
+  try {
+    const response = await axios.get('/api/testers/');
+    testers.value = response.data;
+  } catch (error) {
+    console.error('Error fetching testers:', error);
+  }
+};
+
+onMounted(() => {
+  fetchTestCases();
+  fetchTesters();
+});
+
+const openModal = () => {
+  isEdit.value = false;
+  selectedTestCase.value = null;
+};
+
+const editTestCase = (testCase) => {
+  isEdit.value = true;
+  selectedTestCase.value = { ...testCase };
+};
+
+const saveTestCase = async (data) => {
+  try {
+    if (isEdit.value) {
+      await axios.put(`/api/testcases/${selectedTestCase.value.id}/`, data);
+    } else {
+      await axios.post('/api/testcases/', data);
+    }
+    fetchTestCases(); // Reload after saving
+  } catch (error) {
+    console.error('Error saving test case:', error);
+  }
+};
+
+const deleteTestCase = async (id) => {
+  try {
+    await axios.delete(`/api/testcases/${id}/`);
+    fetchTestCases(); // Reload after delete
+  } catch (error) {
+    console.error('Error deleting test case:', error);
+  }
+};
+
+// ✅ Assign Test Case to Tester
+const assignTestCase = async (testCaseId, testerId) => {
+  try {
+    await axios.patch(`/api/testcases/${testCaseId}/`, { assigned_to: testerId });
+    fetchTestCases();
+  } catch (error) {
+    console.error('Error assigning test case:', error);
+  }
+};
+</script>

@@ -1,82 +1,100 @@
 <template>
-  <div class="user-management-view container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h2 class="fw-bold text-orange">User Management</h2>
-      <button class="btn btn-dark" @click="openModal">
-        <i class="bi bi-person-plus me-2"></i> Add User
-      </button>
+  <div>
+    <div class="header">
+      <h2>User Management</h2>
     </div>
 
+    <!-- User Table -->
     <UserTable 
       :users="users" 
-      @edit="editUser"
+      @edit-user="openUserModal" 
       @toggle-status="toggleUserStatus"
     />
 
+    <!-- User Modal -->
     <UserModal 
-      :showModal="showModal"
-      :modalTitle="modalTitle"
-      :userData="currentUser"
-      @close="closeModal"
-      @submit="saveUser"
+      v-if="showUserModal" 
+      :user="selectedUser" 
+      @close="closeUserModal" 
+      @save="updateUser"
     />
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
 import UserTable from '@/components/UserTable.vue';
 import UserModal from '@/components/UserModal.vue';
 
 const users = ref([]);
-const showModal = ref(false);
-const modalTitle = ref('');
-const currentUser = ref(null);
+const showUserModal = ref(false);
+const selectedUser = ref(null);
 
+// ✅ Fetch all users
 const fetchUsers = async () => {
-  const response = await axios.get('/api/users/');
-  users.value = response.data;
-};
-
-onMounted(fetchUsers);
-
-const openModal = () => {
-  modalTitle.value = 'Add User';
-  currentUser.value = null;
-  showModal.value = true;
-};
-
-const editUser = (user) => {
-  modalTitle.value = 'Edit User';
-  currentUser.value = { ...user };
-  showModal.value = true;
-};
-
-const toggleUserStatus = async (user) => {
-  await axios.patch(`/api/users/${user.id}/toggle-status/`);
-  fetchUsers();
-};
-
-const saveUser = async (data) => {
-  if (data.id) {
-    await axios.put(`/api/users/${data.id}/`, data);
-  } else {
-    const response = await axios.post('/api/users/', data);
-    users.value.push(response.data); // ✅ Add user directly to list
+  try {
+    // Simulate API call
+    const response = await fetch('/api/users/');
+    users.value = await response.json();
+  } catch (error) {
+    console.error('Error fetching users:', error);
   }
-  
-  showModal.value = false;
-  alert(data.id ? 'User updated successfully!' : 'User created successfully!');
 };
 
-const closeModal = () => {
-  showModal.value = false;
+// ✅ Open Modal for Editing User
+const openUserModal = (user) => {
+  selectedUser.value = { ...user };
+  showUserModal.value = true;
 };
+
+// ✅ Close Modal
+const closeUserModal = () => {
+  showUserModal.value = false;
+  selectedUser.value = null;
+};
+
+// ✅ Update User
+const updateUser = async (updatedUser) => {
+  try {
+    await fetch(`/api/users/${updatedUser.id}/`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updatedUser)
+    });
+
+    // Refresh user list
+    fetchUsers();
+    closeUserModal();
+  } catch (error) {
+    console.error('Error updating user:', error);
+  }
+};
+
+// ✅ Toggle User Status
+const toggleUserStatus = async (userId) => {
+  try {
+    await fetch(`/api/users/${userId}/toggle-status/`, { method: 'PATCH' });
+    fetchUsers();
+  } catch (error) {
+    console.error('Error toggling user status:', error);
+  }
+};
+
+onMounted(() => {
+  fetchUsers();
+});
 </script>
 
 <style scoped>
-.text-orange {
-  color: #fd7e14;
+.header {
+  margin-bottom: 24px;
+}
+
+h2 {
+  font-size: 1.5rem;
+  color: #000;
+  font-weight: 600;
 }
 </style>

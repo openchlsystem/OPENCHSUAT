@@ -1,9 +1,8 @@
 <template>
-  <div class="table-responsive">
-    <table class="table table-bordered table-hover align-middle">
-      <thead class="table-dark">
+  <div class="table-wrapper">
+    <table class="table">
+      <thead>
         <tr>
-          <th>#</th>
           <th>Name</th>
           <th>Email</th>
           <th>Role</th>
@@ -12,25 +11,22 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(user, index) in users" :key="user.id">
-          <td>{{ index + 1 }}</td>
+        <tr v-for="user in users" :key="user.id">
           <td>{{ user.name }}</td>
           <td>{{ user.email }}</td>
           <td>{{ user.role }}</td>
           <td>
-            <span :class="user.status === 'Active' ? 'text-success' : 'text-danger'">
-              {{ user.status }}
+            <span :class="{ active: user.is_active, inactive: !user.is_active }">
+              {{ user.is_active ? 'Active' : 'Inactive' }}
             </span>
           </td>
           <td>
-            <button class="btn btn-sm btn-warning me-2" @click="$emit('edit', user)">
-              <i class="bi bi-pencil"></i> Edit
-            </button>
+            <button class="btn-primary" @click="$emit('edit-user', user)">Edit</button>
             <button 
-              class="btn btn-sm btn-secondary" 
-              @click="$emit('toggle-status', user)"
+              class="btn-secondary" 
+              @click="$emit('toggle-status', user.id)"
             >
-              {{ user.status === 'Active' ? 'Deactivate' : 'Activate' }}
+              {{ user.is_active ? 'Deactivate' : 'Activate' }}
             </button>
           </td>
         </tr>
@@ -40,11 +36,8 @@
 </template>
 
 <script setup>
-defineProps({
-  users: Array
-});
-
-defineEmits(['edit', 'toggle-status']);
+defineProps({ users: Array });
+defineEmits(['edit-user', 'toggle-status']);
 </script>
 
 <style scoped>
