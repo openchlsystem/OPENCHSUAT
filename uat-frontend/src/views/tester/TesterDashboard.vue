@@ -1,124 +1,68 @@
 <template>
-  <div class="dashboard-container">
-    <!-- Sidebar Component -->
-    <Sidebar />
+  <div>
+    <div class="dashboard-cards">
+      <DashboardCard title="Assigned Test Cases" :value="stats.assigned_tests" icon="fas fa-tasks" />
+      <DashboardCard title="Executed Tests" :value="stats.executed_tests" icon="fas fa-check-circle" />
+      <DashboardCard title="Pending Tests" :value="stats.pending_tests" icon="fas fa-clock" />
+      <DashboardCard title="Passed Tests" :value="stats.passed_tests" icon="fas fa-thumbs-up" />
+      <DashboardCard title="Failed Tests" :value="stats.failed_tests" icon="fas fa-times-circle" />
+      <DashboardCard title="Reported Defects" :value="stats.reported_defects" icon="fas fa-bug" />
+    </div>
 
-    <!-- Main Dashboard Content -->
-    <div class="tester-dashboard">
-      <div class="container-fluid">
-        <!-- Row for Heading -->
-        <div class="row">
-          <div class="col-12">
-            <h2 class="fw-bold mb-4 text-primary">
-              🧪 Tester Dashboard
-            </h2>
-          </div>
-        </div>
+    <div class="chart-container">
+      <DashboardChart 
+        :labels="['Passed', 'Failed', 'Blocked']"
+        :data="[stats.passed_tests, stats.failed_tests, stats.blocked_tests]"
+        :backgroundColor="['#28a745', '#dc3545', '#ffc107']"
+      />
+    </div>
 
-        <!-- Dashboard Cards (Status Overview) -->
-        <div class="row gap-4">
-          <div class="col-md-4">
-            <DashboardCard 
-              title="Total Assigned Tests" 
-              :count="stats.assignedTests" 
-              icon="bi-list-check" 
-              class="bg-primary text-white shadow-sm"
-            />
-          </div>
-          <div class="col-md-4">
-            <DashboardCard 
-              title="Tests In Progress" 
-              :count="stats.inProgressTests" 
-              icon="bi-clock-history" 
-              class="bg-warning text-dark shadow-sm"
-            />
-          </div>
-          <div class="col-md-4">
-            <DashboardCard 
-              title="Completed Tests" 
-              :count="stats.completedTests" 
-              icon="bi-check-circle" 
-              class="bg-success text-white shadow-sm"
-            />
-          </div>
-        </div>
-
-        <!-- Quick Actions (Navigation) -->
-        <div class="mt-4">
-          <h4 class="text-muted mb-3">Quick Actions</h4>
-          <div class="d-flex justify-content-start gap-3">
-            <router-link to="/tester/assigned-tests" class="btn btn-outline-primary shadow-sm">
-              <i class="bi bi-list-task"></i> View Assigned Tests
-            </router-link>
-            <router-link to="/tester/test-history" class="btn btn-outline-info shadow-sm">
-              <i class="bi bi-clock-history"></i> View Test History
-            </router-link>
-          </div>
-        </div>
-      </div>
+    <div>
+      <h3>Recent Activity</h3>
+      <RecentActivityTable :activities="recentActivities" />
     </div>
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue';
-import DashboardCard from '@/components/DashboardCard.vue';
-import Sidebar from '@/components/Sidebar.vue';
+<script>
+import DashboardCard from '@/components/Admin/DashboardCard.vue';
+import DashboardChart from '@/components/Admin/DashboardChart.vue';
+import RecentActivityTable from '@/components/Admin/RecentActivityTable.vue';
 
-const stats = ref({
-  assignedTests: 10,
-  inProgressTests: 4,
-  completedTests: 6,
-});
+export default {
+  name: 'TesterDashboardView',
+  components: { DashboardCard, DashboardChart, RecentActivityTable },
+  data() {
+    return {
+      stats: {
+        assigned_tests: 0,
+        executed_tests: 0,
+        pending_tests: 0,
+        passed_tests: 0,
+        failed_tests: 0,
+        blocked_tests: 0,
+        reported_defects: 0
+      },
+      recentActivities: []
+    };
+  },
+  async created() {
+    const response = await this.$axios.get('/api/tester-dashboard/');
+    this.stats = response.data.stats;
+    this.recentActivities = response.data.recent_activities;
+  }
+};
 </script>
 
 <style scoped>
-/* Ensure the sidebar and content are displayed side by side */
-.dashboard-container {
-  display: flex;
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
 }
 
-/* Sidebar Styling */
-.tester-dashboard {
-  margin-left: 250px; /* Adjust for sidebar width */
-  padding: 20px;
-  background-color: #f8f9fa;
-  min-height: 100vh;
-}
-
-/* Heading Styling */
-.text-primary {
-  color: #007bff;
-}
-
-h2 {
-  font-size: 2.5rem;
-  font-weight: bold;
-}
-
-h4 {
-  font-size: 1.25rem;
-  font-weight: 500;
-}
-
-/* Fix Row Gap */
-.row.gap-4 {
-  gap: 20px;
-}
-
-/* Button Styling */
-.btn {
-  padding: 10px 20px;
-  font-size: 1rem;
-  transition: transform 0.2s ease;
-}
-
-.btn:hover {
-  transform: scale(1.05);
-}
-
-/* Shadow Styling */
-.shadow-sm {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+.chart-container {
+  margin-top: 24px;
+  height: 200px;
 }
 </style>

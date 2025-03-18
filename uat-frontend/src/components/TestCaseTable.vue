@@ -1,53 +1,50 @@
 <template>
-    <div class="table-responsive">
-      <table class="table table-bordered table-hover">
-        <thead class="table-dark">
-          <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Expected Outcome</th>
-            <th>Status</th>
-            <th>Assigned To</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="testCase in filteredTestCases" :key="testCase.id">
-            <td>{{ testCase.title }}</td>
-            <td>{{ testCase.description }}</td>
-            <td>{{ testCase.expected_outcome }}</td>
-            <td>{{ testCase.status }}</td>
-            <td>
-              <select
-                class="form-control"
-                @change="$emit('assign', testCase.id, $event.target.value)"
-              >
-                <option value="" disabled selected>Select Tester</option>
-                <option v-for="tester in testers" :key="tester.id" :value="tester.id">
-                  {{ tester.username }}
-                </option>
-              </select>
-            </td>
-            <td>
-              <button class="btn btn-sm btn-warning me-2" @click="$emit('edit', testCase)">
-                Edit
-              </button>
-              <button class="btn btn-sm btn-danger" @click="$emit('delete', testCase.id)">
-                Delete
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+  <div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h3>Test Cases</h3>
+      <button @click="$emit('openModal')" class="btn btn-primary">+ Add Test Case</button>
     </div>
-  </template>
-  
-  <script setup>
-  defineProps({
-    filteredTestCases: Array,
-    testers: Array
-  });
-  
-  defineEmits(['edit', 'delete', 'assign']);
-  </script>
-  
+
+    <table class="table table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>Title</th>
+          <th>Functionality</th>
+          <th>Expected Result</th>
+          <th>Created By</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="testCase in testCases" :key="testCase.id">
+          <td>{{ testCase.title }}</td>
+          <td>{{ testCase.functionality?.name || 'N/A' }}</td>
+          <td>{{ testCase.expected_result }}</td>
+          <td>{{ testCase.created_by?.name || 'N/A' }}</td>
+          <td>
+            <button 
+              :class="['btn', testCase.assigned_user ? 'btn-success' : 'btn-secondary']"
+              @click="$emit('assign', testCase)"
+            >
+              {{ testCase.assigned_user ? "Assigned" : "Not Assigned" }}
+            </button>
+          </td>
+          <td>
+            <button @click="$emit('edit', testCase)" class="btn btn-warning btn-sm">Edit</button>
+            <button @click="$emit('delete', testCase.id)" class="btn btn-danger btn-sm">Delete</button>
+            <button @click="$emit('viewSteps', testCase)" class="btn btn-info btn-sm">View Steps</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    testCases: Array
+  }
+};
+</script>

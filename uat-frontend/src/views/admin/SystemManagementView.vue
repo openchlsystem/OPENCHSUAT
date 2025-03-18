@@ -3,7 +3,7 @@
       <h2>System Management</h2>
   
       <!-- Add System Button -->
-      <button @click="openModal(null)">Add New System</button>
+      <!--<button @click="openModal(null)">Add New System</button> -->
   
       <!-- System Table Component -->
       <SystemTable :systems="systems" @edit="openModal" @delete="deleteSystem" />

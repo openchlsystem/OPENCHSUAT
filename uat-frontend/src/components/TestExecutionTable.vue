@@ -1,56 +1,86 @@
 <template>
-  <div class="table-responsive">
-    <table class="table table-bordered table-hover">
-      <thead class="table-light">
+  <div>
+    <div v-if="testExecutions.length === 0" class="no-tests">
+      <p>No test cases assigned to you yet. </p>
+    </div>
+
+    <table v-else class="table custom-table shadow-sm">
+      <thead>
         <tr>
-          <th>#</th>
-          <th>Title</th>
+          <th>Test Case</th>
+          <th>Functionality</th>
+          <th>Assigned By</th>
           <th>Status</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(test, index) in tests" :key="test.id" :class="{'table-active': test.status === 'In Progress'}">
-          <td>{{ index + 1 }}</td>
-          <td>{{ test.title }}</td>
+        <tr v-for="execution in testExecutions" :key="execution.id">
+          <td>{{ execution.test_case.title }}</td>
+          <td>{{ execution.test_case.functionality?.name || 'N/A' }}</td>
+          <td>{{ execution.assigned_by?.name || 'N/A' }}</td>
           <td>
-            <span :class="{
-              'text-warning': test.status === 'Pending',
-              'text-primary': test.status === 'In Progress',
-              'text-success': test.status === 'Completed'
-            }">
-              {{ test.status }}
+            <span :class="statusClass(execution.status)">
+              {{ execution.status || "Pending" }}
             </span>
           </td>
           <td>
-            <button class="btn btn-sm btn-primary" @click="$emit('openExecutionModal', test)">
-              <i class="bi bi-play-circle"></i> Execute
+            <button class="btn btn-primary btn-sm" @click="$emit('execute', execution)">
+              🚀 Execute
             </button>
           </td>
-        </tr>
-        <tr v-if="!tests.length">
-          <td colspan="4" class="text-center text-muted">No tests assigned.</td>
         </tr>
       </tbody>
     </table>
   </div>
 </template>
 
-<script setup>
-defineProps({
-  tests: Array
-});
+<script>
+export default {
+  props: {
+    testExecutions: Array
+  },
+  methods: {
+    statusClass(status) {
+      return {
+        "badge bg-success": status === "Passed",
+        "badge bg-danger": status === "Failed",
+        "badge bg-warning": !status,
+      };
+    },
+  },
+};
 </script>
 
 <style scoped>
-.table {
+.custom-table {
+  background: #ffffff;
   border-radius: 10px;
   overflow: hidden;
+  border: 1px solid #ccc;
 }
-.table-hover tbody tr:hover {
-  background-color: #f1f1f1;
+
+.custom-table thead {
+  background: #004085;
+  color: white;
 }
-.table-active {
-  background-color: #e0e7ff;
+
+.custom-table tbody tr:hover {
+  background: #f1f1f1;
+}
+
+.no-tests {
+  text-align: center;
+  font-size: 18px;
+  padding: 20px;
+  color: #555;
+  background: #e9ecef;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.badge {
+  padding: 5px 10px;
+  font-size: 14px;
 }
 </style>

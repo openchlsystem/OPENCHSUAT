@@ -1,96 +1,71 @@
+<!-- src/views/admin/DefectsView.vue -->
 <template>
-  <div class="defects-view">
-    <div class="container">
-      <!-- Header -->
-      <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold">Defects Management</h2>
-        <button class="btn btn-primary" @click="openModal">
-          <i class="bi bi-bug"></i> Report Defect
-        </button>
-      </div>
+  <div class="container">
+    <h2 class="page-title">Reported Defects</h2>
 
-      <!-- Defects Table -->
-      <DefectTable 
-        :defects="defects" 
-        @edit="editDefect" 
-        @delete="deleteDefect"
-      />
+    <!-- Filters & Search -->
+    <DefectFilter @filter-updated="applyFilters" />
 
-      <!-- Defect Modal -->
-      <DefectModal 
-        v-model:show="showModal" 
-        :defectData="selectedDefect" 
-        @save="saveDefect" 
-      />
-    </div>
+    <!-- Defects Table -->
+    <DefectTable 
+      :defects="filteredDefects" 
+      @view-details="openDefectModal" 
+    />
+
+    <!-- Defect Details Modal -->
+    <DefectDetailModal 
+      v-if="selectedDefect" 
+      :defect="selectedDefect" 
+      @close="selectedDefect = null" 
+    />
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue';
-import DefectTable from '@/components/DefectTable.vue';
-import DefectModal from '@/components/DefectModal.vue';
-import axios from 'axios';
+<script>
+import axios from "@/utils/axios";
+import DefectTable from "@/components/Admin/DefectTable.vue";
+import DefectFilter from "@/components/Admin/DefectFilter.vue";
+import DefectDetailModal from "@/components/Admin/DefectDetailModal.vue";
 
-const defects = ref([]);
-const showModal = ref(false);
-const selectedDefect = ref(null);
-
-const fetchDefects = async () => {
-  try {
-    const response = await axios.get('/api/defects/');
-    defects.value = response.data;
-  } catch (error) {
-    console.error('Error fetching defects:', error);
-  }
-};
-
-const openModal = () => {
-  selectedDefect.value = null;
-  showModal.value = true;
-};
-
-const editDefect = (defect) => {
-  selectedDefect.value = { ...defect };
-  showModal.value = true;
-};
-
-const deleteDefect = async (id) => {
-  if (confirm('Are you sure you want to delete this defect?')) {
-    try {
-      await axios.delete(`/api/defects/${id}/`);
-      defects.value = defects.value.filter((defect) => defect.id !== id);
-    } catch (error) {
-      console.error('Error deleting defect:', error);
+export default {
+  components: { DefectTable, DefectFilter, DefectDetailModal },
+  data() {
+    return {
+      defects: [],
+      filteredDefects: [],
+      selectedDefect: null,
+    };
+  },
+  methods: {
+    fetchDefects() {
+      axios.get("/defects")
+        .then(response => {
+          this.defects = response.data;
+          this.filteredDefects = response.data;
+        })
+        .catch(error => console.error("Error fetching defects:", error));
+    },
+    applyFilters(filtered) {
+      this.filteredDefects = filtered;
+    },
+    openDefectModal(defect) {
+      this.selectedDefect = defect;
     }
+  },
+  created() {
+    this.fetchDefects();
   }
 };
-
-const saveDefect = async (defectData) => {
-  try {
-    if (defectData.id) {
-      // Update existing defect
-      await axios.put(`/api/defects/${defectData.id}/`, defectData);
-      const index = defects.value.findIndex((d) => d.id === defectData.id);
-      if (index !== -1) {
-        defects.value[index] = defectData;
-      }
-    } else {
-      // Create new defect
-      const response = await axios.post('/api/defects/', defectData);
-      defects.value.push(response.data);
-    }
-    showModal.value = false;
-  } catch (error) {
-    console.error('Error saving defect:', error);
-  }
-};
-
-onMounted(fetchDefects);
 </script>
 
 <style scoped>
-.defects-view {
+.container {
   padding: 20px;
+}
+
+.page-title {
+  color: #ff6600; /* Theme color - Orange */
+  font-size: 24px;
+  margin-bottom: 15px;
 }
 </style>

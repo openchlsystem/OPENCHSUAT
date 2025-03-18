@@ -1,50 +1,62 @@
 <template>
-  <div class="defect-report-view">
-    <div class="container">
-      <h2 class="fw-bold mb-4">Defect Report</h2>
+  <div class="container mt-4">
+    <h2 class="text-center"> Report Defects</h2>
 
-      <!-- Defect Report Form Component -->
-      <DefectReportForm @submit="submitDefect" />
-    </div>
+    <button class="btn btn-primary my-3" @click="showForm = true">➕ Report New Defect</button>
+
+    <!-- Defect Form Modal -->
+    <DefectForm v-if="showForm" 
+      @close="showForm = false"
+      @submit="submitDefect"
+      :testCases="testCases"
+    />
+
+    <!-- Defects Table -->
+    <DefectTable :defects="defects" />
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue';
-import DefectReportForm from '@/components/DefectReportForm.vue';
-import axios from 'axios';
+<script>
+import axios from "@/utils/axios";
+import DefectForm from "@/components/DefectForm.vue";
+import DefectTable from "@/components/DefectTable.vue";
 
-const submitDefect = async (defectData) => {
-  try {
-    // API call to submit defect data
-    const formData = new FormData();
-    formData.append('title', defectData.title);
-    formData.append('description', defectData.description);
-    formData.append('severity', defectData.severity);
-    formData.append('priority', defectData.priority);
-    if (defectData.evidence) {
-      formData.append('evidence', defectData.evidence);
-    }
-
-    const response = await axios.post('/api/defects/', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
+export default {
+  components: { DefectForm, DefectTable },
+  data() {
+    return {
+      showForm: false,
+      defects: [],
+      testCases: []
+    };
+  },
+  methods: {
+    async fetchData() {
+      try {
+        const [defectRes, testCaseRes] = await Promise.all([
+          axios.get("/defects/"),
+          axios.get("/testcases/")
+        ]);
+        this.defects = defectRes.data;
+        this.testCases = testCaseRes.data;
+      } catch (error) {
+        console.error("Error fetching defects or test cases:", error);
       }
-    });
-    
-    console.log("Defect Report Submitted:", response.data);
-    // Optionally, show success message or redirect user
-  } catch (error) {
-    console.error("Failed to submit defect:", error);
-    // Optionally, show error message
+    },
+    async submitDefect(formData) {
+      try {
+        const response = await axios.post("/defects/", formData, {
+          headers: { "Content-Type": "multipart/form-data" }
+        });
+        this.defects.push(response.data);
+        this.showForm = false;
+      } catch (error) {
+        console.error("Error submitting defect:", error);
+      }
+    }
+  },
+  mounted() {
+    this.fetchData();
   }
 };
 </script>
-
-<style scoped>
-.defect-report-view {
-  padding: 20px;
-  background-color: #f8f9fa;
-  border-radius: 10px;
-}
-</style>

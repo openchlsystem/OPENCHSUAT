@@ -1,99 +1,76 @@
 <template>
-    <div class="modal d-block" tabindex="-1" role="dialog">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">{{ step?.id ? 'Edit Step' : 'Add Step' }}</h5>
-            <button type="button" class="btn-close" @click="$emit('close')"></button>
-          </div>
-          <div class="modal-body">
-            <form @submit.prevent="save">
-              <div class="mb-3">
-                <label class="form-label">Description</label>
-                <input
-                  v-model="form.description"
-                  type="text"
-                  class="form-control"
-                  required
-                />
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Expected Result</label>
-                <input
-                  v-model="form.expectedResult"
-                  type="text"
-                  class="form-control"
-                  required
-                />
-              </div>
-              <div class="d-flex justify-content-end">
-                <button type="button" class="btn btn-secondary me-2" @click="$emit('close')">
-                  Cancel
-                </button>
-                <button type="submit" class="btn btn-primary">
-                  {{ step?.id ? 'Update' : 'Save' }}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <h3>Test Steps for "{{ testCase.title }}"</h3>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Step</th>
+            <th>Expected Outcome</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="step in testSteps" :key="step.id">
+            <td>{{ step.step_description }}</td>
+            <td>{{ step.expected_outcome }}</td>
+            <td>
+              <button @click="editStep(step)" class="btn btn-warning btn-sm">Edit</button>
+              <button @click="deleteStep(step.id)" class="btn btn-danger btn-sm">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <button @click="addStep" class="btn btn-primary">+ Add Step</button>
+      <button @click="$emit('close')" class="btn btn-secondary">Close</button>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    props: {
-      step: {
-        type: Object,
-        default: null,
-      },
+  </div>
+</template>
+
+<script>
+import axios from "@/utils/axios";
+
+export default {
+  props: {
+    testCase: Object
+  },
+  data() {
+    return {
+      testSteps: []
+    };
+  },
+  methods: {
+    async fetchTestSteps() {
+      try {
+        const response = await axios.get(`/testcases/${this.testCase.id}/steps/`);
+        this.testSteps = response.data;
+      } catch (error) {
+        console.error("Error fetching test steps:", error);
+      }
     },
-    data() {
-      return {
-        form: {
-          description: '',
-          expectedResult: '',
-        },
+    async addStep() {
+      const newStep = {
+        test_case: this.testCase.id,
+        step_description: "New Step",
+        expected_outcome: "Expected Outcome"
       };
+      await axios.post("/teststeps/", newStep);
+      this.fetchTestSteps();
     },
-    watch: {
-      step: {
-        immediate: true,
-        handler(newStep) {
-          if (newStep) {
-            this.form = { ...newStep };
-          } else {
-            this.form = {
-              description: '',
-              expectedResult: '',
-            };
-          }
-        },
-      },
+    async editStep(step) {
+      const updatedStep = { ...step, step_description: prompt("Edit Step", step.step_description) };
+      await axios.put(`/teststeps/${step.id}/`, updatedStep);
+      this.fetchTestSteps();
     },
-    methods: {
-      save() {
-        if (!this.form.description || !this.form.expectedResult) {
-          alert('All fields are required');
-          return;
-        }
-        this.$emit('save', { ...this.form });
-      },
-    },
-  };
-  </script>
-  
-  <style scoped>
-  .modal {
-    background-color: rgba(0, 0, 0, 0.5);
+    async deleteStep(stepId) {
+      await axios.delete(`/teststeps/${stepId}/`);
+      this.fetchTestSteps();
+    }
+  },
+  mounted() {
+    this.fetchTestSteps();
   }
-  .modal-content {
-    padding: 20px;
-    border-radius: 8px;
-  }
-  .btn {
-    font-size: 14px;
-  }
-  </style>
-  
+};
+</script>

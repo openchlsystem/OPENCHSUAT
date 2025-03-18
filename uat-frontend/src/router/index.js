@@ -1,22 +1,25 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '@/store/auth';
 
+// Public Views
 import HomeView from '@/views/HomeView.vue';
 import LoginView from '@/views/auth/LoginView.vue';
-import RegisterView from '@/views/auth/RegisterView.vue';
 import ForgotPasswordView from '@/views/auth/ForgotPasswordView.vue';
 
 // Admin Views
-import AdminDashboard from '@/views/admin/AdminDashboard.vue';
-import DefectsView from '@/views/admin/DefectsView.vue';
-import ReportsView from '@/views/admin/ReportsView.vue';
-import TestCaseListView from '@/views/admin/TestCaseListView.vue';
-const SettingsView = () => import('@/views/admin/SettingsView.vue');
+const AdminLayout = () => import('@/layouts/AdminLayout.vue');
+const AdminDashboard = () => import('@/views/admin/AdminDashboard.vue');
+const OrganizationManagementView = () => import('@/views/admin/OrganizationManagementView.vue');
 const SystemManagementView = () => import('@/views/admin/SystemManagementView.vue');
-const UserManagementView = () => import('@/views/admin/UserManagementView.vue');
 const FunctionalityManagementView = () => import('@/views/admin/FunctionalityManagementView.vue');
+const TestCaseListView = () => import('@/views/admin/TestCaseListView.vue');
+const DefectsView = () => import('@/views/admin/DefectsView.vue');
+const ReportsView = () => import('@/views/admin/ReportsView.vue');
+const SettingsView = () => import('@/views/admin/SettingsView.vue');
+const UserManagementView = () => import('@/views/admin/UserManagementView.vue');
 
 // Tester Views
+const TesterLayout = () => import('@/layouts/TesterLayout.vue');
 const TesterDashboard = () => import('@/views/tester/TesterDashboard.vue');
 const AssignedTests = () => import('@/views/tester/AssignedTestsView.vue');
 const TestExecution = () => import('@/views/tester/TestExecutionView.vue');
@@ -40,43 +43,49 @@ const isAuthenticated = () => {
 };
 
 const routes = [
-  // Public Routes
   { path: '/', name: 'Home', component: HomeView },
   { path: '/login', name: 'Login', component: LoginView },
-  { path: '/register', name: 'Register', component: RegisterView },
   { path: '/forgot-password', name: 'ForgotPassword', component: ForgotPasswordView },
 
   // Admin Routes
-  { path: '/admin/dashboard', name: 'AdminDashboard', component: AdminDashboard, meta: { requiresAuth: true, role: 'admin' } },
-  { path: '/admin/defects', name: 'DefectsView', component: DefectsView, meta: { requiresAuth: true, role: 'admin' } },
-  { path: '/admin/reports', name: 'ReportsView', component: ReportsView, meta: { requiresAuth: true, role: 'admin' } },
-  { path: '/admin/test-cases', name: 'TestCaseListView', component: TestCaseListView, meta: { requiresAuth: true, role: 'admin' } },
-  { path: '/admin/settings', name: 'SettingsView', component: SettingsView, meta: { requiresAuth: true, role: 'admin' } },
-  { path: '/admin/system-management', name: 'SystemManagementView', component: SystemManagementView, meta: { requiresAuth: true, role: 'admin' } },
-  { path: '/admin/users', name: 'UserManagementView', component: UserManagementView, meta: { requiresAuth: true, role: 'admin' } },
-  { path: '/admin/functionalities', name: 'FunctionalityManagementView', component: FunctionalityManagementView, meta: { requiresAuth: true, role: 'admin' } },
+  {
+    path: '/admin',
+    component: AdminLayout,
+    meta: { requiresAuth: true, role: 'admin' },
+    children: [
+      { path: 'dashboard', name: 'AdminDashboard', component: AdminDashboard },
+      { path: 'organizations', name: 'OrganizationManagementView', component: OrganizationManagementView },
+      { path: 'systems', name: 'SystemManagementView', component: SystemManagementView },
+      { path: 'functionalities', name: 'FunctionalityManagementView', component: FunctionalityManagementView },
+      { path: 'test-cases', name: 'TestCaseListView', component: TestCaseListView },
+      { path: 'defects', name: 'DefectsView', component: DefectsView },
+      { path: 'reports', name: 'ReportsView', component: ReportsView },
+      { path: 'settings', name: 'SettingsView', component: SettingsView },
+      { path: 'users', name: 'UserManagementView', component: UserManagementView }
+    ],
+  },
 
   // Tester Routes
-  { path: '/tester/dashboard', name: 'TesterDashboard', component: TesterDashboard, meta: { requiresAuth: true, role: 'tester' } },
-  { path: '/tester/assigned-tests', name: 'AssignedTests', component: AssignedTests, meta: { requiresAuth: true, role: 'tester' } },
-  { path: '/tester/test-execution/:testId', name: 'TestExecution', component: TestExecution, props: true, meta: { requiresAuth: true, role: 'tester' } },
-  { path: '/tester/defect-report', name: 'DefectReport', component: DefectReport, meta: { requiresAuth: true, role: 'tester' } },
-  { path: '/tester/test-history', name: 'TestHistory', component: TestHistory, meta: { requiresAuth: true, role: 'tester' } },
+  {
+    path: '/tester',
+    component: TesterLayout,
+    meta: { requiresAuth: true, role: 'tester' },
+    children: [
+      { path: 'dashboard', name: 'TesterDashboard', component: TesterDashboard },
+      { path: 'assigned-tests', name: 'AssignedTestsView', component: AssignedTests },
+      { path: 'test-execution', name: 'TestExecutionView', component: TestExecution },
+      { path: 'defect-reporting', name: 'DefectReportView', component: DefectReport },
+      { path: 'test-history', name: 'TestHistoryView', component: TestHistory }
+    ],
+  },
 
-  // Report Routes
-  { path: '/reports/test-progress', name: 'TestCaseProgress', component: TestCaseProgress, meta: { requiresAuth: true, role: ['admin', 'viewer'] } },
-  { path: '/reports/defects', name: 'DefectsDashboard', component: DefectsDashboard, meta: { requiresAuth: true, role: ['admin', 'viewer'] } },
-  { path: '/reports/tester-performance', name: 'TesterPerformance', component: TesterPerformance, meta: { requiresAuth: true, role: ['admin', 'viewer'] } },
-  { path: '/reports/export', name: 'ExportReports', component: ExportReports, meta: { requiresAuth: true, role: 'admin' } },
-
-  // Catch-all for unknown routes
-  { path: '/:pathMatch(.*)*', redirect: '/' },
+  // Catch-all
+  { path: '/:pathMatch(.*)*', redirect: '/' }
 ];
 
-// Global Route Guard for Authentication and Role Handling
 const router = createRouter({
   history: createWebHistory(),
-  routes,
+  routes
 });
 
 router.beforeEach((to, from, next) => {
@@ -84,24 +93,14 @@ router.beforeEach((to, from, next) => {
 
   if (to.meta.requiresAuth) {
     if (!isAuthenticated()) {
-      next('/login'); // Redirect unauthenticated users to login
-    } else if (to.meta.role) {
-      if (Array.isArray(to.meta.role)) {
-        if (!to.meta.role.includes(user?.role)) {
-          next('/'); // Redirect users without permission to home page
-        } else {
-          next(); // Allow access
-        }
-      } else if (user?.role !== to.meta.role) {
-        next('/'); // Redirect if role does not match
-      } else {
-        next(); // Allow access
-      }
+      next('/login');
+    } else if (to.meta.role && user?.role !== to.meta.role) {
+      next('/');
     } else {
-      next(); // Allow access
+      next();
     }
   } else {
-    next(); // Allow public access
+    next();
   }
 });
 

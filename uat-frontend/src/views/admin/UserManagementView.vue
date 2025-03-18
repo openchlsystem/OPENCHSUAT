@@ -1,100 +1,111 @@
 <template>
-  <div>
-    <div class="header">
-      <h2>User Management</h2>
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h3>User Management</h3>
+      <button @click="openUserModal(null)" class="btn btn-primary">+ Add User</button>
     </div>
 
-    <!-- User Table -->
-    <UserTable 
-      :users="users" 
-      @edit-user="openUserModal" 
-      @toggle-status="toggleUserStatus"
-    />
+    <table class="table table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="user in users" :key="user.id">
+          <td>{{ user.username }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.role }}</td>
+          <td>
+            <span :class="user.is_active ? 'text-success' : 'text-danger'">
+              {{ user.is_active ? "Active" : "Inactive" }}
+            </span>
+          </td>
+          <td>
+            <button @click="openUserModal(user)" class="btn btn-warning btn-sm">Edit</button>
+            <button @click="deleteUser(user.id)" class="btn btn-danger btn-sm">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
     <!-- User Modal -->
-    <UserModal 
-      v-if="showUserModal" 
-      :user="selectedUser" 
-      @close="closeUserModal" 
-      @save="updateUser"
-    />
+    <UserModal v-if="isUserModalOpen" :user="selectedUser" :roles="roles" @save="saveUser" @close="closeUserModal" />
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue';
-import UserTable from '@/components/UserTable.vue';
-import UserModal from '@/components/UserModal.vue';
+<script>
+import axios from "@/utils/axios";
+import UserModal from "@/components/UserModal.vue";
 
-const users = ref([]);
-const showUserModal = ref(false);
-const selectedUser = ref(null);
+export default {
+  components: { UserModal },
+  data() {
+    return {
+      users: [],
+      roles: ["Admin", "Tester"],
+      isUserModalOpen: false,
+      selectedUser: null
+    };
+  },
+  methods: {
+    fetchUsers() {
+      axios.get("/users/")
+        .then(response => {
+          this.users = response.data;
+        })
+        .catch(error => console.error("Error fetching users:", error));
+    },
+    openUserModal(user) {
+      this.selectedUser = user ? { ...user } : { username: "", email: "", role: "Tester", is_active: true };
+      this.isUserModalOpen = true;
+    },
+    closeUserModal() {
+      this.isUserModalOpen = false;
+    },
+    saveUser(userData) {
+      const request = userData.id
+        ? axios.put(`/users/${userData.id}/`, userData)
+        : axios.post("/users/", userData);
 
-// ✅ Fetch all users
-const fetchUsers = async () => {
-  try {
-    // Simulate API call
-    const response = await fetch('/api/users/');
-    users.value = await response.json();
-  } catch (error) {
-    console.error('Error fetching users:', error);
+      request
+        .then(() => {
+          this.fetchUsers();
+          alert(userData.id ? "User updated successfully!" : "User created successfully!");
+        })
+        .catch(error => console.error("Error saving user:", error));
+
+      this.closeUserModal();
+    },
+    deleteUser(userId) {
+      if (confirm("Are you sure you want to delete this user?")) {
+        axios.delete(`/users/${userId}/`)
+          .then(() => {
+            this.fetchUsers();
+            alert("User deleted successfully!");
+          })
+          .catch(error => console.error("Error deleting user:", error));
+      }
+    }
+  },
+  mounted() {
+    this.fetchUsers();
   }
 };
-
-// ✅ Open Modal for Editing User
-const openUserModal = (user) => {
-  selectedUser.value = { ...user };
-  showUserModal.value = true;
-};
-
-// ✅ Close Modal
-const closeUserModal = () => {
-  showUserModal.value = false;
-  selectedUser.value = null;
-};
-
-// ✅ Update User
-const updateUser = async (updatedUser) => {
-  try {
-    await fetch(`/api/users/${updatedUser.id}/`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(updatedUser)
-    });
-
-    // Refresh user list
-    fetchUsers();
-    closeUserModal();
-  } catch (error) {
-    console.error('Error updating user:', error);
-  }
-};
-
-// ✅ Toggle User Status
-const toggleUserStatus = async (userId) => {
-  try {
-    await fetch(`/api/users/${userId}/toggle-status/`, { method: 'PATCH' });
-    fetchUsers();
-  } catch (error) {
-    console.error('Error toggling user status:', error);
-  }
-};
-
-onMounted(() => {
-  fetchUsers();
-});
 </script>
 
 <style scoped>
-.header {
-  margin-bottom: 24px;
+.container {
+  margin-top: 20px;
 }
-
-h2 {
-  font-size: 1.5rem;
-  color: #000;
-  font-weight: 600;
+.table {
+  margin-top: 10px;
+}
+.btn-sm {
+  margin-right: 5px;
 }
 </style>
