@@ -64,7 +64,7 @@ const fetchTestCases = async () => {
 // ✅ Fetch testers from backend
 const fetchTesters = async () => {
   try {
-    const response = await axios.get('/api/testers/');
+    const response = await axios.get('/api/users/');
     testers.value = response.data;
   } catch (error) {
     console.error('Error fetching testers:', error);
