@@ -45,61 +45,6 @@ import TestCaseModal from "@/components/TestCaseModal.vue";
 import TestCaseAssignmentModal from "@/components/AssignTesterModal.vue";
 import TestStepsView from "@/components/TestStepsModal.vue";
 
-<<<<<<< HEAD
-const testCases = ref([]);
-const testers = ref([]);
-const filterText = ref('');
-const isEdit = ref(false);
-const selectedTestCase = ref(null);
-
-const filteredTestCases = computed(() => {
-  return testCases.value.filter(testCase =>
-    testCase.title.toLowerCase().includes(filterText.value.toLowerCase())
-  );
-});
-
-// ✅ Fetch test cases from backend
-const fetchTestCases = async () => {
-  try {
-    const response = await axios.get('/api/testcases/');
-    testCases.value = response.data;
-  } catch (error) {
-    console.error('Error fetching test cases:', error);
-  }
-};
-
-// ✅ Fetch testers from backend
-const fetchTesters = async () => {
-  try {
-    const response = await axios.get('/api/users/');
-    testers.value = response.data;
-  } catch (error) {
-    console.error('Error fetching testers:', error);
-  }
-};
-
-onMounted(() => {
-  fetchTestCases();
-  fetchTesters();
-});
-
-const openModal = () => {
-  isEdit.value = false;
-  selectedTestCase.value = null;
-};
-
-const editTestCase = (testCase) => {
-  isEdit.value = true;
-  selectedTestCase.value = { ...testCase };
-};
-
-const saveTestCase = async (data) => {
-  try {
-    if (isEdit.value) {
-      await axios.put(`/api/testcases/${selectedTestCase.value.id}/`, data);
-    } else {
-      await axios.post('/api/testcases/', data);
-=======
 export default {
   components: {
     TestCaseTable,
@@ -182,7 +127,6 @@ export default {
         await axios.post("/testcases/", testCase);
       }
       this.closeModal();
->>>>>>> dc4ada588b6edded512a4db34fdc898e19919881
     }
   },
   mounted() {

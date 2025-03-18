@@ -1,5 +1,5 @@
-// src/store/auth.js
 import { defineStore } from 'pinia';
+import axiosInstance from '@/utils/axios';  // Adjust the import path
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -10,26 +10,17 @@ export const useAuthStore = defineStore('auth', {
       console.log('Sending OTP to:', whatsappNumber);
 
       try {
-        // Call the API endpoint to send OTP
-        const response = await fetch('/api/auth/request-otp/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ whatsappNumber }),
+        // Use axiosInstance instead of fetch
+        const response = await axiosInstance.post('/api/auth/request-otp/', {
+          whatsappNumber,
         });
 
-        if (!response.ok) {
-          throw new Error('Failed to send OTP');
-        }
-
-        const data = await response.json();
-        console.log('OTP sent successfully:', data);
+        console.log('OTP sent successfully:', response.data);
 
         // Store OTP in localStorage for verification (if needed)
-        localStorage.setItem('otp', data.otp); // Assuming the API returns the OTP
+        localStorage.setItem('otp', response.data.otp); // Assuming the API returns the OTP
 
-        return data; // Return the API response for further use
+        return response.data; // Return the API response for further use
       } catch (error) {
         console.error('Error sending OTP:', error);
         throw new Error('Failed to send OTP. Please try again.');
@@ -40,20 +31,13 @@ export const useAuthStore = defineStore('auth', {
       console.log('Verifying OTP...');
 
       try {
-        // Call the API endpoint to verify OTP
-        const response = await fetch('/api/auth/verify-otp/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ whatsappNumber, otp: enteredOTP }),
+        // Use axiosInstance instead of fetch
+        const response = await axiosInstance.post('/api/auth/verify-otp/', {
+          whatsappNumber,
+          otp: enteredOTP,
         });
 
-        if (!response.ok) {
-          throw new Error('Failed to verify OTP');
-        }
-
-        const user = await response.json();
+        const user = response.data;
         console.log('OTP verified successfully:', user);
 
         // Check if the user is active
@@ -74,55 +58,21 @@ export const useAuthStore = defineStore('auth', {
 
     async registerUser(whatsappNumber, password) {
       console.log('Registering user...');
-  
-      try {
-          const response = await fetch('/api/auth/register/', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ whatsapp_number: whatsappNumber, password: password }),
-          });
-  
-          if (!response.ok) {
-              const errorData = await response.json();
-              let errorMessage = 'Registration failed. Please try again.';
-              if (errorData && errorData.detail) {
-                  errorMessage = errorData.detail;
-              } else if (errorData && errorData.whatsapp_number) {
-                  errorMessage = errorData.whatsapp_number[0];
-              } else if (errorData && errorData.password) {
-                  errorMessage = errorData.password[0];
-              }
-  
-              throw new Error(errorMessage);
-          }
-  
-          const responseText = await response.text();
-  
-          if (!responseText) {
-              throw new Error('Empty response from server.');
-          }
-  
-          try {
-              const user = JSON.parse(responseText);
-              console.log('User registered successfully:', user);
-              return user;
-          } catch (jsonError) {
-              console.error('Error parsing JSON:', jsonError);
-              throw new Error('Invalid JSON response from server.');
-          }
-  
-      } catch (error) {
-          console.error('Error registering user:', error);
-          throw new Error(error.message || 'Registration failed. Please try again.');
-      }
-  },
 
-    // logout() {
-    //   localStorage.removeItem('user');
-    //   localStorage.removeItem('otp');
-    //   this.user = null;
-    // },
+      try {
+        // Use axiosInstance instead of fetch
+        const response = await axiosInstance.post('/api/auth/register/', {
+          whatsapp_number: whatsappNumber,
+          password: password,
+        });
+
+        const user = response.data;
+        console.log('User registered successfully:', user);
+        return user;
+      } catch (error) {
+        console.error('Error registering user:', error);
+        throw new Error(error.message || 'Registration failed. Please try again.');
+      }
+    },
   },
 });

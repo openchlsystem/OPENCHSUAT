@@ -5,6 +5,7 @@ import { useAuthStore } from '@/store/auth';
 import HomeView from '@/views/HomeView.vue';
 import LoginView from '@/views/auth/LoginView.vue';
 import ForgotPasswordView from '@/views/auth/ForgotPasswordView.vue';
+import RegisterView from '@/views/auth/RegisterView.vue';
 
 // Admin Views
 const AdminLayout = () => import('@/layouts/AdminLayout.vue');
@@ -46,6 +47,7 @@ const routes = [
   { path: '/', name: 'Home', component: HomeView },
   { path: '/login', name: 'Login', component: LoginView },
   { path: '/forgot-password', name: 'ForgotPassword', component: ForgotPasswordView },
+  { path: '/register', name: 'Register', component: RegisterView },
 
   // Admin Routes
   {
