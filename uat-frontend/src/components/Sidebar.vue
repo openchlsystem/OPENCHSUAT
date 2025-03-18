@@ -1,170 +1,149 @@
 <template>
   <div class="sidebar">
-    <ul class="nav flex-column">
-      <!-- Admin Pages -->
-      <li v-if="userRole === 'admin'" class="nav-item">
-        <router-link class="nav-link" to="/admin/dashboard" :class="{ active: isActive('/admin/dashboard') }">
-          <i class="bi bi-speedometer2 me-2"></i> Dashboard
-        </router-link>
-      </li>
-      <li v-if="userRole === 'admin'" class="nav-item">
-        <router-link class="nav-link" to="/admin/defects" :class="{ active: isActive('/admin/defects') }">
-          <i class="bi bi-bug me-2"></i> Defects
-        </router-link>
-      </li>
-      <li v-if="userRole === 'admin'" class="nav-item">
-        <router-link class="nav-link" to="/admin/reports" :class="{ active: isActive('/admin/reports') }">
-          <i class="bi bi-graph-up me-2"></i> Reports
-        </router-link>
-      </li>
-      <li v-if="userRole === 'admin'" class="nav-item">
-        <router-link class="nav-link" to="/admin/settings" :class="{ active: isActive('/admin/settings') }">
-          <i class="bi bi-gear me-2"></i> Settings
-        </router-link>
-      </li>
-      <li v-if="userRole === 'admin'" class="nav-item">
-        <router-link class="nav-link" to="/admin/system-management" :class="{ active: isActive('/admin/system-management') }">
-          <i class="bi bi-server me-2"></i> System Management
-        </router-link>
-      </li>
-      <li v-if="userRole === 'admin'" class="nav-item">
-        <router-link class="nav-link" to="/admin/test-cases" :class="{ active: isActive('/admin/test-cases') }">
-          <i class="bi bi-card-list me-2"></i> Test Cases
-        </router-link>
-      </li>
-      <li v-if="userRole === 'admin'" class="nav-item">
-        <router-link class="nav-link" to="/admin/users" :class="{ active: isActive('/admin/users') }">
-          <i class="bi bi-people-fill me-2"></i> User Management
-        </router-link>
-      </li>
-      <li v-if="userRole === 'admin'" class="nav-item">
-        <router-link class="nav-link" to="/admin/functionalities" :class="{ active: isActive('/admin/functionalities') }">
-          <i class="bi bi-tools me-2"></i> Functionality Management
-        </router-link>
-      </li>
+    <div class="sidebar-header">
+      <h3>{{ isAdmin ? 'Admin Panel' : 'Tester Panel' }}</h3>
+    </div>
+    <ul class="sidebar-links">
+      <!-- Links for Admin -->
+      <template v-if="isAdmin">
+        <li>
+          <router-link to="/admin/dashboard" exact-active-class="active-link">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/admin/organizations" exact-active-class="active-link">
+            <i class="fas fa-building"></i> Organizations
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/admin/systems" exact-active-class="active-link">
+            <i class="fas fa-desktop"></i> Systems
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/admin/functionalities" exact-active-class="active-link">
+            <i class="fas fa-cogs"></i> Functionalities
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/admin/test-cases" exact-active-class="active-link">
+            <i class="fas fa-vial"></i> Test Cases
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/admin/defects" exact-active-class="active-link">
+            <i class="fas fa-bug"></i> Defects
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/admin/users" exact-active-class="active-link">
+            <i class="fas fa-chart-bar"></i> Users
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/admin/settings" exact-active-class="active-link">
+            <i class="fas fa-cog"></i> Settings
+          </router-link>
+        </li>
+      </template>
 
-      <!-- Tester Pages -->
-      <li v-if="userRole === 'tester'" class="nav-item">
-        <router-link class="nav-link" to="/tester/dashboard" :class="{ active: isActive('/tester/dashboard') }">
-          <i class="bi bi-speedometer2 me-2"></i> Tester Dashboard
-        </router-link>
-      </li>
-      <li v-if="userRole === 'tester'" class="nav-item">
-        <router-link class="nav-link" to="/tester/assigned-tests" :class="{ active: isActive('/tester/assigned-tests') }">
-          <i class="bi bi-list-check me-2"></i> Assigned Tests
-        </router-link>
-      </li>
-      <li v-if="userRole === 'tester'" class="nav-item">
-        <router-link class="nav-link" to="/tester/test-execution/1" :class="{ active: isActive('/tester/test-execution') }">
-          <i class="bi bi-play-btn me-2"></i> Test Execution
-        </router-link>
-      </li>
-      <li v-if="userRole === 'tester'" class="nav-item">
-        <router-link class="nav-link" to="/tester/defect-report" :class="{ active: isActive('/tester/defect-report') }">
-          <i class="bi bi-flag me-2"></i> Defect Report
-        </router-link>
-      </li>
-      <li v-if="userRole === 'tester'" class="nav-item">
-        <router-link class="nav-link" to="/tester/test-history" :class="{ active: isActive('/tester/test-history') }">
-          <i class="bi bi-clock-history me-2"></i> Test History
-        </router-link>
-      </li>
-
-      <!-- Reports (Available to Admin & Viewer) -->
-      <li v-if="userRole === 'admin' || userRole === 'viewer'" class="nav-item">
-        <router-link class="nav-link" to="/reports/defects" :class="{ active: isActive('/reports/defects') }">
-          <i class="bi bi-bug me-2"></i> Defects Dashboard
-        </router-link>
-      </li>
-      <li v-if="userRole === 'admin' || userRole === 'viewer'" class="nav-item">
-        <router-link class="nav-link" to="/reports/progress" :class="{ active: isActive('/reports/progress') }">
-          <i class="bi bi-graph-up me-2"></i> Test Case Progress
-        </router-link>
-      </li>
-      <li v-if="userRole === 'admin' || userRole === 'viewer'" class="nav-item">
-        <router-link class="nav-link" to="/reports/performance" :class="{ active: isActive('/reports/performance') }">
-          <i class="bi bi-person-check me-2"></i> Tester Performance
-        </router-link>
-      </li>
-      <li v-if="userRole === 'admin'" class="nav-item">
-        <router-link class="nav-link" to="/reports/export" :class="{ active: isActive('/reports/export') }">
-          <i class="bi bi-download me-2"></i> Export Reports
-        </router-link>
-      </li>
+      <!-- Links for Testers -->
+      <template v-else>
+        <li>
+          <router-link to="/tester/dashboard" exact-active-class="active-link">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/tester/assigned-tests" exact-active-class="active-link">
+            <i class="fas fa-list"></i> Assigned Tests
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/tester/test-execution/1" exact-active-class="active-link">
+            <i class="fas fa-play-circle"></i> Execute Test
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/tester/defect-report" exact-active-class="active-link">
+            <i class="fas fa-bug"></i> Report Defect
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/tester/test-history" exact-active-class="active-link">
+            <i class="fas fa-history"></i> Test History
+          </router-link>
+        </li>
+      </template>
     </ul>
   </div>
 </template>
 
-<script setup>
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
-const userRole = JSON.parse(localStorage.getItem('user'))?.role || 'viewer';
-
-const isActive = (route) => {
-  return router.currentRoute.value.path.startsWith(route);
-};
+<script>
+export default {
+  name: 'Sidebar',
+  props: {
+    userRole: {
+      type: String,
+      required: true
+    }
+  },
+  computed: {
+    isAdmin() {
+      return this.userRole === 'admin';
+    }
+  }
+}
 </script>
 
-
 <style scoped>
-/* Sidebar container */
 .sidebar {
-  width: 240px;
+  width: 250px;
   height: 100vh;
-  background-color: #1f2937;
+  background-color: #343a40;
+  color: white;
   padding: 20px;
   position: fixed;
-  top: 0;
   left: 0;
+  top: 0;
   overflow-y: auto;
-  border-right: 1px solid #374151;
-  transition: width 0.3s ease;
-  z-index: 1000;
 }
 
-/* Sidebar scrollbar styling */
-.sidebar::-webkit-scrollbar {
-  width: 6px;
+.sidebar-header h3 {
+  color: #ff7f00;
+  margin-bottom: 20px;
 }
 
-.sidebar::-webkit-scrollbar-thumb {
-  background-color: #4b5563;
-  border-radius: 4px;
+.sidebar-links {
+  list-style: none;
+  padding: 0;
 }
 
-.sidebar::-webkit-scrollbar-track {
-  background-color: #1f2937;
+.sidebar-links li {
+  margin-bottom: 12px;
 }
 
-/* Nav Links */
-.nav-link {
-  color: #d1d5db;
-  font-size: 16px;
-  padding: 10px 16px;
-  border-radius: 6px;
+.sidebar-links a {
   display: flex;
   align-items: center;
-  transition: background-color 0.2s ease;
+  color: #ccc;
+  text-decoration: none;
+  padding: 10px 14px;
+  border-radius: 4px;
+  transition: background 0.3s ease;
 }
 
-.nav-link i {
-  font-size: 18px;
+.sidebar-links a i {
+  margin-right: 10px;
 }
 
-/* Hover and Active States */
-.nav-link:hover {
-  background-color: #374151;
-  color: #ffffff;
+.sidebar-links a:hover {
+  background-color: #495057;
 }
 
-.nav-link.active {
-  background-color: #2563eb;
-  color: #ffffff;
-}
-
-/* Nav Item */
-.nav-item {
-  margin-bottom: 6px;
+.active-link {
+  background-color: #ff7f00;
+  color: #fff;
 }
 </style>

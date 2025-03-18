@@ -11,7 +11,7 @@ import './assets/style.css'; // Ensure this path is correct for your project str
 const pinia = createPinia();
 
 // Global Axios configuration
-axios.defaults.baseURL = 'http://localhost:8000/api'; // Replace with your actual backend URL
+//axios.defaults.baseURL = 'http://127.0.0.1:8000/api'; // Replace with your actual backend URL
 axios.defaults.headers['Content-Type'] = 'application/json';
 
 // Set Authorization token dynamically

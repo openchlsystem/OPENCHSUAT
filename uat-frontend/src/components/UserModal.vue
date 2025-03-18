@@ -1,233 +1,100 @@
 <template>
-  <div class="modal-overlay" @click.self="$emit('close')">
-    <div class="modal-container">
-      <div class="modal-header">
-        <h5>Edit User</h5>
-        <button 
-          type="button" 
-          class="close-btn" 
-          @click="$emit('close')"
-        >
-          ✕
-        </button>
-      </div>
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <h3>{{ user.id ? "Edit User" : "Add New User" }}</h3>
 
-      <form @submit.prevent="saveUser" class="modal-form">
-        <!-- ✅ Full Name -->
+      <form @submit.prevent="save">
         <div class="form-group">
-          <label>Full Name</label>
-          <input 
-            type="text" 
-            v-model="form.name" 
-            disabled
-          />
+          <label>Username</label>
+          <input type="text" v-model="localUser.username" class="form-control" required />
         </div>
 
-        <!-- ✅ Email -->
         <div class="form-group">
           <label>Email</label>
-          <input 
-            type="email" 
-            v-model="form.email" 
-            disabled
-          />
+          <input type="email" v-model="localUser.email" class="form-control" required />
         </div>
 
-        <!-- ✅ Role -->
         <div class="form-group">
           <label>Role</label>
-          <select v-model="form.role" required>
-            <option value="admin">Admin</option>
-            <option value="tester">Tester</option>
-            <option value="viewer">Viewer</option>
+          <select v-model="localUser.role" class="form-control">
+            <option v-for="role in roles" :key="role">{{ role }}</option>
           </select>
         </div>
 
-        <!-- ✅ Status -->
         <div class="form-group">
           <label>Status</label>
-          <select v-model="form.is_active" required>
+          <select v-model="localUser.is_active" class="form-control">
             <option :value="true">Active</option>
             <option :value="false">Inactive</option>
           </select>
         </div>
 
-        <!-- ✅ Footer -->
-        <div class="modal-footer">
-          <button 
-            type="button" 
-            class="btn-secondary" 
-            @click="$emit('close')"
-          >
-            Cancel
-          </button>
-          <button 
-            type="submit" 
-            class="btn-primary"
-          >
-            Save
-          </button>
+        <div class="form-buttons">
+          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="button" @click="$emit('close')" class="btn btn-secondary">Cancel</button>
         </div>
       </form>
     </div>
   </div>
 </template>
 
-<script setup>
-import { ref, defineProps, defineEmits, watch } from 'vue';
-
-const props = defineProps({ user: Object });
-const emit = defineEmits(['save', 'close']);
-
-const form = ref({
-  name: '',
-  email: '',
-  role: 'tester',
-  is_active: true
-});
-
-// ✅ Sync Form Data
-watch(() => props.user, (newUser) => {
-  if (newUser) form.value = { ...newUser };
-});
-
-const saveUser = () => emit('save', form.value);
+<script>
+export default {
+  props: {
+    user: Object,
+    roles: Array
+  },
+  data() {
+    return {
+      localUser: { ...this.user }
+    };
+  },
+  methods: {
+    save() {
+      this.$emit("save", this.localUser);
+    }
+  }
+};
 </script>
 
-<<style scoped>
-/* ✅ Overlay to cover the entire screen */
+<style scoped>
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7); /* Darker background for better contrast */
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
+  align-items: center;
   justify-content: center;
-  align-items: center;
-  z-index: 1050;
 }
 
-/* ✅ Modal Container */
-.modal-container {
-  background-color: #ffffff;
-  width: 90%;
-  max-width: 500px;
-  padding: 24px;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  overflow-y: auto;
-  max-height: 90vh;
-}
-
-/* ✅ Modal Header */
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.modal-header h5 {
-  font-size: 1.25rem;
-  color: #000;
-  font-weight: 600;
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  color: #ff7f0e;
-  cursor: pointer;
-}
-
-/* ✅ Form Styling */
-.modal-form {
-  display: flex;
-  flex-direction: column;
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
 }
 
 .form-group {
-  margin-bottom: 16px;
+  margin-bottom: 15px;
 }
 
-label {
-  display: block;
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: #000;
-  margin-bottom: 4px;
-}
-
-input,
-textarea,
-select {
+.form-control {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 1rem;
-  color: #000;
-  transition: border-color 0.2s;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
-input:focus,
-textarea:focus,
-select:focus {
-  border-color: #ff7f0e;
-  outline: none;
-}
-
-/* ✅ Footer Styling */
-.modal-footer {
+.form-buttons {
   display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  margin-top: 16px;
+  justify-content: space-between;
 }
 
-/* ✅ Primary Button */
-.btn-primary {
-  background-color: #ff7f0e;
-  color: #ffffff;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.btn-primary:hover {
-  background-color: #e67300;
-}
-
-/* ✅ Secondary Button */
-.btn-secondary {
-  background-color: #000;
-  color: #ffffff;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.btn-secondary:hover {
-  background-color: #333;
-}
-
-/* ✅ Responsive Sizing */
-@media (max-width: 480px) {
-  .modal-container {
-    width: 100%;
-    padding: 16px;
-  }
+.btn {
+  padding: 8px 16px;
+  font-size: 14px;
 }
 </style>

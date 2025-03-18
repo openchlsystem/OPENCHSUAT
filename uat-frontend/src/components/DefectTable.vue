@@ -1,45 +1,36 @@
 <template>
-    <div class="table-responsive">
-      <table class="table table-bordered table-hover">
-        <thead class="table-light">
+    <div>
+      <div v-if="defects.length === 0" class="no-defects">
+        <p>No defects reported yet. ✅</p>
+      </div>
+  
+      <table v-else class="table custom-table shadow-sm">
+        <thead>
           <tr>
-            <th>#</th>
-            <th>Title</th>
-            <th>Description</th>
+            <th>Defect Name</th>
+            <th>Test Case</th>
             <th>Severity</th>
             <th>Status</th>
-            <th>Actions</th>
+            <th>Evidence</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(defect, index) in defects" :key="defect.id">
-            <td>{{ index + 1 }}</td>
-            <td>{{ defect.title }}</td>
-            <td>{{ defect.description }}</td>
+          <tr v-for="defect in defects" :key="defect.id">
+            <td>{{ defect.name }}</td>
+            <td>{{ defect.test_case?.title || "N/A" }}</td>
             <td>
-              <span :class="`badge bg-${getSeverityClass(defect.severity)}`">
+              <span :class="severityClass(defect.severity)">
                 {{ defect.severity }}
               </span>
             </td>
-            <td>{{ defect.status }}</td>
             <td>
-              <button 
-                class="btn btn-sm btn-warning me-2" 
-                @click="$emit('edit', defect)"
-              >
-                <i class="bi bi-pencil"></i> Edit
-              </button>
-              <button 
-                class="btn btn-sm btn-danger" 
-                @click="$emit('delete', defect.id)"
-              >
-                <i class="bi bi-trash"></i> Delete
-              </button>
+              <span class="badge bg-warning">{{ defect.status || "Pending" }}</span>
             </td>
-          </tr>
-          <tr v-if="!defects.length">
-            <td colspan="6" class="text-center text-muted">
-              No defects reported.
+            <td>
+              <a v-if="defect.evidence" :href="defect.evidence" target="_blank" class="btn btn-link">
+                📎 View
+              </a>
+              <span v-else>No Evidence</span>
             </td>
           </tr>
         </tbody>
@@ -47,25 +38,19 @@
     </div>
   </template>
   
-  <script setup>
-  defineProps({
-    defects: Array,
-  });
-  
-  const getSeverityClass = (severity) => {
-    switch (severity) {
-      case 'Low': return 'success';
-      case 'Medium': return 'warning';
-      case 'High': return 'danger';
-      default: return 'secondary';
-    }
+  <script>
+  export default {
+    props: { defects: Array },
+    methods: {
+      severityClass(severity) {
+        return {
+          "badge bg-danger": severity === "Critical",
+          "badge bg-warning": severity === "High",
+          "badge bg-primary": severity === "Medium",
+          "badge bg-success": severity === "Low",
+        };
+      },
+    },
   };
   </script>
-  
-  <style scoped>
-  .table {
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  </style>
   

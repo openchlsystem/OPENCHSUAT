@@ -1,75 +1,92 @@
 <template>
-  <div class="test-history-table">
-    <table class="table table-striped">
+  <div>
+    <table v-if="executions.length > 0" class="table">
       <thead>
         <tr>
-          <th>Test Name</th>
-          <th>Status</th>
-          <th>Execution Date</th>
-          <th>Comments</th>
+          <th @click="sortBy('test_case')">📋 Test Case</th>
+          <th @click="sortBy('execution_date')">📅 Execution Date</th>
+          <th @click="sortBy('status')">📊 Status</th>
+          <th>💬 Comments</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(test, index) in historyData" :key="index">
-          <td>{{ test.testName }}</td>
-          <td>
-            <span :class="`badge bg-${getStatusBadgeColor(test.status)}`">{{ test.status }}</span>
+        <tr v-for="execution in sortedExecutions" :key="execution.id">
+          <td>{{ execution.test_case }}</td>
+          <td>{{ formatDate(execution.execution_date) }}</td>
+          <td :class="statusClass(execution.status)">
+            {{ execution.status }}
           </td>
-          <td>{{ formatDate(test.executionDate) }}</td>
-          <td>{{ test.comments || 'N/A' }}</td>
+          <td>{{ execution.comments || "No comments" }}</td>
         </tr>
       </tbody>
     </table>
+
+    <p v-else class="no-data-message">🚫 No test executions found.</p>
   </div>
 </template>
 
-<script setup>
-import { defineProps } from 'vue';
-
-const props = defineProps({
-  historyData: {
-    type: Array,
-    required: true
+<script>
+export default {
+  props: { executions: Array, sortOrder: String },
+  computed: {
+    sortedExecutions() {
+      return [...this.executions].sort((a, b) => {
+        const dateA = new Date(a.execution_date);
+        const dateB = new Date(b.execution_date);
+        return this.sortOrder === "asc" ? dateA - dateB : dateB - dateA;
+      });
+    }
+  },
+  methods: {
+    formatDate(date) {
+      return new Date(date).toLocaleString();
+    },
+    statusClass(status) {
+      return status === "Passed" ? "status-pass" : "status-fail";
+    }
   }
-});
-
-// Get status badge color based on the test status
-const getStatusBadgeColor = (status) => {
-  switch (status.toLowerCase()) {
-    case 'completed':
-      return 'success'; // Green
-    case 'failed':
-      return 'danger';  // Red
-    case 'in-progress':
-      return 'warning'; // Yellow
-    default:
-      return 'secondary'; // Grey
-  }
-};
-
-// Format date to a readable format
-const formatDate = (date) => {
-  const options = { year: 'numeric', month: 'short', day: 'numeric' };
-  return new Date(date).toLocaleDateString('en-US', options);
 };
 </script>
 
 <style scoped>
-.test-history-table {
+/* Table */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th {
+  background: #007bff;
+  color: white;
+  padding: 10px;
+  cursor: pointer;
+}
+
+td {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+th:hover {
+  background: #0056b3;
+}
+
+.status-pass {
+  color: green;
+  font-weight: bold;
+}
+
+.status-fail {
+  color: red;
+  font-weight: bold;
+}
+
+/* No Data */
+.no-data-message {
+  text-align: center;
+  color: #666;
+  font-size: 16px;
   margin-top: 20px;
-}
-
-.table th {
-  text-align: center;
-}
-
-.badge {
-  padding: 5px 10px;
-  font-size: 0.875rem;
-}
-
-.table td {
-  text-align: center;
-  vertical-align: middle;
 }
 </style>

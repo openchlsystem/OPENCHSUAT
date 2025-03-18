@@ -1,102 +1,68 @@
 <template>
-  <div class="assigned-tests-view">
-    <div class="container">
-      <!-- Header -->
-      <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold text-primary">Assigned Tests</h2>
-        <button class="btn btn-refresh" @click="fetchAssignedTests">
-          <i class="bi bi-arrow-clockwise"></i> Refresh
-        </button>
-      </div>
+  <div class="assigned-tests-container">
+    <h2>📋 Assigned Test Cases</h2>
 
-      <!-- Assigned Test Table -->
-      <AssignedTestTable
-        :tests="assignedTests"
-        @view="viewTest"
-      />
-
-      <!-- Assigned Test Modal -->
-      <AssignedTestModal 
-        v-model:show="showModal"
-        :testData="selectedTest"
-        @close="closeModal"
-      />
+    <!-- Show No Assigned Tests Message -->
+    <div v-if="assignedTests.length === 0" class="no-tests-container">
+      <img src="@/assets/data.png" alt="No Tests" class="no-tests-image" />
+      <p class="no-tests-message">No test cases assigned to you yet.</p>
     </div>
+
+    <!-- Assigned Test Cases Table -->
+    <AssignedTestTable v-if="assignedTests.length > 0" :testCases="assignedTests" />
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue';
-import AssignedTestTable from '@/components/AssignedTestTable.vue';
-import AssignedTestModal from '@/components/AssignedTestModal.vue';
-import axios from 'axios';
+<script>
+import AssignedTestTable from '@/components/tester/AssignedTestTable.vue';
 
-const assignedTests = ref([]);
-const showModal = ref(false);
-const selectedTest = ref(null);
-
-const fetchAssignedTests = async () => {
-  try {
-    const response = await axios.get('/api/assigned-tests/');
-    assignedTests.value = response.data;
-  } catch (error) {
-    console.error('Failed to fetch assigned tests:', error);
-  }
+export default {
+  name: 'AssignedTestsView',
+  components: { AssignedTestTable },
+  data() {
+    return {
+      assignedTests: [],
+    };
+  },
+  async created() {
+    try {
+      const response = await this.$axios.get('/api/tester/assigned-tests/');
+      this.assignedTests = response.data;
+    } catch (error) {
+      console.error('Error fetching assigned tests:', error);
+    }
+  },
 };
-
-const viewTest = (test) => {
-  selectedTest.value = test;
-  showModal.value = true;
-};
-
-const closeModal = () => {
-  showModal.value = false;
-};
-
-onMounted(() => {
-  fetchAssignedTests();
-});
 </script>
 
 <style scoped>
-.assigned-tests-view {
+.assigned-tests-container {
   padding: 20px;
-  background-color: #f9f9f9;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
-  font-size: 28px;
-  color: #0066cc; /* Blue color */
-}
-
-.btn-refresh {
-  background-color: #ff8c00; /* Orange */
-  color: #fff;
-  border-radius: 8px;
-  padding: 10px 15px;
-  border: none;
+  text-align: center;
+  color: #333;
+  font-size: 24px;
   font-weight: bold;
 }
 
-.btn-refresh:hover {
-  background-color: #e07b00; /* Darker Orange */
+.no-tests-container {
+  text-align: center;
+  margin-top: 50px;
 }
 
-table th {
-  background-color: #0066cc; /* Blue */
-  color: white;
+.no-tests-image {
+  width: 200px;
+  opacity: 0.8;
 }
 
-table td {
-  color: #333;
-}
-
-.text-primary {
-  color: #0066cc;
+.no-tests-message {
+  font-size: 18px;
+  color: #777;
+  margin-top: 10px;
 }
 </style>
