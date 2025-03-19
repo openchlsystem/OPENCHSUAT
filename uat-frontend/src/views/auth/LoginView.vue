@@ -1,5 +1,6 @@
 <template>
   <div class="auth-container">
+    <!-- Welcome section remains unchanged -->
     <div class="welcome-section">
       <h1>Welcome to UAT</h1>
       <p>Seamlessly transforming ideas into efficiency—your system, your success!.</p>
@@ -18,9 +19,9 @@
           <input type="text" v-model="otp" placeholder="Enter OTP" required />
         </div>
 
-        <button type="submit">
-          {{ otpRequested ? "Verify OTP" : "Request OTP" }}
-        </button>
+        <!-- Separate buttons for each state -->
+        <button v-if="!otpRequested" type="submit">Request OTP</button>
+        <button v-if="otpRequested" type="submit">Verify OTP</button>
       </form>
 
       <div class="action-links">
@@ -35,19 +36,19 @@
 <script>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useAuthStore } from "@/store/auth"; // Import the Pinia store
+import { useAuthStore } from "@/store/auth";
 
 export default {
   setup() {
+    // Existing reactive variables and store setup
     const whatsapp_number = ref("");
     const otp = ref("");
     const otpRequested = ref(false);
     const router = useRouter();
-    const authStore = useAuthStore(); // Initialize the auth store
+    const authStore = useAuthStore();
 
     const requestOTP = async () => {
       try {
-        // Call the sendOTP action from the auth store
         await authStore.sendOTP(whatsapp_number.value);
         otpRequested.value = true;
         alert("OTP sent successfully!");
@@ -58,15 +59,10 @@ export default {
     };
 
     const verifyOTP = async () => {
-      if (!otpRequested.value) {
-        return requestOTP();
-      }
-
       try {
-        // Call the verifyOTP action from the auth store
         const user = await authStore.verifyOTP(whatsapp_number.value, otp.value);
 
-        // Redirect based on user role
+        // Redirect logic remains the same
         switch (user.role) {
           case "admin":
             router.push("/admin-dashboard");
@@ -97,6 +93,7 @@ export default {
 };
 </script>
 
+<!-- Styles remain unchanged -->
 <style scoped>
 .auth-container {
   display: flex;
