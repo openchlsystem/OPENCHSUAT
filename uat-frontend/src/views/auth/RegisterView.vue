@@ -9,7 +9,7 @@
     <!-- Form Section -->
     <div class="form-container">
       <h2>Register</h2>
-      <form @submit.prevent="otpRequested ? verifyOTP() : registerUser()">
+      <form @submit.prevent="registerUser">
         <div class="form-group">
           <label>WhatsApp Number</label>
           <input type="text" v-model="whatsapp_number" placeholder="Enter your WhatsApp number" required />
@@ -25,14 +25,7 @@
           <input type="password" v-model="password" placeholder="Enter a strong password" required />
         </div>
 
-        <div class="form-group" v-if="otpRequested">
-          <label>OTP</label>
-          <input type="text" v-model="otp" placeholder="Enter OTP" required />
-        </div>
-
-        <button type="submit">
-          {{ otpRequested ? "Verify OTP" : "Register & Request OTP" }}
-        </button>
+        <button type="submit">Register</button>
       </form>
 
       <div class="action-links">
@@ -52,30 +45,17 @@ export default {
     const whatsapp_number = ref("");
     const name = ref("");
     const password = ref("");
-    const otp = ref("");
-    const otpRequested = ref(false);
     const router = useRouter();
     const authStore = useAuthStore();
 
     const registerUser = async () => {
       try {
         await authStore.registerUser(whatsapp_number.value, password.value);
-        otpRequested.value = true;
-        alert("OTP sent! Please enter it to verify your account.");
+        alert("Registration successful! Redirecting to login...");
+        router.push("/login"); // Redirect user to login page
       } catch (error) {
         alert("Registration failed. Please try again.");
         console.error("Registration error:", error);
-      }
-    };
-
-    const verifyOTP = async () => {
-      try {
-        await authStore.verifyOTP(whatsapp_number.value, otp.value);
-        alert("Registration successful! Redirecting...");
-        router.push("/dashboard"); // Adjust redirect based on role if needed
-      } catch (error) {
-        alert("Invalid OTP. Please try again.");
-        console.error("OTP verification error:", error);
       }
     };
 
@@ -83,10 +63,7 @@ export default {
       whatsapp_number,
       name,
       password,
-      otp,
-      otpRequested,
       registerUser,
-      verifyOTP,
     };
   },
 };

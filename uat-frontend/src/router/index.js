@@ -33,14 +33,10 @@ const DefectsDashboard = () => import('@/views/reports/DefectsDashboardView.vue'
 const TesterPerformance = () => import('@/views/reports/TesterPerformanceView.vue');
 const ExportReports = () => import('@/views/reports/ExportReportsView.vue');
 
-const getUser = () => {
-  const authStore = useAuthStore();
-  return authStore.user;
-};
-
+// Check if the user is authenticated
 const isAuthenticated = () => {
   const authStore = useAuthStore();
-  return !!authStore.user;
+  return !!authStore.accessToken; // Check if the access token exists
 };
 
 const routes = [
@@ -53,7 +49,7 @@ const routes = [
   {
     path: '/admin',
     component: AdminLayout,
-    meta: { requiresAuth: true, role: 'admin' },
+    meta: { requiresAuth: true },
     children: [
       { path: 'dashboard', name: 'AdminDashboard', component: AdminDashboard },
       { path: 'organizations', name: 'OrganizationManagementView', component: OrganizationManagementView },
@@ -71,7 +67,7 @@ const routes = [
   {
     path: '/tester',
     component: TesterLayout,
-    meta: { requiresAuth: true, role: 'tester' },
+    meta: { requiresAuth: true },
     children: [
       { path: 'dashboard', name: 'TesterDashboard', component: TesterDashboard },
       { path: 'assigned-tests', name: 'AssignedTestsView', component: AssignedTests },
@@ -91,18 +87,28 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const user = getUser();
+  const requiresAuth = to.meta.requiresAuth; // Check if the route requires authentication
+  const isAuth = isAuthenticated(); // Check if the user is authenticated
 
-  if (to.meta.requiresAuth) {
-    if (!isAuthenticated()) {
+  if (requiresAuth) {
+    if (!isAuth) {
+      // Redirect to login if not authenticated
       next('/login');
-    } else if (to.meta.role && user?.role !== to.meta.role) {
-      next('/');
+    } else {
+      // Redirect all authenticated users to the Admin Dashboard
+      if (to.name !== 'AdminDashboard') {
+        next({ name: 'AdminDashboard' });
+      } else {
+        next();
+      }
+    }
+  } else {
+    // Redirect authenticated users away from public routes (e.g., login, register)
+    if (isAuth && (to.name === 'Login' || to.name === 'Register' || to.name === 'ForgotPassword')) {
+      next({ name: 'AdminDashboard' });
     } else {
       next();
     }
-  } else {
-    next();
   }
 });
 

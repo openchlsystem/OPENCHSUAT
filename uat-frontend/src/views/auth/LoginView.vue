@@ -1,6 +1,5 @@
 <template>
   <div class="auth-container">
-    <!-- Welcome section remains unchanged -->
     <div class="welcome-section">
       <h1>Welcome to UAT</h1>
       <p>Seamlessly transforming ideas into efficiency—your system, your success!.</p>
@@ -19,7 +18,6 @@
           <input type="text" v-model="otp" placeholder="Enter OTP" required />
         </div>
 
-        <!-- Separate buttons for each state -->
         <button v-if="!otpRequested" type="submit">Request OTP</button>
         <button v-if="otpRequested" type="submit">Verify OTP</button>
       </form>
@@ -40,7 +38,6 @@ import { useAuthStore } from "@/store/auth";
 
 export default {
   setup() {
-    // Existing reactive variables and store setup
     const whatsapp_number = ref("");
     const otp = ref("");
     const otpRequested = ref(false);
@@ -60,22 +57,9 @@ export default {
 
     const verifyOTP = async () => {
       try {
-        const user = await authStore.verifyOTP(whatsapp_number.value, otp.value);
-
-        // Redirect logic remains the same
-        switch (user.role) {
-          case "admin":
-            router.push("/admin-dashboard");
-            break;
-          case "tester":
-            router.push("/tester-dashboard");
-            break;
-          case "viewer":
-            router.push("/viewer-dashboard");
-            break;
-          default:
-            throw new Error("Unknown user role");
-        }
+        await authStore.verifyOTP(whatsapp_number.value, otp.value);
+        alert("OTP verified successfully. Redirecting to dashboard...");
+        router.push('/admin');
       } catch (error) {
         alert("Invalid OTP. Please try again.");
         console.error("Invalid OTP:", error);
@@ -93,7 +77,6 @@ export default {
 };
 </script>
 
-<!-- Styles remain unchanged -->
 <style scoped>
 .auth-container {
   display: flex;
