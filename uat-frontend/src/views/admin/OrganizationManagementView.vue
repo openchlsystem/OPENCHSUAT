@@ -27,8 +27,8 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import axios from "axios";
-import OrganizationTable from "@/components/admin/OrganizationTable.vue";
-import OrganizationModal from "@/components/admin/OrganizationModal.vue";
+import OrganizationTable from "@/components/Admin/OrganizationTable.vue";
+import OrganizationModal from "@/components/Admin/OrganizationModal.vue";
 
 const organizations = ref([]);
 const showModal = ref(false);

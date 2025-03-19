@@ -6,13 +6,13 @@ export const useAuthStore = defineStore('auth', {
     user: JSON.parse(localStorage.getItem('user')) || null,
   }),
   actions: {
-    async sendOTP(whatsappNumber) {
-      console.log('Sending OTP to:', whatsappNumber);
+    async sendOTP(whatsapp_number) {
+      console.log('Sending OTP to:', whatsapp_number);
 
       try {
         // Use axiosInstance instead of fetch
         const response = await axiosInstance.post('/api/auth/request-otp/', {
-          whatsappNumber,
+          whatsapp_number,
         });
 
         console.log('OTP sent successfully:', response.data);
