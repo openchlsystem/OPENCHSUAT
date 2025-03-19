@@ -189,7 +189,7 @@ sequenceDiagram
 curl -X POST http://localhost:8000/api/auth/register/ \
 -H "Content-Type: application/json" \
 -d '{
-  "whatsapp_number": "+1234567890",
+  "whatsapp_number": "+254713860955",
   "password": "SecurePass123!",
   "first_name": "Alice",
   "organization": "org-uuid-here"

@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from .views import (
     OrganizationViewSet, SystemViewSet,
@@ -10,10 +10,9 @@ from .views import (
     UserViewSet
 )
 
-# Create a router and register viewsets
 router = DefaultRouter()
 router.register(r'organizations', OrganizationViewSet)
-router.register(r'users', UserViewSet)  # Changed from CustomUserViewSet
+router.register(r'users', UserViewSet)
 router.register(r'systems', SystemViewSet)
 router.register(r'functionalities', FunctionalityViewSet)
 router.register(r'test-cases', TestCaseViewSet)
@@ -30,5 +29,6 @@ urlpatterns = [
     path("api/auth/staff-token/", StaffAuthView.as_view(), name="staff_token"),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema')),
-    # path('api/auth/', include('rest_framework.urls')),  # Optional basic auth
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'), #add token obtain pair
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'), #double check this is not a duplicate.
 ]

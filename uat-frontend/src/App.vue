@@ -1,30 +1,42 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div id="app">
+    <Navbar />
+    <div class="container-fluid">
+      <div class="row">
+        <Sidebar v-if="isAdmin" />
+        <main :class="isAdmin ? 'col-10' : 'col-12'">
+          <router-view />
+        </main>
+      </div>
+    </div>
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+<script>
+import Navbar from './components/Navbar.vue';
+import Sidebar from './components/Sidebar.vue';
+
+export default {
+  name: 'App',
+  components: {
+    Navbar,
+    Sidebar,
+  },
+  computed: {
+    // Check if the current user is an admin
+    isAdmin() {
+      return localStorage.getItem('role') === 'admin'; // Assuming role is stored in localStorage
+    },
+  },
+};
+</script>
+
+<style>
+/* You can add global styles here or in a separate CSS file */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
 }
 </style>
