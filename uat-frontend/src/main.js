@@ -3,6 +3,8 @@ import { createPinia } from 'pinia';
 import App from './App.vue';
 import router from './router';
 import axios from 'axios';
+import Toast from 'vue-toastification';
+import 'vue-toastification/dist/index.css';
 
 // Import global styles
 import './assets/style.css'; // Ensure this path is correct for your project structure
@@ -25,5 +27,11 @@ const app = createApp(App);
 
 app.use(pinia);
 app.use(router);
+app.use(Toast, {
+  position: 'top-right', // Customize toast position
+  timeout: 3000, // Auto-close after 3s
+  closeOnClick: true,
+  pauseOnHover: true,
+});
 
 app.mount('#app');
