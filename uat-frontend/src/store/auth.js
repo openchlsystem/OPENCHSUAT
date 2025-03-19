@@ -1,16 +1,17 @@
 import { defineStore } from 'pinia';
 import axiosInstance from '@/utils/axios';  // Adjust the import path
+import router from '@/router';  // Import the router for redirection
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    user: JSON.parse(localStorage.getItem('user')) || null,
+    accessToken: localStorage.getItem('accessToken') || null,  // Access token
+    refreshToken: localStorage.getItem('refreshToken') || null, // Refresh token
   }),
   actions: {
     async sendOTP(whatsapp_number) {
       console.log('Sending OTP to:', whatsapp_number);
 
       try {
-        // Use axiosInstance instead of fetch
         const response = await axiosInstance.post('/api/auth/request-otp/', {
           whatsapp_number,
         });
@@ -31,47 +32,29 @@ export const useAuthStore = defineStore('auth', {
       console.log('Verifying OTP...');
 
       try {
-        // Use axiosInstance instead of fetch
         const response = await axiosInstance.post('/api/auth/verify-otp/', {
-          whatsappNumber,
+          whatsapp_number: whatsappNumber,
           otp: enteredOTP,
         });
 
-        const user = response.data;
-        console.log('OTP verified successfully:', user);
+        // Extract tokens from the response
+        const { access, refresh } = response.data; // Assuming the API returns `access` and `refresh` tokens
 
-        // Check if the user is active
-        if (!user.is_active) {
-          throw new Error('Your account is inactive. Please contact support.');
-        }
+        // Save tokens to state and localStorage
+        this.accessToken = access;
+        this.refreshToken = refresh;
+        localStorage.setItem('accessToken', access);
+        localStorage.setItem('refreshToken', refresh);
 
-        // Save user data to state and localStorage
-        this.user = user;
-        localStorage.setItem('user', JSON.stringify(user));
+        console.log('OTP verified successfully. Tokens stored.');
 
-        return user; // Return the user data for redirection
+        // Redirect to the admin dashboard
+        router.push({ name: 'AdminDashboard' });  // Redirect to the admin dashboard
+
+        return response.data; // Return the API response for further use
       } catch (error) {
         console.error('Error verifying OTP:', error);
         throw new Error(error.message || 'Invalid OTP. Please try again.');
-      }
-    },
-
-    async registerUser(whatsappNumber, password) {
-      console.log('Registering user...');
-
-      try {
-        // Use axiosInstance instead of fetch
-        const response = await axiosInstance.post('/api/auth/register/', {
-          whatsapp_number: whatsappNumber,
-          password: password,
-        });
-
-        const user = response.data;
-        console.log('User registered successfully:', user);
-        return user;
-      } catch (error) {
-        console.error('Error registering user:', error);
-        throw new Error(error.message || 'Registration failed. Please try again.');
       }
     },
   },
