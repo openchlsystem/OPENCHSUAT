@@ -43,10 +43,12 @@ MIDDLEWARE = [
 ]
 
 # CORS Configuration
-CORS_ALLOW_ALL_ORIGINS = False  # Set to False to use CORS_ALLOWED_ORIGINS
+CORS_ALLOW_ALL_ORIGINS = True  # Set to False to use CORS_ALLOWED_ORIGINS
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Vue.js frontend running on Vite
     "http://127.0.0.1:5173",
+    "http://localhost:5174",  # Vue.js frontend running on Vite
+    "http://127.0.0.1:5174",
 ]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
