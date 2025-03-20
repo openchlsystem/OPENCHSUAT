@@ -35,11 +35,6 @@ export default {
       const token = localStorage.getItem("authToken");
       console.log("Stored Token:", token); // Debugging token presence
 
-      if (!token) {
-        console.log("No token found, redirecting to login...");
-        this.router.push("/login");
-        return;
-      }
 
       try {
         const response = await axios.get("/users/");
@@ -47,11 +42,7 @@ export default {
       } catch (error) {
         console.error("Error fetching users:", error);
 
-        if (error.response?.status === 401) {
-          console.log("Unauthorized access - Redirecting to login...");
-          localStorage.removeItem("authToken");
-          this.router.push("/login");
-        }
+
       }
     },
     openUserModal(user) {
