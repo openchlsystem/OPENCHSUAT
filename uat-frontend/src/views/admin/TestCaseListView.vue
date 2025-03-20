@@ -73,7 +73,7 @@ export default {
     },
     async fetchFunctionalities() {
       try {
-        const response = await axios.get("/functionalities/");
+        const response = await axios.get("api/functionalities/");
         this.functionalities = response.data;
       } catch (error) {
         console.error("Error fetching functionalities:", error);
@@ -116,15 +116,15 @@ export default {
     },
     async deleteTestCase(id) {
       if (confirm("Are you sure you want to delete this test case?")) {
-        await axios.delete(`/testcases/${id}/`);
+        await axios.delete(`api/testcases/${id}/`);
         this.fetchTestCases();
       }
     },
     async saveTestCase(testCase) {
       if (testCase.id) {
-        await axios.put(`/testcases/${testCase.id}/`, testCase);
+        await axios.put(`api/testcases/${testCase.id}/`, testCase);
       } else {
-        await axios.post("/testcases/", testCase);
+        await axios.post("api/testcases/", testCase);
       }
       this.closeModal();
     }
