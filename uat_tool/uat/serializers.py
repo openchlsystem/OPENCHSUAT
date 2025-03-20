@@ -1,5 +1,8 @@
 from rest_framework import serializers
-from .models import Organization, CustomUser, System, Functionality, TestCase, TestStep, TestExecution, Defect
+from .models import Organization, System, Functionality, TestCase, TestStep, TestExecution, Defect, User
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 # Organization Serializer
 class OrganizationSerializer(serializers.ModelSerializer):
@@ -7,22 +10,26 @@ class OrganizationSerializer(serializers.ModelSerializer):
         model = Organization
         fields = ['id', 'name', 'description', 'created_at']
 
-# User Serializer
-class CustomUserSerializer(serializers.ModelSerializer):
-    organization = serializers.PrimaryKeyRelatedField(queryset=Organization.objects.all())  # Allow organization ID to be passed
+# User Serializer (For your custom User model with whatsapp_number)
+class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    organization = serializers.PrimaryKeyRelatedField(queryset=Organization.objects.all(), required=False)
 
     class Meta:
-        model = CustomUser
-        fields = ['id', 'username', 'email', 'organization', 'role', 'password']  # Include password for user creation
-        extra_kwargs = {'password': {'write_only': True}} # Make password write only.
+        model = User
+        fields = ('id', 'whatsapp_number', 'password', 'first_name', 'organization', 'role', 'is_active', 'is_staff')
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'role': {'required': False}
+        }
 
     def create(self, validated_data):
         password = validated_data.pop('password', None)
-        user = CustomUser(**validated_data)
+        instance = self.Meta.model(**validated_data)
         if password is not None:
-            user.set_password(password)
-        user.save()
-        return user
+            instance.set_password(password)
+        instance.save()
+        return instance
 
 # System Serializer
 class SystemSerializer(serializers.ModelSerializer):
