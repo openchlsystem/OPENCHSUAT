@@ -55,7 +55,7 @@ class TestCaseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TestCase
-        fields = ['id', 'title', 'functionality', 'description', 'expected_result', 'created_by', 'steps']
+        fields = ['id', 'title', 'functionality', 'description', 'expected_result', 'created_by', 'steps','assigned_user']
 
 # Test Execution Serializer
 class TestExecutionSerializer(serializers.ModelSerializer):

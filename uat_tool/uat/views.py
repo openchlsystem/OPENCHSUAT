@@ -1,13 +1,15 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAdminUser, AllowAny
 from django.contrib.auth import get_user_model
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiTypes
 from django.utils.timezone import now
 from .models import (
     Organization, System, Functionality, TestCase,
-    TestStep, TestExecution, Defect
+    TestStep, TestExecution, Defect, User
 )
 from .serializers import (
     OrganizationSerializer, SystemSerializer,
@@ -23,6 +25,43 @@ import time
 User = get_user_model()
 otp_store = {}  # Temporary OTP storage with expiration
 
+# Test Case API ViewSet
+class TestCaseViewSet(viewsets.ModelViewSet):
+    queryset = TestCase.objects.all()
+    serializer_class = TestCaseSerializer
+
+    @extend_schema(
+        request={
+            "type": "object",
+            "properties": {
+                "userId": {"type": "string", "description": "UUID of the user to assign"}
+            },
+            "required": ["userId"]
+        },
+        responses={
+            200: {"type": "object", "properties": {"message": {"type": "string"}}},
+            400: {"type": "object", "properties": {"error": {"type": "string"}}},
+        },
+        parameters=[
+            OpenApiParameter(name='pk', type=OpenApiTypes.INT, description='Test case ID', location=OpenApiParameter.PATH)
+        ]
+    )
+    @action(detail=True, methods=['post'])
+    def assign(self, request, pk=None):
+        test_case = self.get_object()
+        user_id = request.data.get('userId')
+        if not user_id:
+            return Response({'error': 'userId is required in the request body'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_400_BAD_REQUEST)
+
+        test_case.assigned_user = user
+        test_case.save()
+        return Response({'message': 'User assigned successfully'}, status=status.HTTP_200_OK)
+
 # Organization API ViewSet
 class OrganizationViewSet(viewsets.ModelViewSet):
     queryset = Organization.objects.all()
@@ -37,11 +76,6 @@ class SystemViewSet(viewsets.ModelViewSet):
 class FunctionalityViewSet(viewsets.ModelViewSet):
     queryset = Functionality.objects.all()
     serializer_class = FunctionalitySerializer
-
-# Test Case API ViewSet
-class TestCaseViewSet(viewsets.ModelViewSet):
-    queryset = TestCase.objects.all()
-    serializer_class = TestCaseSerializer
 
 # Test Step API ViewSet
 class TestStepViewSet(viewsets.ModelViewSet):
@@ -63,6 +97,40 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAdminUser]
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        data = serializer.data
+        for user in data:
+            try:
+                user['organization_name'] = Organization.objects.get(id=user['organization']).name
+            except Organization.DoesNotExist:
+                user['organization_name'] = None
+
+        return Response(data)
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        if data.get('created_by_admin'):
+            data['role'] = 'admin'
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=201, headers=headers)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
 
 # Register User API
 class RegisterUserView(APIView):

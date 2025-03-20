@@ -32,17 +32,11 @@ export default {
   },
   methods: {
     async fetchUsers() {
-      const token = localStorage.getItem("authToken");
-      console.log("Stored Token:", token); // Debugging token presence
-
-
       try {
         const response = await axios.get("/users/");
         this.users = response.data;
       } catch (error) {
         console.error("Error fetching users:", error);
-
-
       }
     },
     openUserModal(user) {

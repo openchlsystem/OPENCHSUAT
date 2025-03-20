@@ -127,13 +127,21 @@ export default {
       this.showAddStepModal = false;
     },
     async assignUser({ testCaseId, userId }) {
-      try {
-        await axios.post(`/test-cases/${testCaseId}/assign/`, { user_id: userId });
-        this.closeAssignModal();
-      } catch (error) {
-        console.error("Error assigning user:", error);
-      }
-    },
+        try {
+          await axios.post(`/test-cases/${testCaseId}/assign/`, { userId: userId });
+          this.closeAssignModal();
+          this.fetchTestCases();
+          alert("User assigned successfully!");
+        } catch (error) {
+          console.error("Error assigning user:", error);
+          if(error.response){
+              alert("Error assigning user: " + error.response.data.error);
+          } else {
+              alert("An unexpected error occurred.");
+          }
+
+        }
+      },
     async deleteTestCase(id) {
       if (confirm("Are you sure you want to delete this test case?")) {
         await axios.delete(`/test-cases/${id}/`);
@@ -147,7 +155,8 @@ export default {
         await axios.post("/test-cases/", testCase);
       }
       this.closeModal();
-    }
+    },
+    
   },
   mounted() {
     this.fetchTestCases();
