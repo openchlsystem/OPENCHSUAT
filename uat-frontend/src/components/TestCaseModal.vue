@@ -58,14 +58,29 @@
         <div class="form-buttons">
           <button type="submit" class="btn btn-primary">Create</button>
           <button type="button" @click="$emit('close')" class="btn btn-secondary">Cancel</button>
+          <button type="button" @click="openAddStepModal" class="btn btn-info">Add Step</button>
         </div>
       </form>
+
+      <!-- Add Test Step Modal -->
+      <AddTestStepModal
+        v-if="showAddStepModal"
+        :testCaseId="localTestCase.id"
+        @close="closeAddStepModal"
+        @saved="handleStepSaved"
+      />
     </div>
   </div>
 </template>
 
 <script>
+import axios from "@/utils/axios";
+import AddTestStepModal from "@/components/AddStepModal.vue";
+
 export default {
+  components: {
+    AddTestStepModal
+  },
   props: {
     testCase: Object,
     functionalities: {
@@ -75,7 +90,8 @@ export default {
   },
   data() {
     return {
-      localTestCase: {}
+      localTestCase: {},
+      showAddStepModal: false
     };
   },
   watch: {
@@ -91,6 +107,21 @@ export default {
   methods: {
     save() {
       this.$emit("save", this.localTestCase);
+    },
+    openAddStepModal() {
+      if (!this.localTestCase.id) {
+        alert("Please save the test case before adding steps.");
+        return;
+      }
+      this.showAddStepModal = true;
+    },
+    closeAddStepModal() {
+      this.showAddStepModal = false;
+    },
+    handleStepSaved() {
+      this.closeAddStepModal();
+      // Optionally, you can emit an event to refresh the parent component
+      this.$emit("step-saved");
     }
   }
 };
@@ -123,9 +154,10 @@ export default {
 .form-buttons {
   display: flex;
   justify-content: space-between;
+  gap: 10px; /* Add gap between buttons */
 }
 
 button {
-  width: 48%;
+  flex: 1; /* Make buttons take equal space */
 }
 </style>
