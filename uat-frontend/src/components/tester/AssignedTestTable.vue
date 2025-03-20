@@ -1,73 +1,94 @@
 <template>
-  <table class="test-table">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Title</th>
-        <th>Functionality</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="(test, index) in testCases" :key="test.id">
-        <td>{{ index + 1 }}</td>
-        <td>{{ test.title }}</td>
-        <td>{{ test.functionality }}</td>
-        <td>{{ test.status }}</td>
-        <td>
-          <button class="execute-btn" @click="executeTest(test.id)">Execute</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-responsive">
+    <table class="table table-hover table-striped">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Test Case Title</th>
+          <th>Priority</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(test, index) in testCases" :key="test.id">
+          <td>{{ index + 1 }}</td>
+          <td class="test-title">{{ test.title }}</td>
+          <td>
+            <span :class="getPriorityClass(test.priority)">{{ test.priority }}</span>
+          </td>
+          <td>
+            <span :class="getStatusClass(test.status)">{{ test.status }}</span>
+          </td>
+          <td>
+            <router-link :to="'/tester/test-case/' + test.id" class="btn btn-primary btn-sm">
+              View
+            </router-link>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'AssignedTestTable',
   props: {
     testCases: Array,
   },
   methods: {
-    executeTest(testId) {
-      this.$router.push({ name: 'TestExecutionView', params: { id: testId } });
+    getPriorityClass(priority) {
+      return {
+        'badge bg-danger': priority === 'High',
+        'badge bg-warning': priority === 'Medium',
+        'badge bg-success': priority === 'Low',
+      };
     },
-  },
+    getStatusClass(status) {
+      return {
+        'badge bg-success': status === 'Passed',
+        'badge bg-warning text-dark': status === 'Pending',
+        'badge bg-danger': status === 'Failed',
+      };
+    }
+  }
 };
 </script>
 
-
 <style scoped>
 .table {
-  border-radius: 12px;
-  overflow: hidden;
+  margin-top: 10px;
 }
 
-.table-light th {
-  background-color: #0066cc; /* Blue */
-  color: white;
+th {
+  background: #f8f9fa;
+  text-align: center;
+  font-weight: bold;
 }
 
-.table td {
-  background-color: #fff;
+td {
+  text-align: center;
+  vertical-align: middle;
 }
 
-.text-success {
-  color: #28a745; /* Green */
+.test-title {
+  font-weight: bold;
+  color: #007bff;
 }
 
-.text-warning {
-  color: #ff8c00; /* Orange */
+.badge {
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 5px;
 }
 
-.btn-info {
-  background-color: #0066cc; /* Blue */
-  color: white;
-  border-radius: 8px;
+.btn-sm {
+  padding: 5px 12px;
+  font-size: 14px;
+  transition: 0.3s ease;
 }
 
-.btn-info:hover {
-  background-color: #004c99; /* Darker Blue */
+.btn-sm:hover {
+  background: #0056b3;
 }
 </style>

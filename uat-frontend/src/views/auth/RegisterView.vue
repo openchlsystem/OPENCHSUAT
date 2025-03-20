@@ -50,12 +50,11 @@ export default {
 
     const registerUser = async () => {
       try {
-        await authStore.registerUser(whatsapp_number.value, password.value);
+        await authStore.registerUser(whatsapp_number.value, name.value, password.value);
         alert("Registration successful! Redirecting to login...");
         router.push("/login"); // Redirect user to login page
       } catch (error) {
-        alert("Registration failed. Please try again.");
-        console.error("Registration error:", error);
+        alert(error.message);
       }
     };
 
@@ -70,7 +69,7 @@ export default {
 </script>
 
 <style scoped>
-.auth-container {
+.auth-container{
   display: flex;
   height: auto;
   width: 100%;

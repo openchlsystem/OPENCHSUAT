@@ -1,13 +1,12 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import { useAuthStore } from '@/store/auth';
+import { createRouter, createWebHistory } from "vue-router";
+import { useAuthStore } from "@/store/auth";
 
 // Public Views
-import HomeView from '@/views/HomeView.vue';
-import LoginView from '@/views/auth/LoginView.vue';
-import ForgotPasswordView from '@/views/auth/ForgotPasswordView.vue';
-import RegisterView from '@/views/auth/RegisterView.vue';
+import HomeView from "@/views/HomeView.vue";
+import LoginView from "@/views/auth/LoginView.vue";
+import RegisterView from "@/views/auth/RegisterView.vue";
 
-// Admin Views
+// Admin Layout and Views
 const AdminLayout = () => import('@/layouts/AdminLayout.vue');
 const AdminDashboard = () => import('@/views/admin/AdminDashboard.vue');
 const OrganizationManagementView = () => import('@/views/admin/OrganizationManagementView.vue');
@@ -27,31 +26,18 @@ const TestExecution = () => import('@/views/tester/TestExecutionView.vue');
 const DefectReport = () => import('@/views/tester/DefectReportView.vue');
 const TestHistory = () => import('@/views/tester/TestHistoryView.vue');
 
-// Reports
-const TestCaseProgress = () => import('@/views/reports/TestCaseProgressView.vue');
-const DefectsDashboard = () => import('@/views/reports/DefectsDashboardView.vue');
-const TesterPerformance = () => import('@/views/reports/TesterPerformanceView.vue');
-const ExportReports = () => import('@/views/reports/ExportReportsView.vue');
-
-// Check if the user is authenticated
-const isAuthenticated = () => {
-  const authStore = useAuthStore();
-  return !!authStore.accessToken; // Check if the access token exists
-};
-
 const routes = [
-  { path: '/', name: 'Home', component: HomeView },
-  { path: '/login', name: 'Login', component: LoginView },
-  { path: '/forgot-password', name: 'ForgotPassword', component: ForgotPasswordView },
-  { path: '/register', name: 'Register', component: RegisterView },
+  { path: "/", name: "Home", component: HomeView },
+  { path: "/login", name: "Login", component: LoginView },
+  { path: "/register", name: "Register", component: RegisterView },
 
-  // Admin Routes
+  // Admin Routes (Require Authentication)
   {
-    path: '/admin',
-    component: AdminLayout,
-    meta: { requiresAuth: true },
+    path: "/admin",
+    component: AdminLayout, // Parent Layout
+    meta: { requiresAuth: true }, // Requires authentication
     children: [
-      { path: 'dashboard', name: 'AdminDashboard', component: AdminDashboard },
+      { path: "", name: "AdminDashboard", component: AdminDashboard}, // Default child
       { path: 'organizations', name: 'OrganizationManagementView', component: OrganizationManagementView },
       { path: 'systems', name: 'SystemManagementView', component: SystemManagementView },
       { path: 'functionalities', name: 'FunctionalityManagementView', component: FunctionalityManagementView },
@@ -59,11 +45,9 @@ const routes = [
       { path: 'defects', name: 'DefectsView', component: DefectsView },
       { path: 'reports', name: 'ReportsView', component: ReportsView },
       { path: 'settings', name: 'SettingsView', component: SettingsView },
-      { path: 'users', name: 'UserManagementView', component: UserManagementView }
+      { path: 'users', name: 'UserManagementView', component: UserManagementView },
     ],
   },
-
-  // Tester Routes
   {
     path: '/tester',
     component: TesterLayout,
@@ -76,35 +60,22 @@ const routes = [
       { path: 'test-history', name: 'TestHistoryView', component: TestHistory }
     ],
   },
-
-  // Catch-all
-  { path: '/:pathMatch(.*)*', redirect: '/' }
 ];
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
 });
 
+// Global Navigation Guard to Protect Admin Routes
 router.beforeEach((to, from, next) => {
-  const requiresAuth = to.meta.requiresAuth; // Check if the route requires authentication
-  const isAuth = isAuthenticated(); // Check if the user is authenticated
+  const authStore = useAuthStore();
+  const isAuthenticated = !!authStore.accessToken;
 
-  if (requiresAuth) {
-    if (!isAuth) {
-      // Redirect to login if not authenticated
-      next('/login');
-    } else {
-      // Allow access to the requested route
-      next();
-    }
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    next("/login"); // Redirect to login if not authenticated
   } else {
-    // Redirect authenticated users away from public routes (e.g., login, register)
-    if (isAuth && (to.name === 'Login' || to.name === 'Register' || to.name === 'ForgotPassword')) {
-      next({ name: 'AdminDashboard' }); // Redirect to admin dashboard
-    } else {
-      next();
-    }
+    next();
   }
 });
 

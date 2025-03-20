@@ -26,10 +26,11 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import axios from "axios";
+import api from "@/utils/axios.js"; // Import global Axios instance
 import OrganizationTable from "@/components/Admin/OrganizationTable.vue";
 import OrganizationModal from "@/components/Admin/OrganizationModal.vue";
 
+// Reactive state
 const organizations = ref([]);
 const showModal = ref(false);
 const selectedOrganization = ref(null);
@@ -37,10 +38,14 @@ const selectedOrganization = ref(null);
 // Fetch Organizations
 const fetchOrganizations = async () => {
   try {
-    const response = await axios.get("/organizations");
+    const response = await api.get("/organizations/");
     organizations.value = response.data;
   } catch (error) {
     console.error("Error fetching organizations:", error);
+    if (error.response && error.response.status === 401) {
+      alert("Session expired. Please log in again.");
+      window.location.href = "/login"; // Redirect to login
+    }
   }
 };
 
@@ -60,13 +65,11 @@ const closeModal = () => {
 const saveOrganization = async (data) => {
   try {
     if (data.id) {
-      // Update existing organization
-      await axios.put(`/organizations/${data.id}/`, data);
+      await api.put(`/organizations/${data.id}/`, data);
     } else {
-      // Create new organization
-      await axios.post("/organizations/", data);
+      await api.post("/organizations/", data);
     }
-    fetchOrganizations(); // Refresh after save
+    fetchOrganizations(); // Refresh list
     closeModal();
   } catch (error) {
     console.error("Error saving organization:", error);
@@ -77,8 +80,8 @@ const saveOrganization = async (data) => {
 const deleteOrganization = async (id) => {
   if (confirm("Are you sure you want to delete this organization?")) {
     try {
-      await axios.delete(`organizations/${id}/`);
-      fetchOrganizations(); // Refresh after delete
+      await api.delete(`/organizations/${id}/`);
+      fetchOrganizations(); // Refresh list
     } catch (error) {
       console.error("Error deleting organization:", error);
     }

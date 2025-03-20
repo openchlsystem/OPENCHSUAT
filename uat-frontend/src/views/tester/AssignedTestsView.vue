@@ -15,6 +15,7 @@
 
 <script>
 import AssignedTestTable from '@/components/tester/AssignedTestTable.vue';
+import axios from "@/utils/axios";
 
 export default {
   name: 'AssignedTestsView',
@@ -26,7 +27,7 @@ export default {
   },
   async created() {
     try {
-      const response = await this.$axios.get('/api/tester/assigned-tests/');
+      const response = await axios.get('/test-cases/');
       this.assignedTests = response.data;
     } catch (error) {
       console.error('Error fetching assigned tests:', error);
@@ -38,31 +39,34 @@ export default {
 <style scoped>
 .assigned-tests-container {
   padding: 20px;
-  background: white;
+  background: #ffffff;
   border-radius: 10px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  max-width: 900px;
+  margin: 30px auto;
+  text-align: center;
 }
 
 h2 {
-  text-align: center;
   color: #333;
   font-size: 24px;
   font-weight: bold;
+  margin-bottom: 20px;
 }
 
 .no-tests-container {
   text-align: center;
-  margin-top: 50px;
+  padding: 20px;
 }
 
 .no-tests-image {
-  width: 200px;
-  opacity: 0.8;
+  width: 180px;
+  opacity: 0.7;
 }
 
 .no-tests-message {
   font-size: 18px;
-  color: #777;
+  color: #555;
   margin-top: 10px;
 }
 </style>

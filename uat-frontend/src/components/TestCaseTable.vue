@@ -1,11 +1,13 @@
 <template>
-  <div>
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h3>Test Cases</h3>
+  <div class="test-case-table">
+    <!-- Header -->
+    <div class="table-header">
+      <h3>📝 Test Cases</h3>
       <button @click="$emit('openModal')" class="btn btn-primary">+ Add Test Case</button>
     </div>
 
-    <table class="table table-striped">
+    <!-- Test Case Table -->
+    <table class="table table-hover">
       <thead class="table-dark">
         <tr>
           <th>Title</th>
@@ -24,16 +26,19 @@
           <td>{{ testCase.created_by?.name || 'N/A' }}</td>
           <td>
             <button 
-              :class="['btn', testCase.assigned_user ? 'btn-success' : 'btn-secondary']"
+              class="btn status-btn"
+              :class="testCase.assigned_user ? 'btn-success' : 'btn-secondary'"
               @click="$emit('assign', testCase)"
             >
               {{ testCase.assigned_user ? "Assigned" : "Not Assigned" }}
             </button>
           </td>
           <td>
-            <button @click="$emit('edit', testCase)" class="btn btn-warning btn-sm">Edit</button>
-            <button @click="$emit('delete', testCase.id)" class="btn btn-danger btn-sm">Delete</button>
-            <button @click="$emit('viewSteps', testCase)" class="btn btn-info btn-sm">View Steps</button>
+            <div class="action-buttons">
+              <button @click="$emit('edit', testCase)" class="btn btn-warning">✏️ Edit</button>
+              <button @click="$emit('delete', testCase.id)" class="btn btn-danger">🗑 Delete</button>
+              <button @click="$emit('viewSteps', testCase)" class="btn btn-info">📜 View Steps</button>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -48,3 +53,45 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+/* Table Container */
+.test-case-table {
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Styling */
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+/* Table Styling */
+.table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Status Button */
+.status-btn {
+  width: 120px;
+  font-weight: bold;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 5px;
+}
+</style>

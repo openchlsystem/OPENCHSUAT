@@ -37,7 +37,7 @@ export default {
   methods: {
     async fetchTestExecutions() {
       try {
-        const response = await axios.get("/testexecutions/");
+        const response = await axios.get("/test-executions/");
         this.testExecutions = response.data;
       } catch (error) {
         console.error("Error fetching test executions:", error);

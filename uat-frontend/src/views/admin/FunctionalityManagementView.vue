@@ -10,7 +10,7 @@
       @delete="deleteFunctionality"
     />
 
-    <!-- Functionality Modal (conditionally rendered) -->
+    <!-- Functionality Modal -->
     <FunctionalityModal 
       v-if="showModal"
       :functionality="selectedFunctionality"
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import axios from "@/utils/axios";
+import axios from "@/utils/axios.js";
 import FunctionalityTable from "@/components/FunctionalityTable.vue";
 import FunctionalityModal from "@/components/FunctionalityModal.vue";
 
@@ -42,54 +42,63 @@ export default {
   methods: {
     async fetchFunctionalities() {
       try {
-        const response = await axios.get("api/functionalities/");
+        const response = await axios.get("/functionalities/");
         this.functionalities = response.data;
       } catch (error) {
         console.error("Error fetching functionalities:", error);
       }
     },
+
     async fetchSystems() {
       try {
-        const response = await axios.get("api/systems/");
+        const response = await axios.get("/systems/");
         this.systems = response.data;
       } catch (error) {
         console.error("Error fetching systems:", error);
       }
     },
+
+    // ✅ FIXED: Opening modal properly
     openCreateModal() {
-      console.log("Opening Create Functionality Modal ✅"); // Debugging
-      this.selectedFunctionality = { id: null, name: "", system: null, description: "" };
+      console.log("✅ Opening Create Modal");
+      this.selectedFunctionality = { id: null, name: "", description: "", system: null };
       this.showModal = true;
-      this.$forceUpdate(); // Ensures Vue re-renders the modal
+      this.$nextTick(() => this.$forceUpdate()); // Ensures reactivity update
     },
+
     editFunctionality(functionality) {
-      console.log("Editing Functionality ✅", functionality);
+      console.log("✅ Editing Functionality", functionality);
       this.selectedFunctionality = { ...functionality };
       this.showModal = true;
     },
-    deleteFunctionality(id) {
+
+    async deleteFunctionality(id) {
       if (confirm("Are you sure you want to delete this functionality?")) {
-        axios.delete(`/functionalities/${id}/`)
-          .then(() => {
-            this.functionalities = this.functionalities.filter(f => f.id !== id);
-          })
-          .catch(error => console.error("Error deleting functionality:", error));
+        try {
+          await axios.delete(`/functionalities/${id}/`);
+          this.functionalities = this.functionalities.filter((f) => f.id !== id);
+        } catch (error) {
+          console.error("Error deleting functionality:", error);
+        }
       }
     },
-    saveFunctionality(newFunctionality) {
-      if (newFunctionality.id) {
-        axios.put(`api/functionalities/${newFunctionality.id}/`, newFunctionality)
-          .then(() => this.fetchFunctionalities())
-          .catch(error => console.error("Error updating functionality:", error));
-      } else {
-        axios.post("api/functionalities/", newFunctionality)
-          .then(() => this.fetchFunctionalities())
-          .catch(error => console.error("Error creating functionality:", error));
+
+    async saveFunctionality(newFunctionality) {
+      try {
+        if (newFunctionality.id) {
+          await axios.put(`/functionalities/${newFunctionality.id}/`, newFunctionality);
+        } else {
+          await axios.post("/functionalities/", newFunctionality);
+        }
+        this.fetchFunctionalities();
+        this.closeModal();
+      } catch (error) {
+        console.error("Error saving functionality:", error);
       }
-      this.closeModal();
     },
+
     closeModal() {
-      console.log("Closing Modal ✅"); // Debugging
+      console.log("✅ Closing Modal");
       this.selectedFunctionality = null;
       this.showModal = false;
     }

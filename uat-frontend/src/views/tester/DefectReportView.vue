@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import axios from "@/utils/axios";
+import axios from "@/utils/axios.js";
 import DefectForm from "@/components/DefectForm.vue";
 import DefectTable from "@/components/DefectTable.vue";
 
