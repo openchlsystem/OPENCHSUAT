@@ -3,6 +3,7 @@
     <div class="modal-content">
       <h3 class="modal-title">Test Steps for {{ testCase?.title }}</h3>
 
+<<<<<<< HEAD
       <!-- Add/Edit Step Form -->
       <div class="add-step-form">
         <input v-model="newStep.description" placeholder="Enter test step..." class="form-control" />
@@ -26,19 +27,60 @@
         <button @click="saveSteps" class="btn btn-primary">Save Steps</button>
         <button @click="$emit('close')" class="btn btn-secondary">Close</button>
       </div>
+=======
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Step Number</th>
+            <th>Description</th>
+            <th>Expected Result</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="step in testCase.steps" :key="step.id">
+            <td>{{ step.step_number }}</td>
+            <td>{{ step.description }}</td>
+            <td>{{ step.expected_result }}</td>
+            <td>
+              <button @click="openEditStepModal(step)" class="btn btn-warning btn-sm">Edit</button>
+              <button @click="deleteStep(step.id)" class="btn btn-danger btn-sm">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <button @click="openAddStepModal" class="btn btn-primary">+ Add Step</button>
+      <button @click="$emit('close')" class="btn btn-secondary">Close</button>
+
+      <!-- Add/Edit Test Step Modal -->
+      <AddTestStepModal
+        v-if="showStepModal"
+        :testCaseId="testCase.id"
+        :stepToEdit="stepToEdit"
+        @close="closeStepModal"
+        @saved="fetchTestSteps"
+        @error="handleError"
+      />
+>>>>>>> 74a37cbf7005864b84cc234115ab5b249abeb296
     </div>
   </div>
 </template>
 
 <script>
 import axios from "@/utils/axios";
+import AddTestStepModal from "@/components/AddStepModal.vue";
 
 export default {
+  components: {
+    AddTestStepModal
+  },
   props: {
     testCase: Object
   },
   data() {
     return {
+<<<<<<< HEAD
       testSteps: [],
       newStep: { description: "" },
       isEditing: false,
@@ -47,15 +89,42 @@ export default {
   },
   methods: {
     // 🔹 Fetch Test Steps from API
+=======
+      showStepModal: false,
+      stepToEdit: null
+    };
+  },
+  methods: {
+    openAddStepModal() {
+      this.stepToEdit = null;
+      this.showStepModal = true;
+    },
+    openEditStepModal(step) {
+      this.stepToEdit = { ...step };
+      this.showStepModal = true;
+    },
+    closeStepModal() {
+      this.showStepModal = false;
+    },
+>>>>>>> 74a37cbf7005864b84cc234115ab5b249abeb296
     async fetchTestSteps() {
       if (!this.testCase?.id) return;
       try {
+<<<<<<< HEAD
         const response = await axios.get(`/test-steps/?test_case=${this.testCase.id}`);
         this.testSteps = response.data; // Load steps
+=======
+        // Fetch the test case with its steps
+        const response = await axios.get(`/api/test-cases/${this.testCase.id}/`);
+        // Update the testCase prop with the fetched data
+        this.$emit("update:testCase", response.data);
+>>>>>>> 74a37cbf7005864b84cc234115ab5b249abeb296
       } catch (error) {
         console.error("Error fetching test steps:", error);
+        this.$emit("error", error); // Emit error event for handling in parent
       }
     },
+<<<<<<< HEAD
 
     // 🔹 Add New Step
     addStep() {
@@ -116,18 +185,40 @@ export default {
         }
       }
     }
+=======
+    async deleteStep(stepId) {
+      try {
+        await axios.delete(`/api/test-steps/${stepId}/`);
+        this.fetchTestSteps(); // Refresh the list of steps after deletion
+      } catch (error) {
+        console.error("Error deleting test step:", error);
+        this.$emit("error", error); // Emit error event for handling in parent
+      }
+    },
+    handleError(error) {
+      console.error("Error in AddTestStepModal:", error);
+      this.$emit("error", error); // Emit error event for handling in parent
+    }
+  },
+  mounted() {
+    this.fetchTestSteps(); // Fetch steps when the modal is opened
+>>>>>>> 74a37cbf7005864b84cc234115ab5b249abeb296
   }
 };
 </script>
 
 <style scoped>
+<<<<<<< HEAD
 /* Modal Overlay */
+=======
+>>>>>>> 74a37cbf7005864b84cc234115ab5b249abeb296
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+<<<<<<< HEAD
   background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
@@ -194,3 +285,26 @@ export default {
   margin-top: 15px;
 }
 </style>
+=======
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 500px;
+}
+
+.table {
+  margin-top: 20px;
+}
+
+button {
+  margin-right: 10px;
+}
+</style>
+>>>>>>> 74a37cbf7005864b84cc234115ab5b249abeb296
