@@ -1,111 +1,90 @@
 <template>
-  <div class="container">
+  <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
-      <h3>User Management</h3>
+      <h3 class="text-primary">System Management</h3>
       <button @click="openUserModal(null)" class="btn btn-primary">+ Add User</button>
     </div>
 
-    <table class="table table-striped">
-      <thead class="table-dark">
-        <tr>
-          <th>Username</th>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="user in users" :key="user.id">
-          <td>{{ user.username }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.role }}</td>
-          <td>
-            <span :class="user.is_active ? 'text-success' : 'text-danger'">
-              {{ user.is_active ? "Active" : "Inactive" }}
-            </span>
-          </td>
-          <td>
-            <button @click="openUserModal(user)" class="btn btn-warning btn-sm">Edit</button>
-            <button @click="deleteUser(user.id)" class="btn btn-danger btn-sm">Delete</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <UserTable :users="users" @edit="openUserModal" @toggle-status="toggleStatus" />
 
-    <!-- User Modal -->
-    <UserModal v-if="isUserModalOpen" :user="selectedUser" :roles="roles" @save="saveUser" @close="closeUserModal" />
+    <UserModal v-if="showUserModal" :user="selectedUser" @close="closeUserModal" @save="saveUser" />
   </div>
 </template>
 
 <script>
-import axios from "@/utils/axios";
+import axios from "@/utils/axios.js";
+import UserTable from "@/components/UserTable.vue";
 import UserModal from "@/components/UserModal.vue";
+import { useRouter } from "vue-router";
 
 export default {
-  components: { UserModal },
+  components: { UserTable, UserModal },
   data() {
     return {
       users: [],
-      roles: ["Admin", "Tester"],
-      isUserModalOpen: false,
-      selectedUser: null
+      selectedUser: null,
+      showUserModal: false,
     };
   },
+  setup() {
+    const router = useRouter();
+    return { router };
+  },
   methods: {
-    fetchUsers() {
-      axios.get("/users/")
-        .then(response => {
-          this.users = response.data;
-        })
-        .catch(error => console.error("Error fetching users:", error));
+    async fetchUsers() {
+      const token = localStorage.getItem("authToken");
+      console.log("Stored Token:", token); // Debugging token presence
+
+      if (!token) {
+        console.log("No token found, redirecting to login...");
+        this.router.push("/login");
+        return;
+      }
+
+      try {
+        const response = await axios.get("/users/");
+        this.users = response.data;
+      } catch (error) {
+        console.error("Error fetching users:", error);
+
+        if (error.response?.status === 401) {
+          console.log("Unauthorized access - Redirecting to login...");
+          localStorage.removeItem("authToken");
+          this.router.push("/login");
+        }
+      }
     },
     openUserModal(user) {
-      this.selectedUser = user ? { ...user } : { username: "", email: "", role: "Tester", is_active: true };
-      this.isUserModalOpen = true;
+      this.selectedUser = user ? { ...user } : null;
+      this.showUserModal = true;
     },
     closeUserModal() {
-      this.isUserModalOpen = false;
+      this.showUserModal = false;
+      this.fetchUsers();
     },
-    saveUser(userData) {
-      const request = userData.id
-        ? axios.put(`/users/${userData.id}/`, userData)
-        : axios.post("/users/", userData);
-
-      request
-        .then(() => {
-          this.fetchUsers();
-          alert(userData.id ? "User updated successfully!" : "User created successfully!");
-        })
-        .catch(error => console.error("Error saving user:", error));
-
-      this.closeUserModal();
-    },
-    deleteUser(userId) {
-      if (confirm("Are you sure you want to delete this user?")) {
-        axios.delete(`/users/${userId}/`)
-          .then(() => {
-            this.fetchUsers();
-            alert("User deleted successfully!");
-          })
-          .catch(error => console.error("Error deleting user:", error));
+    async saveUser(userData) {
+      try {
+        if (userData.id) {
+          await axios.put(`/users/${userData.id}/`, userData);
+        } else {
+          await axios.post("/users/", { ...userData, created_by_admin: true });
+        }
+        this.closeUserModal();
+      } catch (error) {
+        console.error("Error saving user:", error);
       }
-    }
+    },
+    async toggleStatus(user) {
+      try {
+        await axios.put(`/users/${user.id}/`, { ...user, is_active: !user.is_active });
+        this.fetchUsers();
+      } catch (error) {
+        console.error("Error updating status:", error);
+      }
+    },
   },
   mounted() {
     this.fetchUsers();
-  }
+  },
 };
 </script>
-
-<style scoped>
-.container {
-  margin-top: 20px;
-}
-.table {
-  margin-top: 10px;
-}
-.btn-sm {
-  margin-right: 5px;
-}
-</style>
