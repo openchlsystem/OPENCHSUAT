@@ -19,7 +19,7 @@ export const useAuthStore = defineStore('auth', {
         console.log('OTP sent successfully:', response.data);
 
         // Store OTP in localStorage for verification (if needed)
-        localStorage.setItem('otp', response.data.otp); // Assuming the API returns the OTP
+        // localStorage.setItem('otp', response.data.otp); // Assuming the API returns the OTP
 
         return response.data; // Return the API response for further use
       } catch (error) {
