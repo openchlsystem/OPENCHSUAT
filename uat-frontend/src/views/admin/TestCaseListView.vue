@@ -65,7 +65,7 @@ export default {
   methods: {
     async fetchTestCases() {
       try {
-        const response = await axios.get("/testcases/");
+        const response = await axios.get("api/test-cases/");
         this.testCases = response.data;
       } catch (error) {
         console.error("Error fetching test cases:", error);
@@ -73,7 +73,7 @@ export default {
     },
     async fetchFunctionalities() {
       try {
-        const response = await axios.get("/functionalities/");
+        const response = await axios.get("api/functionalities/");
         this.functionalities = response.data;
       } catch (error) {
         console.error("Error fetching functionalities:", error);
@@ -108,7 +108,7 @@ export default {
     },
     async assignUser({ testCaseId, userId }) {
       try {
-        await axios.post(`/testcases/${testCaseId}/assign/`, { user_id: userId });
+        await axios.post(`/test-cases/${testCaseId}/assign/`, { user_id: userId });
         this.closeAssignModal();
       } catch (error) {
         console.error("Error assigning user:", error);
@@ -116,15 +116,15 @@ export default {
     },
     async deleteTestCase(id) {
       if (confirm("Are you sure you want to delete this test case?")) {
-        await axios.delete(`/testcases/${id}/`);
+        await axios.delete(`api/test-cases/${id}/`);
         this.fetchTestCases();
       }
     },
     async saveTestCase(testCase) {
       if (testCase.id) {
-        await axios.put(`/testcases/${testCase.id}/`, testCase);
+        await axios.put(`api/test-cases/${testCase.id}/`, testCase);
       } else {
-        await axios.post("/testcases/", testCase);
+        await axios.post("api/test-cases/", testCase);
       }
       this.closeModal();
     }

@@ -42,7 +42,7 @@ export default {
   methods: {
     async fetchFunctionalities() {
       try {
-        const response = await axios.get("/functionalities/");
+        const response = await axios.get("api/functionalities/");
         this.functionalities = response.data;
       } catch (error) {
         console.error("Error fetching functionalities:", error);
@@ -50,7 +50,7 @@ export default {
     },
     async fetchSystems() {
       try {
-        const response = await axios.get("/systems/");
+        const response = await axios.get("api/systems/");
         this.systems = response.data;
       } catch (error) {
         console.error("Error fetching systems:", error);
@@ -78,11 +78,11 @@ export default {
     },
     saveFunctionality(newFunctionality) {
       if (newFunctionality.id) {
-        axios.put(`/functionalities/${newFunctionality.id}/`, newFunctionality)
+        axios.put(`api/functionalities/${newFunctionality.id}/`, newFunctionality)
           .then(() => this.fetchFunctionalities())
           .catch(error => console.error("Error updating functionality:", error));
       } else {
-        axios.post("/functionalities/", newFunctionality)
+        axios.post("api/functionalities/", newFunctionality)
           .then(() => this.fetchFunctionalities())
           .catch(error => console.error("Error creating functionality:", error));
       }

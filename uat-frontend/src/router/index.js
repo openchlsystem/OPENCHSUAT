@@ -95,17 +95,13 @@ router.beforeEach((to, from, next) => {
       // Redirect to login if not authenticated
       next('/login');
     } else {
-      // Redirect all authenticated users to the Admin Dashboard
-      if (to.name !== 'AdminDashboard') {
-        next({ name: 'AdminDashboard' });
-      } else {
-        next();
-      }
+      // Allow access to the requested route
+      next();
     }
   } else {
     // Redirect authenticated users away from public routes (e.g., login, register)
     if (isAuth && (to.name === 'Login' || to.name === 'Register' || to.name === 'ForgotPassword')) {
-      next({ name: 'AdminDashboard' });
+      next({ name: 'AdminDashboard' }); // Redirect to admin dashboard
     } else {
       next();
     }

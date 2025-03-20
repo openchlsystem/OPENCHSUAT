@@ -5,17 +5,17 @@
       <button @click="showModal = true" class="btn btn-primary">+ Add System</button>
     </div>
 
-    <!-- Modal (Only when showModal is true) -->
-    <SystemModal 
-      v-if="showModal" 
-      @closeModal="showModal = false" 
-      @openSystemForm="openSystemForm" 
+    <SystemModal
+      v-if="showModal"
+      :system="selectedSystem"
+      :organizations="organizations"
+      @closeModal="closeModal"
+      @saveSystem="saveSystem"
     />
 
-    <!-- System Form (Only when showForm is true) -->
     <div v-if="showForm" class="card p-4 mb-4 form-container">
-      <h4 class="mb-3">Create New System</h4>
-      <form @submit.prevent="createSystem">
+      <h4 class="mb-3">{{ selectedSystem ? 'Edit System' : 'Create New System' }}</h4>
+      <form @submit.prevent="selectedSystem ? updateSystem() : createSystem(form)">
         <div class="mb-3">
           <label class="form-label">System Name</label>
           <input v-model="form.name" class="form-control" required />
@@ -36,14 +36,13 @@
         </div>
 
         <div class="d-flex justify-content-end">
-          <button type="submit" class="btn btn-success me-2">Create</button>
+          <button type="submit" class="btn btn-success me-2">{{ selectedSystem ? 'Update' : 'Create' }}</button>
           <button type="button" class="btn btn-outline-secondary" @click="showForm = false">Cancel</button>
         </div>
       </form>
     </div>
 
-    <!-- Table (Hidden when form is shown) -->
-    <table v-if="!showForm" class="table table-striped">
+    <table v-if="!showForm" class="table table-striped systems-table">
       <thead class="table-dark">
         <tr>
           <th>Name</th>
@@ -53,13 +52,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="system in systems" :key="system.id">
+        <tr v-for="system in systemsWithOrganization" :key="system.id">
           <td>{{ system.name }}</td>
-          <td>{{ system.organization.name }}</td>
+          <td>{{ system.organizationName }}</td>
           <td>{{ system.description }}</td>
           <td>
             <button @click="$emit('view', system)" class="btn btn-info btn-sm">View</button>
-            <button @click="$emit('edit', system)" class="btn btn-warning btn-sm">Edit</button>
+            <button @click="editSystem(system)" class="btn btn-warning btn-sm">Edit</button>
             <button @click="$emit('delete', system.id)" class="btn btn-danger btn-sm">Delete</button>
           </td>
         </tr>
@@ -70,32 +69,76 @@
 
 <script>
 import SystemModal from './SystemModal.vue';
+import axios from 'axios';
 
 export default {
   components: { SystemModal },
   props: {
     systems: Array,
-    organizations: Array
+    organizations: Array,
   },
   data() {
     return {
       showModal: false,
       showForm: false,
-      form: { name: '', organization: '', description: '' }
+      selectedSystem: null,
+      form: { name: '', organization: '', description: '' },
     };
+  },
+  computed: {
+    systemsWithOrganization() {
+      return this.systems.map((system) => {
+        console.log('System:', system); // Debugging
+        const organization = this.organizations.find((org) => org.id === system.organization);
+        return {
+          ...system,
+          organizationName: organization ? organization.name : 'N/A',
+        };
+      });
+    },
   },
   methods: {
     openSystemForm() {
-      this.showModal = false; // Close modal
-      this.showForm = true;   // Show form
+      this.showModal = false;
+      this.showForm = true;
     },
-    async createSystem() {
-      await this.$axios.post('/api/systems/', this.form);
-      this.showForm = false;
-      this.$emit('refreshSystems');
-    }
-  }
-}
+    editSystem(system) {
+      this.selectedSystem = system;
+      this.form = { ...system };
+      this.showForm = true;
+    },
+    async createSystem(data) {
+      try {
+        console.log('Data being sent in createSystem:', data);
+        await axios.post('/systems/', data);
+        this.$emit('refreshSystems');
+      } catch (error) {
+        console.error('Error creating system:', error);
+      }
+    },
+    async updateSystem() {
+      try {
+        const response = await axios.put(`/systems/${this.selectedSystem.id}/`, this.form);
+        console.log('Update Response:', response.data); // Debugging
+        this.showForm = false;
+        this.$emit('refreshSystems');
+      } catch (error) {
+        console.error('Error updating system:', error);
+      }
+    },
+    closeModal() {
+      this.showModal = false;
+      this.selectedSystem = null;
+    },
+    saveSystem(formData) {
+      if (this.selectedSystem) {
+        this.updateSystem();
+      } else {
+        this.createSystem(formData); // pass form data to createSystem
+      }
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -105,5 +148,29 @@ export default {
   border: 1px solid #ddd;
   border-radius: 8px;
   background: #fff;
+}
+
+.systems-table {
+  width: 100%;
+}
+
+.systems-table th,
+.systems-table td {
+  padding: 10px;
+  text-align: left;
+}
+
+.systems-table th {
+  background-color: #343a40;
+  color: white;
+}
+
+.systems-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.systems-table .btn-sm {
+  padding: 5px 10px;
+  font-size: 0.8rem;
 }
 </style>

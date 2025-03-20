@@ -56,7 +56,7 @@
         </div>
 
         <div class="form-buttons">
-          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="submit" class="btn btn-primary">Create</button>
           <button type="button" @click="$emit('close')" class="btn btn-secondary">Cancel</button>
         </div>
       </form>
