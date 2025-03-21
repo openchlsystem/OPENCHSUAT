@@ -26,6 +26,13 @@ import time
 
 User = get_user_model()
 otp_store = {}  # Temporary OTP storage with expiration
+class RolesView(APIView):
+    def get(self, request):
+        # Fetch roles from User.ROLE_CHOICES
+        roles = [{'value': role[0], 'label': role[1]} for role in User.ROLE_CHOICES]
+        # Return the roles as a JSON response
+        return Response(roles)
+
 
 class DashboardView(APIView):
     def get(self, request):

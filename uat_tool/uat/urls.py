@@ -7,7 +7,7 @@ from .views import (
     FunctionalityViewSet, TestCaseViewSet, TestStepViewSet,
     TestExecutionViewSet, DefectViewSet, RegisterUserView,
     RequestOTPView, VerifyOTPView, StaffAuthView,
-    UserViewSet, DashboardView  # Added DashboardView
+    UserViewSet, DashboardView, RolesView,
 )
 
 # Initialize the DefaultRouter
@@ -17,16 +17,19 @@ router = DefaultRouter()
 router.register(r'organizations', OrganizationViewSet)
 router.register(r'systems', SystemViewSet)
 router.register(r'functionalities', FunctionalityViewSet)
-router.register(r'test-cases', TestCaseViewSet)  # Fixed typo: 'test-cases' instead of 'test-cases'
-router.register(r'test-steps', TestStepViewSet)  # Fixed typo: 'test-steps' instead of 'test-steps'
-router.register(r'test-executions', TestExecutionViewSet)  # Fixed typo: 'test-executions' instead of 'test-executions'
-router.register(r'defects', DefectViewSet)  # Fixed typo: 'defects' instead of 'defects'
+router.register(r'test-cases', TestCaseViewSet)
+router.register(r'test-steps', TestStepViewSet)
+router.register(r'test-executions', TestExecutionViewSet)
+router.register(r'defects', DefectViewSet)
 router.register(r'users', UserViewSet)
 
 # Define URL patterns
 urlpatterns = [
     # Include router URLs under 'api/'
-    path('api/', include(router.urls)),  # Keep this first to avoid conflicts
+    path('api/', include(router.urls)),
+
+    # Roles endpoint (standalone path, not registered with the router)
+    path('api/roles/', RolesView.as_view(), name='roles'),
 
     # Authentication endpoints
     path('api/auth/register/', RegisterUserView.as_view(), name='register'),
@@ -40,8 +43,8 @@ urlpatterns = [
 
     # API documentation endpoints
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),  # Swagger UI
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 
     # Dashboard endpoint
-    path('api/dashboard/', DashboardView.as_view(), name='dashboard'),  # Added DashboardView
+    path('api/dashboard/', DashboardView.as_view(), name='dashboard'),
 ]
