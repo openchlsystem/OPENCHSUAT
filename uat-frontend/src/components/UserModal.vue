@@ -22,7 +22,7 @@
 
         <div class="form-group">
           <label>Role</label>
-          <select v-model="formData.role" class="form-control">
+          <select v-model="formData.role" class="form-control" required>
             <option v-for="role in roles" :key="role.value" :value="role.value">
               {{ role.label }}
             </option>
@@ -65,7 +65,7 @@ export default {
       whatsapp_number: "",
       first_name: "",
       password: "",
-      role: "tester",
+      role: "tester", // Default role
       organization: null,
       is_active: true,
       created_by_admin: true,
@@ -74,6 +74,7 @@ export default {
     const organizations = ref([]);
     const roles = ref([]);
 
+    // Fetch organizations from the backend
     const fetchOrganizations = async () => {
       try {
         const response = await axios.get("/organizations/");
@@ -83,33 +84,31 @@ export default {
       }
     };
 
+    // Fetch roles from the backend
     const fetchRoles = async () => {
       try {
-        const response = await axios.get("/users/");
-        const uniqueRoles = new Set();
-        response.data.forEach((user) => {
-          uniqueRoles.add(user.role);
-        });
-        roles.value = Array.from(uniqueRoles).map((role) => ({
-          value: role,
-          label: role.charAt(0).toUpperCase() + role.slice(1),
-        }));
+        const response = await axios.get("/roles/");
+        roles.value = response.data;
       } catch (error) {
         console.error("Failed to fetch roles:", error);
       }
     };
 
+    // Fetch data when the modal is mounted
     onMounted(() => {
       fetchOrganizations();
       fetchRoles();
     });
 
+    // Watch for changes in the `user` prop
     watch(
       () => props.user,
       (newValue) => {
         if (newValue) {
+          // If editing an existing user, populate the form with their data
           formData.value = { ...newValue };
         } else {
+          // If adding a new user, reset the form
           formData.value = {
             whatsapp_number: "",
             first_name: "",
@@ -124,18 +123,23 @@ export default {
       { immediate: true }
     );
 
+    // Save or update the user
     const saveUser = async () => {
       try {
+        // Ensure the organization ID is an integer
         formData.value.organization = parseInt(formData.value.organization);
 
         if (props.user) {
+          // Update an existing user
           await axios.put(`/users/${props.user.id}/`, formData.value);
           alert("User updated successfully!");
         } else {
+          // Create a new user
           await axios.post("/users/", formData.value);
           alert("User registered successfully!");
         }
 
+        // Close the modal and emit the save event
         emit("close");
         emit("save", formData.value);
       } catch (error) {
