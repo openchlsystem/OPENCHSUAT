@@ -3,20 +3,20 @@
     <table v-if="executions.length > 0" class="table">
       <thead>
         <tr>
-          <th @click="sortBy('test_case')">📋 Test Case</th>
-          <th @click="sortBy('execution_date')">📅 Execution Date</th>
-          <th @click="sortBy('status')">📊 Status</th>
-          <th>💬 Comments</th>
+          <th @click="sortBy('test_case.name')">Test Case</th>
+          <th @click="sortBy('execution_date')">Execution Date</th>
+          <th @click="sortBy('status')">Status</th>
+          <th>Comments</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="execution in sortedExecutions" :key="execution.id">
-          <td>{{ execution.test_case }}</td>
+          <td>{{ execution.test_case.name }}</td>
           <td>{{ formatDate(execution.execution_date) }}</td>
           <td :class="statusClass(execution.status)">
             {{ execution.status }}
           </td>
-          <td>{{ execution.comments || "No comments" }}</td>
+          <td>{{ execution.notes || "No comments" }}</td>
         </tr>
       </tbody>
     </table>
@@ -42,7 +42,7 @@ export default {
       return new Date(date).toLocaleString();
     },
     statusClass(status) {
-      return status === "Passed" ? "status-pass" : "status-fail";
+      return status === "passed" ? "status-pass" : "status-fail";
     }
   }
 };
