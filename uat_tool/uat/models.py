@@ -165,6 +165,11 @@ class Defect(models.Model):
     """
     Represents a defect identified during a test execution.
     """
+    STATUS_CHOICES = [
+        ('open', 'Open'),
+        ('in_progress', 'In Progress'),
+        ('resolved', 'Resolved'),
+    ]
     execution = models.ForeignKey(TestExecution, on_delete=models.CASCADE, related_name='defects', help_text="The test execution during which this defect was identified.")
     title = models.CharField(max_length=255, help_text="A brief title summarizing the defect.")
     description = models.TextField(help_text="A detailed description of the defect, including steps to reproduce.")
@@ -174,6 +179,7 @@ class Defect(models.Model):
         ('high', 'High'),
         ('critical', 'Critical')
     ], help_text="The severity level of the defect.")
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='open')
     resolved = models.BooleanField(default=False, help_text="Indicates whether the defect has been resolved.")
     resolution_notes = models.TextField(blank=True, null=True, help_text="Notes on how the defect was resolved.")
     reported_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='reported_defects', help_text="The user who reported this defect.")

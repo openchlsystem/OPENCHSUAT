@@ -7,7 +7,7 @@ from .views import (
     FunctionalityViewSet, TestCaseViewSet, TestStepViewSet,
     TestExecutionViewSet, DefectViewSet, RegisterUserView,
     RequestOTPView, VerifyOTPView, StaffAuthView,
-    UserViewSet
+    UserViewSet, DashboardView  # Added DashboardView
 )
 
 # Initialize the DefaultRouter
@@ -40,5 +40,8 @@ urlpatterns = [
 
     # API documentation endpoints
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema')),  # Swagger UI
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),  # Swagger UI
+
+    # Dashboard endpoint
+    path('api/dashboard/', DashboardView.as_view(), name='dashboard'),  # Added DashboardView
 ]

@@ -1,10 +1,12 @@
+from django.core import serializers
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import IsAdminUser, AllowAny, IsAuthenticated
 from django.contrib.auth import get_user_model
+from django.db.models import Count
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiTypes
 from django.utils.timezone import now
 from .models import (
@@ -25,27 +27,57 @@ import time
 User = get_user_model()
 otp_store = {}  # Temporary OTP storage with expiration
 
+class DashboardView(APIView):
+    def get(self, request):
+        # Calculate totals
+        total_organizations = Organization.objects.count()
+        total_systems = System.objects.count()
+        total_functionalities = Functionality.objects.count()
+        total_test_cases = TestCase.objects.count()
+        total_active_users = User.objects.filter(is_active=True).count()
+        total_open_defects = Defect.objects.filter(status='open').count()  # Use 'status' field
+
+        # Prepare response
+        stats = {
+            "organizations": total_organizations,
+            "systems": total_systems,
+            "functionalities": total_functionalities,
+            "test_cases": total_test_cases,
+            "active_users": total_active_users,
+            "open_defects": total_open_defects,
+        }
+
+        return Response({"stats": stats}, status=status.HTTP_200_OK)
+
 # Test Case API ViewSet
 class TestCaseViewSet(viewsets.ModelViewSet):
-    queryset = TestCase.objects.all()
     serializer_class = TestCaseSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = TestCase.objects.all()  # Add a default queryset
 
-    @extend_schema(
-        request={
-            "type": "object",
-            "properties": {
-                "userId": {"type": "string", "description": "UUID of the user to assign"}
-            },
-            "required": ["userId"]
-        },
-        responses={
-            200: {"type": "object", "properties": {"message": {"type": "string"}}},
-            400: {"type": "object", "properties": {"error": {"type": "string"}}},
-        },
-        parameters=[
-            OpenApiParameter(name='pk', type=OpenApiTypes.INT, description='Test case ID', location=OpenApiParameter.PATH)
-        ]
-    )
+    def get_queryset(self):
+        user = self.request.user
+
+        # Admins can see all test cases
+        if user.role == 'admin':
+            return TestCase.objects.all()
+
+        # Testers can only see test cases assigned to them
+        elif user.role == 'tester':
+            return TestCase.objects.filter(assigned_user=user)
+
+        # Viewers (if applicable) can see test cases they created or are assigned to
+        elif user.role == 'viewer':
+            return TestCase.objects.filter(created_by=user) | TestCase.objects.filter(assigned_user=user)
+
+        # Default: return an empty queryset for unauthorized roles
+        return TestCase.objects.none()
+
+    def perform_create(self, serializer):
+        if not self.request.user.is_authenticated:
+            raise serializers.ValidationError("User must be authenticated to create a test case.")
+        serializer.save(created_by=self.request.user)
+
     @action(detail=True, methods=['post'])
     def assign(self, request, pk=None):
         test_case = self.get_object()
