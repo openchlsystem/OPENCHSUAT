@@ -21,11 +21,11 @@
       <tbody>
         <tr v-for="testCase in testCases" :key="testCase.id">
           <td>{{ testCase.title }}</td>
-          <td>{{ testCase.functionality?.name || 'N/A' }}</td>
+          <td>{{ testCase.functionalityName || 'N/A' }}</td>
           <td>{{ testCase.expected_result }}</td>
-          <td>{{ testCase.created_by?.name || 'N/A' }}</td>
+          <td>{{ testCase.created_by?.first_name || testCase.created_by?.whatsapp_number || 'N/A' }}</td>
           <td>
-            <button 
+            <button
               class="btn status-btn"
               :class="testCase.assigned_user ? 'btn-success' : 'btn-secondary'"
               @click="$emit('assign', testCase)"
@@ -38,6 +38,7 @@
               <button @click="$emit('edit', testCase)" class="btn btn-warning">✏️ Edit</button>
               <button @click="$emit('delete', testCase.id)" class="btn btn-danger">🗑 Delete</button>
               <button @click="$emit('viewSteps', testCase)" class="btn btn-info">📜 View Steps</button>
+              <button @click="$emit('addStep', testCase)" class="btn btn-info">➕ Add Step</button>
             </div>
           </td>
         </tr>
@@ -55,7 +56,6 @@ export default {
 </script>
 
 <style scoped>
-/* Table Container */
 .test-case-table {
   padding: 20px;
   background: #fff;
@@ -63,7 +63,6 @@ export default {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Header Styling */
 .table-header {
   display: flex;
   justify-content: space-between;
@@ -71,19 +70,16 @@ export default {
   margin-bottom: 15px;
 }
 
-/* Table Styling */
 .table {
   border-radius: 8px;
   overflow: hidden;
 }
 
-/* Status Button */
 .status-btn {
   width: 120px;
   font-weight: bold;
 }
 
-/* Action Buttons */
 .action-buttons {
   display: flex;
   gap: 8px;

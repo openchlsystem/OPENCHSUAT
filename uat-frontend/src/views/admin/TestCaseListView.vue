@@ -4,7 +4,7 @@
 
     <!-- Test Case Table -->
     <TestCaseTable 
-      :testCases="testCases" 
+      :testCases="testCasesWithFunctionalityNames"
       @openModal="openCreateModal"
       @edit="editTestCase"
       @delete="deleteTestCase"
@@ -14,7 +14,7 @@
     />
 
     <!-- Test Case Modal (Add/Edit Test Cases) -->
-    <TestCaseModal 
+    <TestCaseModal
       v-if="showModal"
       :testCase="selectedTestCase"
       :functionalities="functionalities"
@@ -23,7 +23,7 @@
     />
 
     <!-- Assign Test Case Modal -->
-    <TestCaseAssignmentModal 
+    <TestCaseAssignmentModal
       v-if="showAssignModal"
       :testCase="selectedTestCase"
       @close="closeAssignModal"
@@ -31,19 +31,19 @@
     />
 
     <!-- Test Steps View -->
-    <TestStepsView 
+    <TestStepsView
       v-if="showStepsModal"
       :testCase="selectedTestCase"
       @close="closeTestSteps"
     />
 
     <!-- Add Test Step Modal -->
-    <AddTestStepModal 
+    <AddTestStepModal
       v-if="showAddStepModal"
       :testCaseId="selectedTestCase?.id"
       :testCaseTitle="selectedTestCase?.title"
       @close="closeAddStepModal"
-      @stepAdded="fetchTestCases"
+      @saved="handleStepSaved"
     />
   </div>
 </template>
@@ -54,7 +54,7 @@ import TestCaseTable from "@/components/TestCaseTable.vue";
 import TestCaseModal from "@/components/TestCaseModal.vue";
 import TestCaseAssignmentModal from "@/components/AssignTesterModal.vue";
 import TestStepsView from "@/components/TestStepsModal.vue";
-import AddTestStepModal from "@/components/TestStepsModal.vue";
+import AddTestStepModal from "@/components/AddStepModal.vue";
 
 export default {
   components: {
@@ -74,6 +74,18 @@ export default {
       showStepsModal: false,
       showAddStepModal: false,
     };
+  },
+  computed: {
+    // Map functionality names to test cases
+    testCasesWithFunctionalityNames() {
+      return this.testCases.map(testCase => {
+        const functionality = this.functionalities.find(func => func.id === testCase.functionality);
+        return {
+          ...testCase,
+          functionalityName: functionality ? functionality.name : 'N/A'
+        };
+      });
+    }
   },
   methods: {
     async fetchTestCases() {
@@ -127,21 +139,20 @@ export default {
       this.showAddStepModal = false;
     },
     async assignUser({ testCaseId, userId }) {
-        try {
-          await axios.post(`/test-cases/${testCaseId}/assign/`, { userId: userId });
-          this.closeAssignModal();
-          this.fetchTestCases();
-          alert("User assigned successfully!");
-        } catch (error) {
-          console.error("Error assigning user:", error);
-          if(error.response){
-              alert("Error assigning user: " + error.response.data.error);
-          } else {
-              alert("An unexpected error occurred.");
-          }
-
+      try {
+        await axios.post(`/test-cases/${testCaseId}/assign/`, { userId: userId });
+        this.closeAssignModal();
+        this.fetchTestCases();
+        alert("User assigned successfully!");
+      } catch (error) {
+        console.error("Error assigning user:", error);
+        if (error.response) {
+          alert("Error assigning user: " + error.response.data.error);
+        } else {
+          alert("An unexpected error occurred.");
         }
-      },
+      }
+    },
     async deleteTestCase(id) {
       if (confirm("Are you sure you want to delete this test case?")) {
         await axios.delete(`/test-cases/${id}/`);
@@ -156,7 +167,9 @@ export default {
       }
       this.closeModal();
     },
-    
+    handleStepSaved() {
+      this.fetchTestCases(); // Re-fetch test cases to update the list
+    }
   },
   mounted() {
     this.fetchTestCases();
