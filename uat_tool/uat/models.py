@@ -36,13 +36,17 @@ class UserManager(BaseUserManager):
         return self.create_user(whatsapp_number, password, **extra_fields)
 
 class User(AbstractBaseUser, PermissionsMixin):
-    """
-    Custom user model representing a user in the system.
-    """
+    # Define role choices as a class-level attribute
+    ROLE_CHOICES = [
+        ('admin', 'Admin'),
+        ('tester', 'Tester'),
+        ('viewer', 'Viewer'),
+    ]
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     whatsapp_number = models.CharField(max_length=15, unique=True, help_text="The user's WhatsApp number.")
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name='users', null=True, help_text="The organization the user belongs to.")
-    role = models.CharField(max_length=20, choices=[('admin', 'Admin'), ('tester', 'Tester'), ('viewer', 'Viewer')], default='tester', help_text="The role of the user.")
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='tester', help_text="The role of the user.")
     otp_secret = models.CharField(max_length=255, blank=True, null=True, help_text="The OTP secret for two-factor authentication.")
     is_active = models.BooleanField(default=True, help_text="Indicates whether the user is active.")
     is_staff = models.BooleanField(default=False, help_text="Indicates whether the user is a staff member.")
@@ -165,6 +169,11 @@ class Defect(models.Model):
     """
     Represents a defect identified during a test execution.
     """
+    STATUS_CHOICES = [
+        ('open', 'Open'),
+        ('in_progress', 'In Progress'),
+        ('resolved', 'Resolved'),
+    ]
     execution = models.ForeignKey(TestExecution, on_delete=models.CASCADE, related_name='defects', help_text="The test execution during which this defect was identified.")
     title = models.CharField(max_length=255, help_text="A brief title summarizing the defect.")
     description = models.TextField(help_text="A detailed description of the defect, including steps to reproduce.")
@@ -174,6 +183,7 @@ class Defect(models.Model):
         ('high', 'High'),
         ('critical', 'Critical')
     ], help_text="The severity level of the defect.")
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='open')
     resolved = models.BooleanField(default=False, help_text="Indicates whether the defect has been resolved.")
     resolution_notes = models.TextField(blank=True, null=True, help_text="Notes on how the defect was resolved.")
     reported_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='reported_defects', help_text="The user who reported this defect.")
