@@ -78,7 +78,7 @@ class TestCaseSerializer(serializers.ModelSerializer):
             return data
 # Test Execution Serializer
 class TestExecutionSerializer(serializers.ModelSerializer):
-    test_case = TestCaseSerializer(read_only=True)  # Serialize test_case as an object
+    test_case = serializers.PrimaryKeyRelatedField(queryset=TestCase.objects.all()) # Serialize test_case as an object
     tester = UserSerializer(read_only=True)  # Serialize tester as an object
 
     class Meta:
@@ -92,4 +92,4 @@ class DefectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Defect
-        fields = ['id', 'execution', 'title', 'description', 'severity', 'resolved', 'resolution_notes', 'reported_by', 'created_at', 'updated_at']
+        fields = '__all__'

@@ -26,6 +26,17 @@ import time
 
 User = get_user_model()
 otp_store = {}  # Temporary OTP storage with expiration
+
+class StatusChoicesView(APIView):
+    """
+    API View to fetch status choices for TestExecution.
+    """
+    def get(self, request):
+        # Fetch status choices from the TestExecution model
+        status_choices = TestExecution._meta.get_field('status').choices
+        # Format the choices as a list of dictionaries
+        formatted_choices = [{'value': choice[0], 'label': choice[1]} for choice in status_choices]
+        return Response(formatted_choices)
 class RolesView(APIView):
     def get(self, request):
         # Fetch roles from User.ROLE_CHOICES
@@ -125,6 +136,11 @@ class TestStepViewSet(viewsets.ModelViewSet):
 class TestExecutionViewSet(viewsets.ModelViewSet):
     queryset = TestExecution.objects.all()
     serializer_class = TestExecutionSerializer
+    permission_classes = [IsAuthenticated]  # Ensure only authenticated users can access
+
+    def perform_create(self, serializer):
+        # Set the tester to the currently authenticated user
+        serializer.save(tester=self.request.user)
 
 # Defect API ViewSet
 class DefectViewSet(viewsets.ModelViewSet):

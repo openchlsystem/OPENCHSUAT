@@ -7,7 +7,7 @@ from .views import (
     FunctionalityViewSet, TestCaseViewSet, TestStepViewSet,
     TestExecutionViewSet, DefectViewSet, RegisterUserView,
     RequestOTPView, VerifyOTPView, StaffAuthView,
-    UserViewSet, DashboardView, RolesView,
+    UserViewSet, DashboardView, RolesView,StatusChoicesView
 )
 
 # Initialize the DefaultRouter
@@ -27,6 +27,8 @@ router.register(r'users', UserViewSet)
 urlpatterns = [
     # Include router URLs under 'api/'
     path('api/', include(router.urls)),
+
+    path('api/status-choices/', StatusChoicesView.as_view(), name='status-choices'),
 
     # Roles endpoint (standalone path, not registered with the router)
     path('api/roles/', RolesView.as_view(), name='roles'),

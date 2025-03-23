@@ -186,6 +186,8 @@ class Defect(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='open')
     resolved = models.BooleanField(default=False, help_text="Indicates whether the defect has been resolved.")
     resolution_notes = models.TextField(blank=True, null=True, help_text="Notes on how the defect was resolved.")
+    attachment = models.FileField(upload_to='defects_attachments/', blank=True, null=True,
+     help_text="An optional attachment for the step.")
     reported_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='reported_defects', help_text="The user who reported this defect.")
     created_at = models.DateTimeField(auto_now_add=True, help_text="The date and time when the defect was created.")
     updated_at = models.DateTimeField(auto_now=True, help_text="The date and time when the defect was last updated.")
