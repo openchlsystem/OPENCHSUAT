@@ -1,13 +1,17 @@
+from django.core import serializers
 from rest_framework import viewsets, status
 from rest_framework.response import Response
+from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import IsAdminUser, AllowAny, IsAuthenticated
 from django.contrib.auth import get_user_model
+from django.db.models import Count
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiTypes
 from django.utils.timezone import now
 from .models import (
     Organization, System, Functionality, TestCase,
-    TestStep, TestExecution, Defect
+    TestStep, TestExecution, Defect, User
 )
 from .serializers import (
     OrganizationSerializer, SystemSerializer,
@@ -22,6 +26,108 @@ import time
 
 User = get_user_model()
 otp_store = {}  # Temporary OTP storage with expiration
+class DefectOptionsView(APIView):
+    """
+    API View to fetch options for Defect fields (severity and status).
+    """
+    def get(self, request):
+        # Get severity choices from Defect model
+        severity_choices = Defect._meta.get_field('severity').choices
+        severity_options = [{'value': choice[0], 'label': choice[1]} for choice in severity_choices]
+
+        # Get status choices from Defect model
+        status_choices = Defect._meta.get_field('status').choices
+        status_options = [{'value': choice[0], 'label': choice[1]} for choice in status_choices]
+
+        return Response({
+            'severity_options': severity_options,
+            'status_options': status_options
+        })
+
+class StatusChoicesView(APIView):
+    """
+    API View to fetch status choices for TestExecution.
+    """
+    def get(self, request):
+        # Fetch status choices from the TestExecution model
+        status_choices = TestExecution._meta.get_field('status').choices
+        # Format the choices as a list of dictionaries
+        formatted_choices = [{'value': choice[0], 'label': choice[1]} for choice in status_choices]
+        return Response(formatted_choices)
+class RolesView(APIView):
+    def get(self, request):
+        # Fetch roles from User.ROLE_CHOICES
+        roles = [{'value': role[0], 'label': role[1]} for role in User.ROLE_CHOICES]
+        # Return the roles as a JSON response
+        return Response(roles)
+
+
+class DashboardView(APIView):
+    def get(self, request):
+        # Calculate totals
+        total_organizations = Organization.objects.count()
+        total_systems = System.objects.count()
+        total_functionalities = Functionality.objects.count()
+        total_test_cases = TestCase.objects.count()
+        total_active_users = User.objects.filter(is_active=True).count()
+        total_open_defects = Defect.objects.filter(status='open').count()  # Use 'status' field
+
+        # Prepare response
+        stats = {
+            "organizations": total_organizations,
+            "systems": total_systems,
+            "functionalities": total_functionalities,
+            "test_cases": total_test_cases,
+            "active_users": total_active_users,
+            "open_defects": total_open_defects,
+        }
+
+        return Response({"stats": stats}, status=status.HTTP_200_OK)
+
+# Test Case API ViewSet
+class TestCaseViewSet(viewsets.ModelViewSet):
+    serializer_class = TestCaseSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = TestCase.objects.all()  # Add a default queryset
+
+    def get_queryset(self):
+        user = self.request.user
+
+        # Admins can see all test cases
+        if user.role == 'admin':
+            return TestCase.objects.all()
+
+        # Testers can only see test cases assigned to them
+        elif user.role == 'tester':
+            return TestCase.objects.filter(assigned_user=user)
+
+        # Viewers (if applicable) can see test cases they created or are assigned to
+        elif user.role == 'viewer':
+            return TestCase.objects.filter(created_by=user) | TestCase.objects.filter(assigned_user=user)
+
+        # Default: return an empty queryset for unauthorized roles
+        return TestCase.objects.none()
+
+    def perform_create(self, serializer):
+        if not self.request.user.is_authenticated:
+            raise serializers.ValidationError("User must be authenticated to create a test case.")
+        serializer.save(created_by=self.request.user)
+
+    @action(detail=True, methods=['post'])
+    def assign(self, request, pk=None):
+        test_case = self.get_object()
+        user_id = request.data.get('userId')
+        if not user_id:
+            return Response({'error': 'userId is required in the request body'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return Response({'error': 'User not found'}, status=status.HTTP_400_BAD_REQUEST)
+
+        test_case.assigned_user = user
+        test_case.save()
+        return Response({'message': 'User assigned successfully'}, status=status.HTTP_200_OK)
 
 # Organization API ViewSet
 class OrganizationViewSet(viewsets.ModelViewSet):
@@ -38,11 +144,6 @@ class FunctionalityViewSet(viewsets.ModelViewSet):
     queryset = Functionality.objects.all()
     serializer_class = FunctionalitySerializer
 
-# Test Case API ViewSet
-class TestCaseViewSet(viewsets.ModelViewSet):
-    queryset = TestCase.objects.all()
-    serializer_class = TestCaseSerializer
-
 # Test Step API ViewSet
 class TestStepViewSet(viewsets.ModelViewSet):
     queryset = TestStep.objects.all()
@@ -52,6 +153,11 @@ class TestStepViewSet(viewsets.ModelViewSet):
 class TestExecutionViewSet(viewsets.ModelViewSet):
     queryset = TestExecution.objects.all()
     serializer_class = TestExecutionSerializer
+    permission_classes = [IsAuthenticated]  # Ensure only authenticated users can access
+
+    def perform_create(self, serializer):
+        # Set the tester to the currently authenticated user
+        serializer.save(tester=self.request.user)
 
 # Defect API ViewSet
 class DefectViewSet(viewsets.ModelViewSet):
@@ -63,6 +169,40 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAdminUser]
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        data = serializer.data
+        for user in data:
+            try:
+                user['organization_name'] = Organization.objects.get(id=user['organization']).name
+            except Organization.DoesNotExist:
+                user['organization_name'] = None
+
+        return Response(data)
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        if data.get('created_by_admin'):
+            data['role'] = 'admin'
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=201, headers=headers)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
 
 # Register User API
 class RegisterUserView(APIView):

@@ -10,7 +10,7 @@
     </div>
 
     <div class="chart-container">
-      <DashboardChart 
+      <DashboardChart
         :labels="['Passed', 'Failed', 'Blocked']"
         :data="[60, 30, 10]"
         :backgroundColor="['#28a745', '#dc3545', '#ffc107']"
@@ -28,6 +28,7 @@
 import DashboardCard from '@/components/Admin/DashboardCard.vue';
 import DashboardChart from '@/components/Admin/DashboardChart.vue';
 import RecentActivityTable from '@/components/Admin/RecentActivityTable.vue';
+import axios from 'axios';
 
 export default {
   name: 'AdminDashboard',
@@ -38,11 +39,18 @@ export default {
       recentActivities: []
     };
   },
-  async created() {
-    const response = await this.$axios.get('/api/dashboard/');
+async created() {
+  console.log("Dashboard component created"); // Debugging
+  try {
+    const response = await axios.get('/dashboard/');
+    console.log("Fetched stats:", response.data.stats); // Debugging
     this.stats = response.data.stats;
-    this.recentActivities = response.data.recent_activities;
+  } catch (error) {
+    console.error("Error fetching dashboard data:", error);
+  } finally {
+    this.loading = false;
   }
+},
 };
 </script>
 

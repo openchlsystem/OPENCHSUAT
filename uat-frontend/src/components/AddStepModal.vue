@@ -1,8 +1,7 @@
 <template>
-  <div class="modal-overlay" @click.self="$emit('close')">
+  <div class="modal-overlay">
     <div class="modal-content">
-      <h3 v-if="isEditing">Edit Test Step</h3>
-      <h3 v-else>Add New Test Step</h3>
+      <h3 class="modal-title">{{ stepToEdit ? 'Edit Step' : 'Add Step' }}</h3>
 
       <form @submit.prevent="saveStep">
         <div class="form-group">
@@ -36,9 +35,23 @@
           ></textarea>
         </div>
 
-        <div class="form-buttons">
-          <button type="submit" class="btn btn-primary">{{ isEditing ? 'Update' : 'Add' }}</button>
-          <button type="button" @click="$emit('close')" class="btn btn-secondary">Cancel</button>
+        <div class="form-group">
+          <label for="attachment">Attachment</label>
+          <input
+            type="file"
+            id="attachment"
+            @change="handleFileUpload"
+            class="form-control"
+          />
+        </div>
+
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary">
+            {{ stepToEdit ? 'Update' : 'Save' }}
+          </button>
+          <button type="button" @click="closeModal" class="btn btn-secondary">
+            Cancel
+          </button>
         </div>
       </form>
     </div>
@@ -64,51 +77,73 @@ export default {
       step: {
         step_number: 1,
         description: "",
-        expected_result: ""
+        expected_result: "",
+        attachment: null
       },
-      isEditing: false
+      file: null
     };
   },
   watch: {
     stepToEdit: {
       immediate: true,
-      handler(newValue) {
-        if (newValue) {
-          this.step = { ...newValue };
-          this.isEditing = true;
+      handler(newVal) {
+        if (newVal) {
+          this.step = { ...newVal };
         } else {
-          this.step = {
-            step_number: 1,
-            description: "",
-            expected_result: ""
-          };
-          this.isEditing = false;
+          this.resetForm();
         }
       }
     }
   },
   methods: {
+    resetForm() {
+      this.step = {
+        step_number: 1,
+        description: "",
+        expected_result: "",
+        attachment: null
+      };
+      this.file = null;
+    },
+    handleFileUpload(event) {
+      this.file = event.target.files[0];
+    },
     async saveStep() {
       try {
-        const payload = {
-          test_case: this.testCaseId,
-          step_number: this.step.step_number,
-          description: this.step.description,
-          expected_result: this.step.expected_result
-        };
-
-        if (this.isEditing) {
-          await axios.put(`http://127.0.0.1:8000/api/test-steps/${this.step.id}/`, payload);
-        } else {
-          await axios.post("http://127.0.0.1:8000/api/test-steps/", payload);
+        const formData = new FormData();
+        formData.append("step_number", this.step.step_number);
+        formData.append("description", this.step.description);
+        formData.append("expected_result", this.step.expected_result);
+        formData.append("test_case", this.testCaseId);
+        if (this.file) {
+          formData.append("attachment", this.file);
         }
 
-        this.$emit("saved");
-        this.$emit("close");
+        if (this.stepToEdit) {
+          // Update existing step
+          await axios.put(`/test-steps/${this.stepToEdit.id}/`, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data"
+            }
+          });
+        } else {
+          // Create new step
+          await axios.post("/test-steps/", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data"
+            }
+          });
+        }
+
+        this.$emit("saved"); // Emit the saved event
+        this.closeModal();
       } catch (error) {
         console.error("Error saving test step:", error);
-        this.$emit("error", error); // Emit error event for handling in parent
+        this.$emit("error", error);
       }
+    },
+    closeModal() {
+      this.$emit("close");
     }
   }
 };
@@ -135,15 +170,23 @@ export default {
 }
 
 .form-group {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
-.form-buttons {
-  display: flex;
-  justify-content: space-between;
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 button {
-  width: 48%;
+  margin-right: 10px;
 }
 </style>

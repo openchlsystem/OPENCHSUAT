@@ -9,20 +9,33 @@
     </div>
 
     <!-- Assigned Test Cases Table -->
-    <AssignedTestTable v-if="assignedTests.length > 0" :testCases="assignedTests" />
+    <AssignedTestTable v-if="assignedTests.length > 0" 
+      :testCases="assignedTests" 
+      @openTestModal="fetchTestDetails"
+    />
+
+    <!-- Assigned Test Modal -->
+    <AssignedTestModal 
+      :show="isModalOpen" 
+      :testData="selectedTest" 
+      @close="isModalOpen = false"
+    />
   </div>
 </template>
 
 <script>
 import AssignedTestTable from '@/components/tester/AssignedTestTable.vue';
-import axios from "@/utils/axios";
+import AssignedTestModal from '@/components/tester/AssignedTestModal.vue';
+import axios from "@/utils/axios.js";
 
 export default {
   name: 'AssignedTestsView',
-  components: { AssignedTestTable },
+  components: { AssignedTestTable, AssignedTestModal },
   data() {
     return {
       assignedTests: [],
+      selectedTest: null,
+      isModalOpen: false,
     };
   },
   async created() {
@@ -33,40 +46,16 @@ export default {
       console.error('Error fetching assigned tests:', error);
     }
   },
+  methods: {
+    async fetchTestDetails(test) {
+      try {
+        const response = await axios.get(`/test-cases/${test.id}`);
+        this.selectedTest = response.data;
+        this.isModalOpen = true;
+      } catch (error) {
+        console.error('Error fetching test details:', error);
+      }
+    }
+  }
 };
 </script>
-
-<style scoped>
-.assigned-tests-container {
-  padding: 20px;
-  background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  max-width: 900px;
-  margin: 30px auto;
-  text-align: center;
-}
-
-h2 {
-  color: #333;
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
-.no-tests-container {
-  text-align: center;
-  padding: 20px;
-}
-
-.no-tests-image {
-  width: 180px;
-  opacity: 0.7;
-}
-
-.no-tests-message {
-  font-size: 18px;
-  color: #555;
-  margin-top: 10px;
-}
-</style>

@@ -18,8 +18,7 @@
             <td>{{ user.first_name }}</td>
             <td>{{ user.whatsapp_number }}</td>
             <td>{{ user.role }}</td>
-            <td>{{ user.organization }}</td>
-            <td>
+            <td>{{ user.organization_name }}</td> <td>
               <span class="badge bg-info">{{ user.created_by_admin ? "Admin" : "Self" }}</span>
             </td>
             <td>

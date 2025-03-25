@@ -1,9 +1,9 @@
 <template>
   <div class="modal-overlay">
     <div class="modal-content">
-      <h4 class="modal-title">Register New User</h4>
+      <h4 class="modal-title">{{ user ? 'Edit User' : 'Register New User' }}</h4>
 
-      <form @submit.prevent="registerUser">
+      <form @submit.prevent="saveUser">
         <div class="form-group">
           <label>WhatsApp Number</label>
           <input type="text" v-model="formData.whatsapp_number" class="form-control" placeholder="Enter WhatsApp number" required />
@@ -16,14 +16,16 @@
 
         <div class="form-group">
           <label>Password</label>
-          <input type="password" v-model="formData.password" class="form-control" placeholder="Enter a strong password" required />
+          <input type="password" v-model="formData.password" class="form-control" placeholder="Enter a strong password" />
+          <p v-if="user">Leave blank to keep current password.</p>
         </div>
 
         <div class="form-group">
           <label>Role</label>
-          <select v-model="formData.role" class="form-control">
-            <option value="admin">Admin</option>
-            <option value="tester">Tester</option>
+          <select v-model="formData.role" class="form-control" required>
+            <option v-for="role in roles" :key="role.value" :value="role.value">
+              {{ role.label }}
+            </option>
           </select>
         </div>
 
@@ -42,7 +44,7 @@
         </div>
 
         <div class="modal-actions">
-          <button type="submit" class="btn btn-success">Register</button>
+          <button type="submit" class="btn btn-success">{{ user ? 'Save Changes' : 'Register' }}</button>
           <button type="button" @click="$emit('close')" class="btn btn-secondary">Cancel</button>
         </div>
       </form>
@@ -51,24 +53,28 @@
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import axios from "@/utils/axios.js";
 
 export default {
-  setup(_, { emit }) {
+  props: {
+    user: Object,
+  },
+  setup(props, { emit }) {
     const formData = ref({
       whatsapp_number: "",
       first_name: "",
       password: "",
-      role: "tester",
-      organization: "",
+      role: "tester", // Default role
+      organization: null,
       is_active: true,
-      created_by_admin: true, // Marks admin-created users
+      created_by_admin: true,
     });
 
     const organizations = ref([]);
+    const roles = ref([]);
 
-    // Fetch organizations from API
+    // Fetch organizations from the backend
     const fetchOrganizations = async () => {
       try {
         const response = await axios.get("/organizations/");
@@ -78,23 +84,74 @@ export default {
       }
     };
 
-    onMounted(fetchOrganizations);
-
-    const registerUser = async () => {
+    // Fetch roles from the backend
+    const fetchRoles = async () => {
       try {
-        await axios.post("/users/", formData.value);
-        alert("User registered successfully!");
-        emit("userRegistered"); // Notify parent to refresh user list
-        emit("close"); // Close modal
+        const response = await axios.get("/roles/");
+        roles.value = response.data;
       } catch (error) {
-        alert("Registration failed: " + error.response.data.detail);
+        console.error("Failed to fetch roles:", error);
+      }
+    };
+
+    // Fetch data when the modal is mounted
+    onMounted(() => {
+      fetchOrganizations();
+      fetchRoles();
+    });
+
+    // Watch for changes in the `user` prop
+    watch(
+      () => props.user,
+      (newValue) => {
+        if (newValue) {
+          // If editing an existing user, populate the form with their data
+          formData.value = { ...newValue };
+        } else {
+          // If adding a new user, reset the form
+          formData.value = {
+            whatsapp_number: "",
+            first_name: "",
+            password: "",
+            role: "tester",
+            organization: null,
+            is_active: true,
+            created_by_admin: true,
+          };
+        }
+      },
+      { immediate: true }
+    );
+
+    // Save or update the user
+    const saveUser = async () => {
+      try {
+        // Ensure the organization ID is an integer
+        formData.value.organization = parseInt(formData.value.organization);
+
+        if (props.user) {
+          // Update an existing user
+          await axios.put(`/users/${props.user.id}/`, formData.value);
+          alert("User updated successfully!");
+        } else {
+          // Create a new user
+          await axios.post("/users/", formData.value);
+          alert("User registered successfully!");
+        }
+
+        // Close the modal and emit the save event
+        emit("close");
+        emit("save", formData.value);
+      } catch (error) {
+        alert("Registration failed: " + JSON.stringify(error.response.data));
       }
     };
 
     return {
       formData,
-      registerUser,
+      saveUser,
       organizations,
+      roles,
     };
   },
 };

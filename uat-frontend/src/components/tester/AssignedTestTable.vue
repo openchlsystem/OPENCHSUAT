@@ -1,5 +1,5 @@
 <template>
-  <div class="table-responsive">
+  <div class="table-container">
     <table class="table table-hover table-striped">
       <thead>
         <tr>
@@ -15,15 +15,19 @@
           <td>{{ index + 1 }}</td>
           <td class="test-title">{{ test.title }}</td>
           <td>
-            <span :class="getPriorityClass(test.priority)">{{ test.priority }}</span>
+            <span class="badge" :class="getPriorityClass(test.priority)">
+              {{ test.priority }}
+            </span>
           </td>
           <td>
-            <span :class="getStatusClass(test.status)">{{ test.status }}</span>
+            <span class="badge" :class="getStatusClass(test.status)">
+              {{ test.status }}
+            </span>
           </td>
           <td>
-            <router-link :to="'/tester/test-case/' + test.id" class="btn btn-primary btn-sm">
-              View
-            </router-link>
+            <button class="btn btn-outline-primary btn-sm" @click="viewDetails(test)">
+              <i class="fas fa-eye"></i> View
+            </button>
           </td>
         </tr>
       </tbody>
@@ -39,56 +43,68 @@ export default {
   methods: {
     getPriorityClass(priority) {
       return {
-        'badge bg-danger': priority === 'High',
-        'badge bg-warning': priority === 'Medium',
-        'badge bg-success': priority === 'Low',
+        'badge-danger': priority === 'High',
+        'badge-warning': priority === 'Medium',
+        'badge-success': priority === 'Low',
       };
     },
     getStatusClass(status) {
       return {
-        'badge bg-success': status === 'Passed',
-        'badge bg-warning text-dark': status === 'Pending',
-        'badge bg-danger': status === 'Failed',
+        'badge-success': status === 'Passed',
+        'badge-warning': status === 'Pending',
+        'badge-danger': status === 'Failed',
       };
-    }
-  }
+    },
+    viewDetails(test) {
+      this.$emit('openTestModal', test);
+    },
+  },
 };
 </script>
 
 <style scoped>
-.table {
-  margin-top: 10px;
+.table-container {
+  border-radius: 10px;
+  overflow: hidden;
 }
 
-th {
-  background: #f8f9fa;
-  text-align: center;
-  font-weight: bold;
-}
-
-td {
-  text-align: center;
-  vertical-align: middle;
+.table thead {
+  background-color: #0056b3;
+  color: white;
 }
 
 .test-title {
-  font-weight: bold;
-  color: #007bff;
+  font-weight: 500;
 }
 
 .badge {
-  padding: 8px 12px;
-  font-size: 14px;
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 12px;
+}
+
+.badge-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.badge-warning {
+  background-color: #ffc107;
+  color: black;
+}
+
+.badge-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-outline-primary {
   border-radius: 5px;
+  transition: 0.3s;
 }
 
-.btn-sm {
-  padding: 5px 12px;
-  font-size: 14px;
-  transition: 0.3s ease;
-}
-
-.btn-sm:hover {
-  background: #0056b3;
+.btn-outline-primary:hover {
+  background-color: #0056b3;
+  color: white;
 }
 </style>

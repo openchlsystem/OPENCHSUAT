@@ -9,6 +9,7 @@
             <th>Step Number</th>
             <th>Description</th>
             <th>Expected Result</th>
+            <th>Attachment</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -18,6 +19,12 @@
             <td>{{ step.description }}</td>
             <td>{{ step.expected_result }}</td>
             <td>
+              <a v-if="step.attachment" :href="step.attachment" target="_blank" class="attachment-link">
+                View Attachment
+              </a>
+              <span v-else>No Attachment</span>
+            </td>
+            <td>
               <button @click="openEditStepModal(step)" class="btn btn-warning btn-sm">Edit</button>
               <button @click="deleteStep(step.id)" class="btn btn-danger btn-sm">Delete</button>
             </td>
@@ -25,7 +32,7 @@
         </tbody>
       </table>
 
-      <button @click="openAddStepModal" class="btn btn-primary">+ Add Step</button>
+
       <button @click="$emit('close')" class="btn btn-secondary">Close</button>
 
       <!-- Add/Edit Test Step Modal -->
@@ -74,7 +81,7 @@ export default {
       if (!this.testCase?.id) return;
       try {
         // Fetch the test case with its steps
-        const response = await axios.get(`/api/test-cases/${this.testCase.id}/`);
+        const response = await axios.get(`/test-cases/${this.testCase.id}/`);
         // Update the testCase prop with the fetched data
         this.$emit("update:testCase", response.data);
       } catch (error) {
@@ -84,7 +91,7 @@ export default {
     },
     async deleteStep(stepId) {
       try {
-        await axios.delete(`/api/test-steps/${stepId}/`);
+        await axios.delete(`/test-steps/${stepId}/`);
         this.fetchTestSteps(); // Refresh the list of steps after deletion
       } catch (error) {
         console.error("Error deleting test step:", error);
@@ -114,19 +121,26 @@ export default {
   align-items: center;
   justify-content: center;
 }
-
 .modal-content {
   background: white;
   padding: 20px;
   border-radius: 8px;
-  width: 500px;
+  width: 80%;
+  max-width: 800px;
 }
 
 .table {
   margin-top: 20px;
+  width: 100%;
 }
-
 button {
   margin-right: 10px;
+}
+.attachment-link {
+  color: #007bff;
+  text-decoration: none;
+}
+.attachment-link:hover {
+  text-decoration: underline;
 }
 </style>

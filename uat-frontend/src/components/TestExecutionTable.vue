@@ -1,33 +1,40 @@
 <template>
-  <div>
-    <div v-if="testExecutions.length === 0" class="no-tests">
-      <p>No test cases assigned to you yet. </p>
-    </div>
-
-    <table v-else class="table custom-table shadow-sm">
-      <thead>
+  <div class="table-responsive">
+    <table class="table table-striped table-hover">
+      <thead class="thead-dark">
         <tr>
+          <th>#</th>
           <th>Test Case</th>
           <th>Functionality</th>
-          <th>Assigned By</th>
           <th>Status</th>
-          <th>Actions</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="execution in testExecutions" :key="execution.id">
-          <td>{{ execution.test_case.title }}</td>
-          <td>{{ execution.test_case.functionality?.name || 'N/A' }}</td>
-          <td>{{ execution.assigned_by?.name || 'N/A' }}</td>
+        <!-- Loading State -->
+        <tr v-if="loading">
+          <td colspan="5" class="text-center">
+            <div class="spinner-border text-primary" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Empty State -->
+        <tr v-else-if="testExecutions.length === 0">
+          <td colspan="5" class="text-center">No test executions found.</td>
+        </tr>
+
+        <!-- Data Rows -->
+        <tr v-for="(test, index) in testExecutions" :key="test.id">
+          <td>{{ index + 1 }}</td>
+          <td>{{ test.title }}</td>
+          <td>{{ test.functionality }}</td>
           <td>
-            <span :class="statusClass(execution.status)">
-              {{ execution.status || "Pending" }}
-            </span>
+            <span :class="getStatusClass(test.status)">{{ test.status || "Pending" }}</span>
           </td>
           <td>
-            <button class="btn btn-primary btn-sm" @click="$emit('execute', execution)">
-              🚀 Execute
-            </button>
+            <button class="btn btn-primary btn-sm" @click="$emit('execute', test)">Execute</button>
           </td>
         </tr>
       </tbody>
@@ -38,49 +45,88 @@
 <script>
 export default {
   props: {
-    testExecutions: Array
+    testExecutions: {
+      type: Array,
+      default: () => [],
+    },
+    loading: {
+      type: Boolean,
+      default: false,
+    },
   },
   methods: {
-    statusClass(status) {
-      return {
-        "badge bg-success": status === "Passed",
-        "badge bg-danger": status === "Failed",
-        "badge bg-warning": !status,
-      };
+    getStatusClass(status) {
+      switch (status) {
+        case "Passed":
+          return "badge badge-success";
+        case "Failed":
+          return "badge badge-danger";
+        case "In Progress":
+          return "badge badge-warning";
+        default:
+          return "badge badge-secondary";
+      }
     },
   },
 };
 </script>
 
 <style scoped>
-.custom-table {
-  background: #ffffff;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1px solid #ccc;
-}
-
-.custom-table thead {
-  background: #004085;
-  color: white;
-}
-
-.custom-table tbody tr:hover {
-  background: #f1f1f1;
-}
-
-.no-tests {
-  text-align: center;
-  font-size: 18px;
-  padding: 20px;
-  color: #555;
-  background: #e9ecef;
-  border-radius: 8px;
-  margin-top: 20px;
+.table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
 .badge {
   padding: 5px 10px;
   font-size: 14px;
+  border-radius: 4px;
+}
+
+.badge-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.badge-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.badge-warning {
+  background-color: #ffc107;
+  color: black;
+}
+
+.badge-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn {
+  font-size: 14px;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.spinner-border {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  vertical-align: text-bottom;
+  border: 0.25em solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spinner-border 0.75s linear infinite;
+}
+
+@keyframes spinner-border {
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>

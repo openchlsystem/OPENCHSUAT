@@ -37,7 +37,8 @@ const routes = [
     component: AdminLayout, // Parent Layout
     meta: { requiresAuth: true }, // Requires authentication
     children: [
-      { path: "", name: "AdminDashboard", component: AdminDashboard}, // Default child
+      { path: "", name: "AdminDashboardDefault", component: AdminDashboard }, // Default route for /admin
+      { path: "dashboard", name: "AdminDashboard", component: AdminDashboard }, // Route for /admin/dashboard
       { path: 'organizations', name: 'OrganizationManagementView', component: OrganizationManagementView },
       { path: 'systems', name: 'SystemManagementView', component: SystemManagementView },
       { path: 'functionalities', name: 'FunctionalityManagementView', component: FunctionalityManagementView },
