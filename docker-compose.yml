@@ -1,0 +1,42 @@
+# version: '3.8'
+
+services:
+  backend:
+    build: ./uat_tool
+    container_name: uat_backend
+    ports:
+      - "8005:8005"
+    volumes:
+      - ./uat_tool:/app
+    env_file:
+      - ./uat_tool/.env
+    depends_on:
+      - db
+
+  frontend:
+    build: ./uat-frontend
+    container_name: uat_frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./uat-frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+
+  db:
+    image: mysql:8.0
+    container_name: uat_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: uat_db
+      MYSQL_USER: uat_user
+      MYSQL_PASSWORD: uat_password
+      MYSQL_ROOT_PASSWORD: root_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
