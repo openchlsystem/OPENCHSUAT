@@ -25,12 +25,11 @@
 
         <div class="form-group">
           <label>Severity <span class="required">*</span></label>
-          <select v-model="defect.severity" class="form-control custom-select" required>
-            <option value="Critical"> Critical</option>
-            <option value="High"> High</option>
-            <option value="Medium"> Medium</option>
-            <option value="Low"> Low</option>
-          </select>
+            <select v-model="formData.status" class="w-full p-2 border rounded mb-4">
+             <option v-for="option in statusOptions" :key="option.value" :value="option.value">
+             {{ option.label }}
+            </option>
+      </select>
         </div>
 
         <div class="form-group">

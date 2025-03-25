@@ -15,7 +15,6 @@
     <DefectTable :defects="defects" />
   </div>
 </template>
-
 <script>
 import axios from "@/utils/axios.js";
 import DefectForm from "@/components/DefectForm.vue";
@@ -35,7 +34,7 @@ export default {
       try {
         const [defectRes, testCaseRes] = await Promise.all([
           axios.get("/defects/"),
-          axios.get("/testcases/")
+          axios.get("/test-cases/")
         ]);
         this.defects = defectRes.data;
         this.testCases = testCaseRes.data;
