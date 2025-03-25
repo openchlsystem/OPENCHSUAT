@@ -31,14 +31,6 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-    def create(self, validated_data):
-        password = validated_data.pop('password', None)
-        instance = self.Meta.model(**validated_data)
-        if password is not None:
-            instance.set_password(password)
-        instance.save()
-        return instance
-
 # System Serializer
 class SystemSerializer(serializers.ModelSerializer):
     organization = OrganizationSerializer(read_only=True)  # Serialize organization as an object
@@ -87,9 +79,26 @@ class TestExecutionSerializer(serializers.ModelSerializer):
 
 # Defect Serializer
 class DefectSerializer(serializers.ModelSerializer):
-    execution = TestExecutionSerializer(read_only=True)  # Serialize execution as an object
-    reported_by = UserSerializer(read_only=True)  # Serialize reported_by as an object
+    execution = TestExecutionSerializer(read_only=True)
+    execution_id = serializers.PrimaryKeyRelatedField(
+        queryset=TestExecution.objects.all(),
+        source='execution',
+        write_only=True,
+        required=True
+    )
+    reported_by = UserSerializer(read_only=True)
+    reported_by_id = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(),
+        source='reported_by',
+        write_only=True,
+        required=True
+    )
 
     class Meta:
         model = Defect
-        fields = '__all__'
+        fields = [
+            'id', 'title', 'description', 'severity', 'status',
+            'resolved', 'resolution_notes', 'attachment',
+            'execution', 'execution_id', 'reported_by', 'reported_by_id',
+            'created_at', 'updated_at'
+        ]

@@ -26,6 +26,23 @@ import time
 
 User = get_user_model()
 otp_store = {}  # Temporary OTP storage with expiration
+class DefectOptionsView(APIView):
+    """
+    API View to fetch options for Defect fields (severity and status).
+    """
+    def get(self, request):
+        # Get severity choices from Defect model
+        severity_choices = Defect._meta.get_field('severity').choices
+        severity_options = [{'value': choice[0], 'label': choice[1]} for choice in severity_choices]
+
+        # Get status choices from Defect model
+        status_choices = Defect._meta.get_field('status').choices
+        status_options = [{'value': choice[0], 'label': choice[1]} for choice in status_choices]
+
+        return Response({
+            'severity_options': severity_options,
+            'status_options': status_options
+        })
 
 class StatusChoicesView(APIView):
     """
