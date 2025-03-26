@@ -1,5 +1,3 @@
-# version: '3.8'
-
 services:
   backend:
     build: ./uat_tool
@@ -11,7 +9,8 @@ services:
     env_file:
       - ./uat_tool/.env
     depends_on:
-      - db
+      db:
+        condition: service_healthy  # Ensure DB is healthy before starting the backend
 
   frontend:
     build: ./uat-frontend
@@ -37,6 +36,10 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      retries: 5
+      interval: 5s
 
 volumes:
-  mysql_data:
+  mysql_data:  # Make sure this is defined here

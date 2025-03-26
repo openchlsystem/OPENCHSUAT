@@ -13,11 +13,11 @@ class OrganizationSerializer(serializers.ModelSerializer):
 # User Serializer (For your custom User model with whatsapp_number)
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
-    organization = serializers.PrimaryKeyRelatedField(queryset=Organization.objects.all())  # Use PrimaryKeyRelatedField
+
 
     class Meta:
         model = User
-        fields = ('id', 'whatsapp_number', 'password', 'first_name', 'organization', 'role', 'is_active', 'is_staff')
+        fields = ('id', 'whatsapp_number', 'password', 'first_name', 'role', 'is_active', 'is_staff')
         extra_kwargs = {
             'password': {'write_only': True},
             'role': {'required': False}
