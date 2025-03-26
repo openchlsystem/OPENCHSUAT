@@ -1,28 +1,29 @@
-<!-- src/components/admin/DefectTable.vue -->
 <template>
   <div>
     <table class="defect-table">
       <thead>
         <tr>
-          <th @click="sortBy('name')">Defect Name</th>
-          <th @click="sortBy('test_case')">Test Case</th>
+          <th @click="sortBy('title')">Defect Name</th>
+          <th @click="sortBy('execution.test_case_title')">Test Case</th>
           <th @click="sortBy('severity')">Severity</th>
           <th @click="sortBy('status')">Status</th>
-          <th @click="sortBy('reported_at')">Date Reported</th>
+          <th @click="sortBy('created_at')">Date Reported</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="defect in sortedDefects" :key="defect.id">
-          <td>{{ defect.name }}</td>
-          <td>{{ defect.test_case }}</td>
+          <!-- ✅ Use correct key for defect name -->
+          <td>{{ defect.title ?? 'N/A' }}</td>
+          <!-- ✅ Show test case title instead of ID -->
+          <td>{{ defect.execution?.test_case_title ?? 'N/A' }}</td>
           <td>
-            <span :class="`severity-${defect.severity}`">{{ defect.severity }}</span>
+            <span :class="`severity-${defect.severity}`">{{ defect.severity ?? 'N/A' }}</span>
           </td>
           <td>
-            <span :class="`status-${defect.status}`">{{ defect.status }}</span>
+            <span :class="`status-${defect.status}`">{{ defect.status ?? 'N/A' }}</span>
           </td>
-          <td>{{ new Date(defect.reported_at).toLocaleDateString() }}</td>
+          <td>{{ defect.created_at ? new Date(defect.created_at).toLocaleDateString() : 'N/A' }}</td>
           <td>
             <button class="btn-view" @click="$emit('view-details', defect)">View</button>
           </td>
@@ -38,7 +39,10 @@
 <script>
 export default {
   props: {
-    defects: Array
+    defects: {
+      type: Array,
+      required: true
+    }
   },
   data() {
     return {
@@ -50,7 +54,12 @@ export default {
     sortedDefects() {
       return [...this.defects].sort((a, b) => {
         if (!this.sortKey) return 0;
-        let result = a[this.sortKey] > b[this.sortKey] ? 1 : -1;
+
+        // ✅ Handle nested keys like execution.test_case_title
+        const valueA = this.getNestedValue(a, this.sortKey) || "";
+        const valueB = this.getNestedValue(b, this.sortKey) || "";
+
+        let result = valueA > valueB ? 1 : -1;
         return this.sortAsc ? result : -result;
       });
     }
@@ -59,7 +68,13 @@ export default {
     sortBy(key) {
       this.sortAsc = this.sortKey === key ? !this.sortAsc : true;
       this.sortKey = key;
+    },
+    getNestedValue(obj, path) {
+      return path.split('.').reduce((value, key) => value?.[key], obj);
     }
+  },
+  mounted() {
+    console.log("Defects data:", this.defects); // ✅ Debugging data
   }
 };
 </script>
@@ -71,7 +86,7 @@ export default {
 }
 
 .defect-table th {
-  background: orange; /* Theme color - Blue */
+  background: orange;
   color: white;
   cursor: pointer;
   padding: 10px;
@@ -116,7 +131,7 @@ export default {
 }
 
 .btn-view {
-  background: #ff6600; /* Theme color - Orange */
+  background: #ff6600;
   color: white;
   padding: 5px 10px;
   border: none;

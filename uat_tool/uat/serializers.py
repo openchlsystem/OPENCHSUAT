@@ -33,15 +33,16 @@ class UserSerializer(serializers.ModelSerializer):
 
 # System Serializer
 class SystemSerializer(serializers.ModelSerializer):
-    organization = OrganizationSerializer(read_only=True)  # Serialize organization as an object
+   # organization = OrganizationSerializer.PrimaryKeyRelatedField(queryset=Organization.objects.all())  # ❌ Incorrect usage
 
     class Meta:
         model = System
         fields = ['id', 'name', 'organization', 'description']
 
+
 # Functionality Serializer
 class FunctionalitySerializer(serializers.ModelSerializer):
-    system = SystemSerializer(read_only=True)  # Serialize system as an object
+    #system = SystemSerializer(read_only=True)  # Serialize system as an object
 
     class Meta:
         model = Functionality
