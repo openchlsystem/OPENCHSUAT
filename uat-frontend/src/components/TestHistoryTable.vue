@@ -94,51 +94,51 @@ export default {
         });
     },
   },
-  watch: {
-    executions: {
-      immediate: true,
-      async handler(newExecutions) {
-        if (newExecutions && newExecutions.length > 0) {
-          const testCaseIds = [...new Set(newExecutions.map((execution) => execution.test_case))];
+    watch: {
+      executions: {
+        immediate: true,
+        async handler(newExecutions) {
+          if (newExecutions && newExecutions.length > 0) {
+            const testCaseIds = [...new Set(newExecutions.map((execution) => execution.test_case))];
 
-          console.log("Test Case IDs:", testCaseIds);
+            console.log("Test Case IDs:", testCaseIds);
 
-          await Promise.all(
-            testCaseIds.map((testCaseId) => this.fetchTestCaseTitle(testCaseId))
-          );
+            await Promise.all(
+              testCaseIds.map((testCaseId) => this.fetchTestCaseTitle(testCaseId))
+            );
 
-          console.log("Updated testCaseTitles:", this.testCaseTitles);
-        } else {
-          this.testCaseTitles = {};
-        }
+            console.log("Updated testCaseTitles:", this.testCaseTitles);
+          } else {
+            this.testCaseTitles = {};
+          }
+        },
       },
     },
-  },
-  methods: {
-    async fetchTestCaseTitle(testCaseId) {
-      try {
-        const response = await axios.get(`/test-cases/${testCaseId}/`);
-        console.log("Fetched Test Case:", response.data);
+    methods: {
+      async fetchTestCaseTitle(testCaseId) {
+        try {
+          const response = await axios.get(`/test-cases/${testCaseId}/`);
+          console.log("Fetched Test Case:", response.data);
 
-        this.$set(this.testCaseTitles, testCaseId, response.data.title || "Unknown");
-
-        console.log("Updated testCaseTitles:", this.testCaseTitles);
-      } catch (error) {
-        console.error("Error fetching test case title:", error);
-        this.$set(this.testCaseTitles, testCaseId, "Unknown");
-      }
-    },
-    getTestCaseTitle(testCaseId) {
-      if (this.testCaseTitles[testCaseId]) {
-        return this.testCaseTitles[testCaseId];
-      } else {
-        if (this.testCaseTitles.hasOwnProperty(testCaseId)) {
+          this.testCaseTitles = { ...this.testCaseTitles, [testCaseId]: response.data.title || "Unknown" };
+          
+          console.log("Updated testCaseTitles:", this.testCaseTitles);
+        } catch (error) {
+          console.error("Error fetching test case title:", error);
+          this.$set(this.testCaseTitles, testCaseId, "Unknown");
+        }
+      },
+      getTestCaseTitle(testCaseId) {
+        if (this.testCaseTitles[testCaseId]) {
           return this.testCaseTitles[testCaseId];
         } else {
-          return "Loading...";
+          if (this.testCaseTitles.hasOwnProperty(testCaseId)) {
+            return this.testCaseTitles[testCaseId];
+          } else {
+            return "Loading...";
+          }
         }
-      }
-    },
+      },
     getStatusLabel(statusValue) {
       const status = this.statusChoices.find((s) => s.value === statusValue);
       return status ? status.label : statusValue;

@@ -1,46 +1,55 @@
 <template>
   <div class="modal-overlay">
     <div class="modal-content">
-      <h3 class="modal-title"> Report a Defect</h3>
+      <h3 class="modal-title">Report a Defect</h3>
 
-      <form @submit.prevent="submit">
+      <form @submit.stop.prevent="submit">
+        <!-- Defect Name -->
         <div class="form-group">
           <label>Defect Name <span class="required">*</span></label>
-          <input type="text" v-model="defect.name" class="form-control" required />
+          <input type="text" v-model="defect.title" class="form-control" required />
         </div>
 
+        <!-- Defect Description -->
         <div class="form-group">
           <label>Defect Description <span class="required">*</span></label>
           <textarea v-model="defect.description" class="form-control" rows="3" required></textarea>
         </div>
 
+        <!-- Related Test Case -->
         <div class="form-group">
           <label>Related Test Case <span class="required">*</span></label>
-          <select v-model="defect.test_case_id" class="form-control" required>
+          <select v-model="defect.execution" class="form-control" required>
             <option v-for="test in testCases" :key="test.id" :value="test.id">
               {{ test.title }}
             </option>
           </select>
         </div>
 
+        <!-- Severity -->
         <div class="form-group">
           <label>Severity <span class="required">*</span></label>
-            <select v-model="formData.status" class="w-full p-2 border rounded mb-4">
-             <option v-for="option in statusOptions" :key="option.value" :value="option.value">
-             {{ option.label }}
+          <select v-model="defect.severity" class="form-control" required>
+            <option v-for="severity in defectOptions.severity_options" :key="severity.label" :value="severity.value">
+              {{ severity.label }}
             </option>
-      </select>
+          </select>
         </div>
 
+        <!-- Attach Evidence -->
         <div class="form-group">
           <label>Attach Evidence</label>
-          <input type="file" @change="handleFileUpload" class="form-control file-input" />
+          <input type="file" @change="handleFileUpload" class="form-control" />
         </div>
 
+        <!-- Form Buttons -->
         <div class="form-buttons">
           <button type="submit" class="btn btn-orange">Submit</button>
           <button type="button" @click="$emit('close')" class="btn btn-secondary">Cancel</button>
         </div>
+
+        <!-- Error Message -->
+        <p v-if="errorMessage" class="error-text">{{ errorMessage }}</p>
       </form>
     </div>
   </div>
@@ -48,35 +57,69 @@
 
 <script>
 export default {
-  props: { testCases: Array },
+  props: { 
+    testCases: Array, 
+    defectOptions: Array 
+  },
   data() {
     return {
       defect: {
-        name: "",
+        title: "",
         description: "",
-        test_case_id: "",
+        execution: "",
         severity: "Medium",
+        execution_id: "",
+        reported_by_id: "",
         evidence: null
-      }
+      },
+      errorMessage: ""
     };
   },
   methods: {
     handleFileUpload(event) {
       this.defect.evidence = event.target.files[0];
     },
-    submit() {
+    async submit() {
+      if (!this.defect.execution) {
+        this.errorMessage = "Please select a related test case.";
+        return;
+      }
+
+      this.errorMessage = "";
+
       const formData = new FormData();
-      formData.append("name", this.defect.name);
+      formData.append("title", this.defect.title);
       formData.append("description", this.defect.description);
-      formData.append("test_case_id", this.defect.test_case_id);
+      formData.append("execution_id", this.defect.execution);
       formData.append("severity", this.defect.severity);
+
+      // formData.append("reported_by_id", testCases.assigned_user);
+      const selectedTestCase = this.testCases.find(test => test.id === this.defect.execution);
+      if (selectedTestCase && selectedTestCase.assigned_user) {
+        formData.append("reported_by_id", selectedTestCase.assigned_user);
+      }
+
+
       if (this.defect.evidence) {
         formData.append("evidence", this.defect.evidence);
       }
-      this.$emit("submit", formData);
+
+      try {
+        console.log("Submitting defect:", Object.fromEntries(formData));
+        
+        // Emit formData to parent
+        this.$emit("submit", formData);
+      } catch (error) {
+        console.error("Error submitting defect:", error.response?.data || error);
+
+        if (error.response?.data) {
+          const errors = error.response.data;
+          this.errorMessage = Object.values(errors).flat().join(" ");
+        } else {
+          this.errorMessage = "Failed to submit defect. Please check the required fields.";
+        }
+      }
     }
-
-
   }
 };
 </script>
@@ -172,5 +215,12 @@ textarea {
 
 .btn-secondary:hover {
   background: #333;
+}
+
+/* Error Message */
+.error-text {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
 }
 </style>
