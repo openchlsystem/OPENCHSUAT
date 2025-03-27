@@ -88,7 +88,6 @@ class User(AbstractBaseUser, PermissionsMixin):
             name=self.whatsapp_number, issuer_name="uat"
         )
 
-<<<<<<< HEAD
 class UserOrganization(models.Model):
     """
     Represents the many-to-many relationship between users and organizations.
@@ -101,22 +100,6 @@ class UserOrganization(models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.organization}"
-=======
-
-
-# User organization Join Table 
-class UserOrganization(models.Model):
-    """
-    Represents the join table between User and Organization.
-    """
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_organizations', help_text="The user associated with the organization.")
-    organization = models.ForeignKey('Organization', on_delete=models.CASCADE, related_name='user_organizations', help_text="The organization the user belongs to.")
-    
-    # Unique together
-    class Meta:
-        unique_together = ('user', 'organization')
-
->>>>>>> 00ebb86de2bb9cf4952a56bd8c26deaa40f095b1
 
 # System & Functionality
 class System(models.Model):

@@ -28,7 +28,6 @@ class UserOrganizationSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-<<<<<<< HEAD
     password = serializers.CharField(
         write_only=True,
         required=False,
@@ -49,14 +48,6 @@ class UserSerializer(serializers.ModelSerializer):
             'organizations', 'role', 'is_active', 'is_staff',
             'created_at', 'last_login'
         ]
-=======
-    password = serializers.CharField(write_only=True)
-
-
-    class Meta:
-        model = User
-        fields = ('id', 'whatsapp_number', 'password', 'first_name', 'role', 'is_active', 'is_staff')
->>>>>>> 00ebb86de2bb9cf4952a56bd8c26deaa40f095b1
         extra_kwargs = {
             'password': {'write_only': True},
             'role': {'required': False},
@@ -65,28 +56,24 @@ class UserSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         whatsapp_number = data.get('whatsapp_number')
-        organizations = data.get('organizations', [])
 
         if not whatsapp_number:
             raise serializers.ValidationError(
                 {"whatsapp_number": "This field is required."}
             )
 
-        if not organizations:
-            raise serializers.ValidationError(
-                {"organizations": ["At least one organization is required."]}
-            )
+        # Only check existing organizations if organizations are provided
+        organizations = data.get('organizations', [])
+        if organizations:  # Only run this check if organizations are provided
+            existing_orgs = UserOrganization.objects.filter(
+                user__whatsapp_number=whatsapp_number,
+                organization__in=organizations
+            ).select_related('organization').values_list('organization__name', flat=True)
 
-        # Check for existing users
-        existing_orgs = UserOrganization.objects.filter(
-            user__whatsapp_number=whatsapp_number,
-            organization__in=organizations
-        ).select_related('organization').values_list('organization__name', flat=True)
-
-        if existing_orgs and not self.instance:
-            raise serializers.ValidationError({
-                "whatsapp_number": f"This number is already registered in: {', '.join(existing_orgs)}"
-            })
+            if existing_orgs and not self.instance:
+                raise serializers.ValidationError({
+                    "whatsapp_number": f"This number is already registered in: {', '.join(existing_orgs)}"
+                })
 
         return data
 
@@ -102,12 +89,11 @@ class UserSerializer(serializers.ModelSerializer):
             user.set_password(password)
             user.save()
 
-        # Create UserOrganization relationships
+        # Create UserOrganization relationships if organizations were provided
         for org in organizations:
             UserOrganization.objects.create(user=user, organization=org)
 
         return user
-
 class SystemSerializer(serializers.ModelSerializer):
    # organization = OrganizationSerializer.PrimaryKeyRelatedField(queryset=Organization.objects.all())  # ❌ Incorrect usage
 
