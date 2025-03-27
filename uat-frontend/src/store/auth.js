@@ -75,7 +75,14 @@ export const useAuthStore = defineStore('auth', {
         console.log('OTP verified successfully. Tokens stored.');
 
         // Redirect user to dashboard
-        router.push({ name: 'AdminDashboard' });
+        // ✅ Redirect based on user role
+    if (user.role === 'admin') {
+      router.push({ name: 'AdminDashboard' });
+    } else if (user.role === 'tester') {
+      router.push({ name: 'TesterDashboard' });
+    } else {
+      router.push({ name: 'Login' }); // Fallback if role is undefined
+    }
 
         return response.data;
       } catch (error) {
