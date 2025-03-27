@@ -96,6 +96,7 @@ export default {
       // formData.append("reported_by_id", testCases.assigned_user);
       const selectedTestCase = this.testCases.find(test => test.id === this.defect.execution);
       if (selectedTestCase && selectedTestCase.assigned_user) {
+        console.log("{{reported_by_id}}")
         formData.append("reported_by_id", selectedTestCase.assigned_user);
       }
 
