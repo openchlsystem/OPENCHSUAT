@@ -72,9 +72,30 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
   const isAuthenticated = !!authStore.accessToken;
+  const userRole = authStore.userRole;
 
   if (to.meta.requiresAuth && !isAuthenticated) {
-    next("/login"); // Redirect to login if not authenticated
+    next("/login");
+  } else if (to.meta.requiresAuth && isAuthenticated) {
+    // Redirect based on the user's role if the route role doesn't match
+    if (to.meta.role && to.meta.role !== userRole) {
+      if (userRole === 'admin') {
+        next('/admin/dashboard'); // Redirect admin to admin dashboard
+      } else if (userRole === 'tester') {
+        next('/tester/dashboard'); // Redirect tester to tester dashboard
+      } else {
+        next('/'); // Unknown role, send home
+      }
+    } else {
+      next(); // Proceed if the role matches
+    }
+  } else if (to.path === '/login' && isAuthenticated) {
+    // If logged in, prevent access to login page
+    if (userRole === 'admin') {
+      next('/admin/dashboard');
+    } else if (userRole === 'tester') {
+      next('/tester/dashboard');
+    }
   } else {
     next();
   }

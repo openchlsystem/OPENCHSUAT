@@ -226,6 +226,6 @@ EOF
 
 # Finish setup
 echo "🎉 UAT Tool setup complete!"
-echo "🚀 Backend running at http://localhost:8000/"
+echo "🚀 Backend running at http://localhost:8005/"
 echo "🌟 Frontend running at http://localhost:5173/"
 

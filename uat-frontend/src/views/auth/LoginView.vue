@@ -58,13 +58,20 @@ export default {
     const verifyOTP = async () => {
       try {
         await authStore.verifyOTP(whatsapp_number.value, otp.value);
-        alert("OTP verified successfully. Redirecting to dashboard...");
-        router.push('/admin');
+        alert('OTP verified successfully. Redirecting to dashboard...');
+
+        // Redirect based on role
+        if (authStore.userRole === 'admin') {
+          router.push('/admin');
+        } else if (authStore.userRole === 'tester') {
+          router.push('/tester');
+        }
       } catch (error) {
-        alert("Invalid OTP. Please try again.");
-        console.error("Invalid OTP:", error);
+        alert('Invalid OTP. Please try again.');
+        console.error('Invalid OTP:', error);
       }
     };
+
 
     return {
       whatsapp_number,

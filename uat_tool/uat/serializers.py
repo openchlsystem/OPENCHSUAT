@@ -28,6 +28,7 @@ class UserOrganizationSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+<<<<<<< HEAD
     password = serializers.CharField(
         write_only=True,
         required=False,
@@ -48,6 +49,14 @@ class UserSerializer(serializers.ModelSerializer):
             'organizations', 'role', 'is_active', 'is_staff',
             'created_at', 'last_login'
         ]
+=======
+    password = serializers.CharField(write_only=True)
+
+
+    class Meta:
+        model = User
+        fields = ('id', 'whatsapp_number', 'password', 'first_name', 'role', 'is_active', 'is_staff')
+>>>>>>> 00ebb86de2bb9cf4952a56bd8c26deaa40f095b1
         extra_kwargs = {
             'password': {'write_only': True},
             'role': {'required': False},

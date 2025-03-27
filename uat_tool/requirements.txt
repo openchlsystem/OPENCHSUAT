@@ -21,3 +21,10 @@ rpds-py==0.23.1
 sqlparse==0.5.3
 uritemplate==4.1.1
 urllib3==2.3.0
+djangorestframework
+mysqlclient
+dj-database-url
+gunicorn
+python-dotenv
+
+
