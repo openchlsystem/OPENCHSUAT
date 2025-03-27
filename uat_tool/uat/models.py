@@ -4,6 +4,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 import pyotp
 import uuid
+import base64
 
 # User & Organization
 class Organization(models.Model):
@@ -44,8 +45,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    whatsapp_number = models.CharField(max_length=15, unique=True, help_text="The user's WhatsApp number.")
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name='users', null=True, help_text="The organization the user belongs to.")
+    whatsapp_number = models.CharField(max_length=15, unique=True,help_text="The user's WhatsApp number.")
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='admin', help_text="The role of the user.")
     otp_secret = models.CharField(max_length=255, blank=True, null=True, help_text="The OTP secret for two-factor authentication.")
     is_active = models.BooleanField(default=True, help_text="Indicates whether the user is active.")
@@ -83,6 +83,19 @@ class User(AbstractBaseUser, PermissionsMixin):
             name=self.whatsapp_number, issuer_name="uat"
         )
 
+class UserOrganization(models.Model):
+    """
+    Represents the many-to-many relationship between users and organizations.
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_organizations', help_text="The user associated with the organization")
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name='organization_users', help_text="The organization associated with the user")
+
+    class Meta:
+        unique_together = ('user', 'organization')
+
+    def __str__(self):
+        return f"{self.user} - {self.organization}"
+
 # System & Functionality
 class System(models.Model):
     """
@@ -112,7 +125,14 @@ class TestCase(models.Model):
     Represents a test case for a functionality.
     """
     title = models.CharField(max_length=255, help_text="The title of the test case.")
-    functionality = models.ForeignKey(Functionality, on_delete=models.CASCADE, related_name='test_cases', help_text="The functionality this test case belongs to.")
+    functionality = models.ForeignKey(
+        Functionality,
+        on_delete=models.CASCADE,
+        related_name='test_cases',
+        null=True,  # Allow NULL in database
+        blank=True,  # Allow blank in forms
+        help_text="The functionality this test case belongs to."
+    )
     description = models.TextField(help_text="A detailed description of the test case.")
     expected_result = models.TextField(help_text="The expected result of the test case.")
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, help_text="The user who created this test case.")
@@ -126,7 +146,8 @@ class TestCase(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, help_text="The date and time when the test case was created.")
 
     def __str__(self):
-        return f"{self.title} ({self.functionality.name})"
+        func_name = self.functionality.name if self.functionality else "No Functionality"
+        return f"{self.title} ({func_name})"
 
 class TestStep(models.Model):
     """
@@ -204,4 +225,4 @@ class Defect(models.Model):
     class Meta:
         verbose_name = "Defect"
         verbose_name_plural = "Defects"
-        ordering = ['-created_at']  # Order defects by creation date (newest first)
+        ordering = ['-created_at']  # Order defects by creation date (newest first)s by creation date (newest first)

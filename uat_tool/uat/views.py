@@ -11,7 +11,7 @@ from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiTypes
 from django.utils.timezone import now
 from .models import (
     Organization, System, Functionality, TestCase,
-    TestStep, TestExecution, Defect, User
+    TestStep, TestExecution, Defect, User, UserOrganization
 )
 from .serializers import (
     OrganizationSerializer, SystemSerializer,
@@ -23,9 +23,12 @@ import requests
 import random
 import logging
 import time
+from django.db import transaction
 
 User = get_user_model()
 otp_store = {}  # Temporary OTP storage with expiration
+
+
 class DefectOptionsView(APIView):
     """
     API View to fetch options for Defect fields (severity and status).
@@ -44,16 +47,20 @@ class DefectOptionsView(APIView):
             'status_options': status_options
         })
 
+
 class StatusChoicesView(APIView):
     """
     API View to fetch status choices for TestExecution.
     """
+
     def get(self, request):
         # Fetch status choices from the TestExecution model
         status_choices = TestExecution._meta.get_field('status').choices
         # Format the choices as a list of dictionaries
         formatted_choices = [{'value': choice[0], 'label': choice[1]} for choice in status_choices]
         return Response(formatted_choices)
+
+
 class RolesView(APIView):
     def get(self, request):
         # Fetch roles from User.ROLE_CHOICES
@@ -84,147 +91,302 @@ class DashboardView(APIView):
 
         return Response({"stats": stats}, status=status.HTTP_200_OK)
 
-# Test Case API ViewSet
+
 class TestCaseViewSet(viewsets.ModelViewSet):
     serializer_class = TestCaseSerializer
     permission_classes = [IsAuthenticated]
-    queryset = TestCase.objects.all()  # Add a default queryset
+    queryset = TestCase.objects.all()
 
     def get_queryset(self):
         user = self.request.user
+        queryset = super().get_queryset()
 
-        # Admins can see all test cases
+        # Apply organization filter if provided
+        organization_id = self.request.query_params.get('organization_id')
+        if organization_id:
+            queryset = queryset.filter(
+                functionality__system__organization_id=organization_id
+            )
+
+        # Role-based filtering
         if user.role == 'admin':
-            return TestCase.objects.all()
-
-        # Testers can only see test cases assigned to them
+            return queryset
         elif user.role == 'tester':
-            return TestCase.objects.filter(assigned_user=user)
-
-        # Viewers (if applicable) can see test cases they created or are assigned to
+            return queryset.filter(assigned_user=user)
         elif user.role == 'viewer':
-            return TestCase.objects.filter(created_by=user) | TestCase.objects.filter(assigned_user=user)
-
-        # Default: return an empty queryset for unauthorized roles
+            return queryset.filter(
+                models.Q(created_by=user) |
+                models.Q(assigned_user=user)
+            )
         return TestCase.objects.none()
 
     def perform_create(self, serializer):
+        """
+        Ensure created_by is set and handle functionality validation
+        """
         if not self.request.user.is_authenticated:
-            raise serializers.ValidationError("User must be authenticated to create a test case.")
+            raise serializers.ValidationError(
+                {"detail": "Authentication credentials were not provided."},
+                code=status.HTTP_401_UNAUTHORIZED
+            )
+
+        # Validate functionality_id exists if provided
+        functionality_id = self.request.data.get('functionality_id')
+        if functionality_id:
+            try:
+                Functionality.objects.get(id=functionality_id)
+            except Functionality.DoesNotExist:
+                raise serializers.ValidationError(
+                    {"functionality_id": "Functionality with this ID does not exist."},
+                    code=status.HTTP_400_BAD_REQUEST
+                )
+
+        # Save with the current user as created_by
         serializer.save(created_by=self.request.user)
 
     @action(detail=True, methods=['post'])
     def assign(self, request, pk=None):
+        """
+        Custom action to assign a test case to a user
+        """
         test_case = self.get_object()
         user_id = request.data.get('userId')
+
         if not user_id:
-            return Response({'error': 'userId is required in the request body'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {'error': 'userId is required in the request body'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         try:
             user = User.objects.get(pk=user_id)
         except User.DoesNotExist:
-            return Response({'error': 'User not found'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {'error': 'User not found'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         test_case.assigned_user = user
         test_case.save()
-        return Response({'message': 'User assigned successfully'}, status=status.HTTP_200_OK)
 
-# Organization API ViewSet
+        return Response(
+            {'message': 'User assigned successfully'},
+            status=status.HTTP_200_OK
+        )
+
+    @action(detail=True, methods=['post'])
+    def change_status(self, request, pk=None):
+        """
+        Custom action to change test case status
+        """
+        test_case = self.get_object()
+        new_status = request.data.get('status')
+
+        if not new_status:
+            return Response(
+                {'error': 'status is required in the request body'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if new_status not in dict(TestCase._meta.get_field('status').choices):
+            return Response(
+                {'error': 'Invalid status value'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        test_case.status = new_status
+        test_case.save()
+
+        return Response(
+            {'message': f'Status changed to {new_status}'},
+            status=status.HTTP_200_OK
+        )
+
 class OrganizationViewSet(viewsets.ModelViewSet):
     queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
 
-# System API ViewSet
+
 class SystemViewSet(viewsets.ModelViewSet):
     queryset = System.objects.all()
     serializer_class = SystemSerializer
 
-# Functionality API ViewSet
+
 class FunctionalityViewSet(viewsets.ModelViewSet):
     queryset = Functionality.objects.all()
     serializer_class = FunctionalitySerializer
 
-# Test Step API ViewSet
+
 class TestStepViewSet(viewsets.ModelViewSet):
     queryset = TestStep.objects.all()
     serializer_class = TestStepSerializer
 
-# Test Execution API ViewSet
+
 class TestExecutionViewSet(viewsets.ModelViewSet):
     queryset = TestExecution.objects.all()
     serializer_class = TestExecutionSerializer
-    permission_classes = [IsAuthenticated]  # Ensure only authenticated users can access
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        # Set the tester to the currently authenticated user
         serializer.save(tester=self.request.user)
 
-# Defect API ViewSet
-class DefectViewSet(viewsets.ModelViewSet):
-    queryset = Defect.objects.all()
-    serializer_class = DefectSerializer
 
-# User API ViewSet
+class DefectViewSet(viewsets.ModelViewSet):
+    queryset = Defect.objects.all().order_by('-created_at')
+    serializer_class = DefectSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        """
+        Minimal validation - just save with current user as reporter
+        """
+        serializer.save(reported_by=self.request.user)
+
+    def get_queryset(self):
+        """
+        Basic queryset filtering without strict permissions
+        """
+        return super().get_queryset()
+
+
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+    queryset = User.objects.all().prefetch_related('user_organizations__organization')
     serializer_class = UserSerializer
     permission_classes = [IsAdminUser]
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-        serializer = self.get_serializer(queryset, many=True)
-        data = serializer.data
-        for user in data:
-            try:
-                user['organization_name'] = Organization.objects.get(id=user['organization']).name
-            except Organization.DoesNotExist:
-                user['organization_name'] = None
-
-        return Response(data)
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        organization_id = self.request.query_params.get('organization_id')
+        if organization_id:
+            queryset = queryset.filter(
+                user_organizations__organization_id=organization_id
+            ).distinct()
+        return queryset
 
     def create(self, request, *args, **kwargs):
-        data = request.data
-        if data.get('created_by_admin'):
-            data['role'] = 'admin'
+        # Make data mutable
+        data = request.data.copy()
+
+        # Ensure organizations is always a list
+        organizations = data.get('organizations', [])
+        if isinstance(organizations, (int, str)):
+            organizations = [organizations]
+            data['organizations'] = organizations
+
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+
+        with transaction.atomic():
+            # Create user with serializer (includes organization validation)
+            user = serializer.save()
+
+            # If serializer didn't handle organizations (fallback)
+            if not user.user_organizations.exists() and organizations:
+                for org_id in organizations:
+                    try:
+                        org = Organization.objects.get(id=org_id)
+                        UserOrganization.objects.create(user=user, organization=org)
+                    except Organization.DoesNotExist:
+                        # Shouldn't happen since serializer validates
+                        continue
+
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=201, headers=headers)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        data = request.data.copy()
+
+        # Handle organizations if provided
+        if 'organizations' in data:
+            organizations = data.pop('organizations', [])
+            if isinstance(organizations, (int, str)):
+                organizations = [organizations]
+
+            # Let serializer handle validation
+            data['organizations'] = organizations
+
+        serializer = self.get_serializer(instance, data=data, partial=partial)
         serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
+
+        with transaction.atomic():
+            self.perform_update(serializer)
+
+            # If serializer didn't handle organizations (fallback)
+            if 'organizations' in data:
+                current_orgs = set(instance.user_organizations.values_list('organization_id', flat=True))
+                new_orgs = set(map(int, organizations))
+
+                # Only make changes if needed
+                if current_orgs != new_orgs:
+                    # Clear existing organizations
+                    instance.user_organizations.all().delete()
+                    # Add new organizations
+                    for org_id in new_orgs:
+                        try:
+                            org = Organization.objects.get(id=org_id)
+                            UserOrganization.objects.create(user=instance, organization=org)
+                        except Organization.DoesNotExist:
+                            # Shouldn't happen since serializer validates
+                            continue
 
         if getattr(instance, '_prefetched_objects_cache', None):
             instance._prefetched_objects_cache = {}
 
         return Response(serializer.data)
-
-# Register User API
 class RegisterUserView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        serializer = UserSerializer(data=request.data)
+        data = request.data.copy()
+
+        # Set default empty list if organizations not provided
+        if 'organizations' not in data:
+            data['organizations'] = []
+
+        # Convert single organization ID to list if needed
+        if isinstance(data['organizations'], (int, str)):
+            data['organizations'] = [data['organizations']]
+
+        # Validate organizations if any are provided
+        if data['organizations']:
+            for org_id in data['organizations']:
+                try:
+                    Organization.objects.get(id=org_id)
+                except (Organization.DoesNotExist, ValueError):
+                    return Response(
+                        {"organizations": [f"Organization with ID {org_id} does not exist."]},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+
+        serializer = UserSerializer(data=data)
         if serializer.is_valid():
             user = serializer.save()
+
+            # Create UserOrganization relationships if organizations were provided
+            if data['organizations']:
+                for org_id in data['organizations']:
+                    organization = Organization.objects.get(id=org_id)
+                    UserOrganization.objects.create(user=user, organization=organization)
+
             return Response(
-                {"message": "User registered successfully!", "user_id": user.id},
+                {
+                    "message": "User registered successfully!",
+                    "user_id": user.id,
+                    "organizations": data['organizations'] or None
+                },
                 status=status.HTTP_201_CREATED,
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# OTP Request API
+
 class RequestOTPView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
         whatsapp_number = request.data.get("whatsapp_number")
-        org_id = request.data.get("org_id")  # Allow passing org_id dynamically
+        org_id = request.data.get("org_id")
 
         if not whatsapp_number:
             return Response({"error": "WhatsApp number is required."}, status=status.HTTP_400_BAD_REQUEST)
@@ -234,18 +396,19 @@ class RequestOTPView(APIView):
         except User.DoesNotExist:
             return Response({"error": "User not found. Please register first."}, status=status.HTTP_404_NOT_FOUND)
 
-        # Generate a 6-digit OTP
         otp = str(random.randint(100000, 999999))
-        otp_store[whatsapp_number] = {"otp": otp, "expiry": time.time() + 300}  # 5 min expiry
+        otp_store[whatsapp_number] = {"otp": otp, "expiry": time.time() + 300}
 
-        # Send OTP via WhatsApp API
         try:
             response = requests.post(
-                "https://backend.bitz-itc.com/api/whatsapp/whatsapp/send/",
+                "https://backend.bitz-itc.com/api/webhook/whatsapp/",
                 json={
-                    "recipient": whatsapp_number,
-                    "message_type": "text",
-                    "content": f"Your OTP is: {otp}. It expires in 5 minutes.",
+                    "direction": "outgoing",
+                    "data": {
+                        "recipient": whatsapp_number,
+                        "message_type": "text",
+                        "content": otp,
+                    },
                 },
                 headers={"Content-Type": "application/json"},
             )
@@ -260,7 +423,7 @@ class RequestOTPView(APIView):
             logging.error(f"Request error while sending OTP: {e}")
             return Response({"error": "Failed to send OTP."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-# OTP Verification API
+
 class VerifyOTPView(APIView):
     permission_classes = [AllowAny]
 
@@ -281,18 +444,16 @@ class VerifyOTPView(APIView):
             except User.DoesNotExist:
                 return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
-            # Generate JWT tokens
             refresh = RefreshToken.for_user(user)
             access_token = str(refresh.access_token)
 
-            # Remove OTP after successful login
             del otp_store[whatsapp_number]
 
             return Response({"access": access_token, "refresh": str(refresh)}, status=status.HTTP_200_OK)
 
         return Response({"error": "Invalid OTP"}, status=status.HTTP_400_BAD_REQUEST)
 
-# Staff Authentication API
+
 class StaffAuthView(APIView):
     permission_classes = [AllowAny]
 
@@ -311,7 +472,6 @@ class StaffAuthView(APIView):
         if not user.check_password(password):
             return Response({"error": "Invalid credentials."}, status=status.HTTP_403_FORBIDDEN)
 
-        # Generate access token
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token)
 
