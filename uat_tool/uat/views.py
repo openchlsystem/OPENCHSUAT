@@ -33,6 +33,7 @@ class DefectOptionsView(APIView):
     """
     API View to fetch options for Defect fields (severity and status).
     """
+
     def get(self, request):
         # Get severity choices from Defect model
         severity_choices = Defect._meta.get_field('severity').choices
@@ -202,6 +203,7 @@ class TestCaseViewSet(viewsets.ModelViewSet):
             status=status.HTTP_200_OK
         )
 
+
 class OrganizationViewSet(viewsets.ModelViewSet):
     queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
@@ -252,16 +254,50 @@ class DefectViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().prefetch_related('user_organizations__organization')
     serializer_class = UserSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]  # Changed from IsAdminUser to IsAuthenticated
+
+    def get_permissions(self):
+        """
+        Instantiates and returns the list of permissions that this view requires.
+        """
+        if self.action in ['create', 'destroy']:
+            # Only superusers can create or delete users
+            permission_classes = [IsAdminUser]
+        else:
+            # For other actions, check our custom permission logic in get_queryset
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
+        user = self.request.user
         queryset = super().get_queryset()
         organization_id = self.request.query_params.get('organization_id')
+
+        # Filter by organization if specified
         if organization_id:
             queryset = queryset.filter(
                 user_organizations__organization_id=organization_id
             ).distinct()
-        return queryset
+
+        # Role-based filtering
+        if user.is_superuser:
+            # Superusers can see all users
+            return queryset
+        elif user.role == 'admin':
+            # Admins can see all users except superusers
+            return queryset.filter(is_superuser=False)
+        elif user.role == 'tester':
+            # Testers can only see themselves
+            return queryset.filter(id=user.id)
+        elif user.role == 'viewer':
+            # Viewers can see themselves and users in their organizations
+            return queryset.filter(
+                models.Q(id=user.id) |
+                models.Q(user_organizations__organization__in=user.user_organizations.values('organization'))
+            )
+
+        # Default fallback - only see yourself
+        return queryset.filter(id=user.id)
 
     def create(self, request, *args, **kwargs):
         # Make data mutable
@@ -335,6 +371,7 @@ class UserViewSet(viewsets.ModelViewSet):
             instance._prefetched_objects_cache = {}
 
         return Response(serializer.data)
+
 class RegisterUserView(APIView):
     permission_classes = [AllowAny]
 
@@ -391,13 +428,25 @@ class RequestOTPView(APIView):
         if not whatsapp_number:
             return Response({"error": "WhatsApp number is required."}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Clean the whatsapp number (remove any non-digit characters)
+        whatsapp_number = ''.join(filter(str.isdigit, whatsapp_number))
+
         try:
             user = User.objects.get(whatsapp_number=whatsapp_number)
         except User.DoesNotExist:
             return Response({"error": "User not found. Please register first."}, status=status.HTTP_404_NOT_FOUND)
 
+        # Generate a 6-digit OTP
         otp = str(random.randint(100000, 999999))
-        otp_store[whatsapp_number] = {"otp": otp, "expiry": time.time() + 300}
+        # Store OTP with timestamp (valid for 5 minutes)
+        otp_store[whatsapp_number] = {
+            "otp": otp,
+            "timestamp": time.time(),
+            "verified": False
+        }
+
+        # Log the OTP for debugging (remove in production)
+        logging.info(f"Generated OTP for {whatsapp_number}: {otp}")
 
         try:
             response = requests.post(
@@ -407,7 +456,7 @@ class RequestOTPView(APIView):
                     "data": {
                         "recipient": whatsapp_number,
                         "message_type": "text",
-                        "content": otp,
+                        "content": f"Your verification code is: {otp}",
                     },
                 },
                 headers={"Content-Type": "application/json"},
@@ -434,24 +483,46 @@ class VerifyOTPView(APIView):
         if not whatsapp_number or not otp:
             return Response({"error": "WhatsApp number and OTP are required."}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Clean the whatsapp number (remove any non-digit characters)
+        whatsapp_number = ''.join(filter(str.isdigit, whatsapp_number))
+
+        # Get stored OTP data
         otp_data = otp_store.get(whatsapp_number)
-        if otp_data and otp_data["otp"] == otp:
-            if time.time() > otp_data["expiry"]:
-                return Response({"error": "OTP expired."}, status=status.HTTP_400_BAD_REQUEST)
 
-            try:
-                user = User.objects.get(whatsapp_number=whatsapp_number)
-            except User.DoesNotExist:
-                return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+        if not otp_data:
+            return Response({"error": "OTP not found or expired. Please request a new OTP."},
+                            status=status.HTTP_400_BAD_REQUEST)
 
-            refresh = RefreshToken.for_user(user)
-            access_token = str(refresh.access_token)
+        # Check if OTP is correct
+        if otp_data["otp"] != otp:
+            return Response({"error": "Invalid OTP"}, status=status.HTTP_400_BAD_REQUEST)
 
-            del otp_store[whatsapp_number]
+        # Check if OTP is expired (5 minutes = 300 seconds)
+        if time.time() - otp_data["timestamp"] > 300:
+            return Response({"error": "OTP expired. Please request a new OTP."},
+                            status=status.HTTP_400_BAD_REQUEST)
 
-            return Response({"access": access_token, "refresh": str(refresh)}, status=status.HTTP_200_OK)
+        try:
+            user = User.objects.get(whatsapp_number=whatsapp_number)
+        except User.DoesNotExist:
+            return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        return Response({"error": "Invalid OTP"}, status=status.HTTP_400_BAD_REQUEST)
+        # Mark OTP as verified
+        otp_data["verified"] = True
+        otp_store[whatsapp_number] = otp_data
+
+        # Generate tokens
+        refresh = RefreshToken.for_user(user)
+        access_token = str(refresh.access_token)
+
+        # Clean up (optional - you might want to keep it for a while)
+        # del otp_store[whatsapp_number]
+
+        return Response({
+            "access": access_token,
+            "refresh": str(refresh),
+            "user": UserSerializer(user).data
+        }, status=status.HTTP_200_OK)
 
 
 class StaffAuthView(APIView):
