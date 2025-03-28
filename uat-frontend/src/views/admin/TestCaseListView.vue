@@ -55,6 +55,9 @@ import TestCaseModal from "@/components/TestCaseModal.vue";
 import TestCaseAssignmentModal from "@/components/AssignTesterModal.vue";
 import TestStepsView from "@/components/TestStepsModal.vue";
 import AddTestStepModal from "@/components/AddStepModal.vue";
+import { useToast } from 'vue-toastification';
+
+const toast = useToast();
 
 export default {
   components: {
@@ -143,13 +146,13 @@ export default {
         await axios.post(`/test-cases/${testCaseId}/assign/`, { userId: userId });
         this.closeAssignModal();
         this.fetchTestCases();
-        alert("User assigned successfully!");
+        toast.success("User assigned successfully!");
       } catch (error) {
         console.error("Error assigning user:", error);
         if (error.response) {
-          alert("Error assigning user: " + error.response.data.error);
+          toast.error("Error assigning user: " + error.response.data.error);
         } else {
-          alert("An unexpected error occurred.");
+          toast.error("An unexpected error occurred.");
         }
       }
     },
