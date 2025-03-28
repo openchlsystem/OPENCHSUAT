@@ -39,6 +39,9 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/store/auth";
+import { useToast } from 'vue-toastification';
+
+const toast = useToast();
 
 export default {
   setup() {
@@ -51,10 +54,10 @@ export default {
     const registerUser = async () => {
       try {
         await authStore.registerUser(whatsapp_number.value, name.value, password.value);
-        alert("Registration successful! Redirecting to login...");
+        toast.success("Registration successful! Redirecting to login...");
         router.push("/login"); // Redirect user to login page
       } catch (error) {
-        alert(error.message);
+        toast.error(error.message);
       }
     };
 

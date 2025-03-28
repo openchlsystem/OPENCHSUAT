@@ -51,6 +51,10 @@
             <i class="fas fa-users"></i> Users
           </router-link>
         </li>
+        <!-- Logout Button -->
+        <li class="logout-container">
+          <LogoutButton theme="admin"/>
+        </li>
       </ul>
     </nav>
 
@@ -58,6 +62,15 @@
     <div class="content">
       <header class="header">
         <h2>Admin Dashboard</h2>
+        <div class="user-info">
+          <span class="welcome-message">Welcome, {{ userName }}</span>
+          <LogoutButton 
+            buttonText="Sign Out" 
+            size="small" 
+            theme="admin"
+            class="header-logout"
+          />
+        </div>
       </header>
       <main>
         <router-view />
@@ -67,8 +80,23 @@
 </template>
 
 <script>
+import { computed } from 'vue';
+import { useAuthStore } from '@/store/auth';
+import LogoutButton from '@/components/LogoutButton.vue';
+
 export default {
   name: 'AdminLayout',
+  components: {
+    LogoutButton
+  },
+  setup() {
+    const authStore = useAuthStore();
+    const userName = computed(() => authStore.user?.name || 'Admin');
+
+    return {
+      userName
+    };
+  }
 };
 </script>
 
@@ -89,6 +117,8 @@ export default {
   left: 0;
   top: 0;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar-header h3 {
@@ -99,6 +129,9 @@ export default {
 .sidebar-links {
   list-style: none;
   padding: 0;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar-links li {
@@ -128,6 +161,13 @@ export default {
   color: #fff;
 }
 
+/* Sidebar Logout Button */
+.logout-container {
+  margin-top: auto; /* Push to bottom of flex container */
+  padding-top: 20px;
+  border-top: 1px solid #495057;
+}
+
 /* Content Styling */
 .content {
   margin-left: 250px;
@@ -142,5 +182,23 @@ export default {
   border-bottom: 1px solid #ddd;
   font-size: 18px;
   font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.welcome-message {
+  font-size: 14px;
+  color: #666;
+}
+
+/* .header-logout { */
+  /* Any specific styling for the header logout button */
+/* } */
 </style>

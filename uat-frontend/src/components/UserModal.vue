@@ -106,6 +106,9 @@
 <script>
 import { ref, onMounted, watch } from "vue";
 import axios from "@/utils/axios.js";
+import { useToast } from 'vue-toastification';
+
+const toast = useToast();
 
 export default {
   props: {
@@ -217,7 +220,7 @@ export default {
 
     // Validate at least one organization is selected
     if (payload.organizations.length === 0) {
-      alert("Please select at least one organization");
+      toast.warning("Please select at least one organization");
       return;
     }
 
@@ -235,7 +238,7 @@ export default {
       },
     });
 
-    alert(`User ${props.user ? 'updated' : 'registered'} successfully!`);
+    toast.success(`User ${props.user ? 'updated' : 'registered'} successfully!`);
     emit("close");
     emit("refresh");
   } catch (error) {
@@ -254,7 +257,7 @@ export default {
       errorMessage = error.message;
     }
 
-    alert(errorMessage);
+    toast.error(errorMessage);
   }
 };
 

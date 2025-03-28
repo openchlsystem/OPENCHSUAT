@@ -76,6 +76,9 @@
 <script>
 import axios from "@/utils/axios";
 import AddTestStepModal from "@/components/AddStepModal.vue";
+import { useToast } from 'vue-toastification';
+
+const toast = useToast();
 
 export default {
   components: {
@@ -110,7 +113,7 @@ export default {
     },
     openAddStepModal() {
       if (!this.localTestCase.id) {
-        alert("Please save the test case before adding steps.");
+        toast.warning("Please save the test case before adding steps.");
         return;
       }
       this.showAddStepModal = true;

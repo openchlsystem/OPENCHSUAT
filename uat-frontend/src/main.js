@@ -5,6 +5,7 @@ import router from './router';
 import axios from 'axios';
 import Toast from 'vue-toastification';
 import 'vue-toastification/dist/index.css';
+import '@fortawesome/fontawesome-free/css/all.css'
 
 // Import global styles
 import './assets/style.css'; // Ensure this path is correct for your project structure
