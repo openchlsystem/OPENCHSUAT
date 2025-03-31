@@ -8,12 +8,12 @@ from pathlib import Path
 from datetime import timedelta
 import os
 import os
-import dj_database_url
+# import dj_database_url
 
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 import os
 
-load_dotenv()  # Load the environment variables from the .env file
+# load_dotenv()  # Load the environment variables from the .env file
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -89,22 +89,22 @@ TEMPLATES = [
 WSGI_APPLICATION = 'uat_tool.wsgi.application'
 
 # Database
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-
-
 DATABASES = {
-    'default': dj_database_url.parse(
-        os.getenv('DATABASE_URL'),
-        conn_max_age=600,
-        engine='django.db.backends.mysql'
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
+
+
+
+# DATABASES = {
+#     'default': dj_database_url.parse(
+#         os.getenv('DATABASE_URL'),
+#         conn_max_age=600,
+#         engine='django.db.backends.mysql'
+#     )
+# }
 
 
 # Authentication

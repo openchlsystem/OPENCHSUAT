@@ -7,7 +7,7 @@
             <th>First Name</th>
             <th>WhatsApp</th>
             <th>Role</th>
-            <th>Organization</th>
+            <th>Organizations</th>
             <th>Registered By</th>
             <th>Status</th>
             <th>Actions</th>
@@ -18,7 +18,12 @@
             <td>{{ user.first_name }}</td>
             <td>{{ user.whatsapp_number }}</td>
             <td>{{ user.role }}</td>
-            <td>{{ user.organization_name }}</td> <td>
+            <td>
+              <span v-for="org in user.organizations" :key="org.id" class="badge bg-primary me-1">
+                {{ org.name }}
+              </span>
+            </td>
+            <td>
               <span class="badge bg-info">{{ user.created_by_admin ? "Admin" : "Self" }}</span>
             </td>
             <td>

@@ -1,13 +1,23 @@
 import { defineStore } from 'pinia';
-import axiosInstance from '@/utils/axios';  // Adjust the import path if needed
-import router from '@/router';  // Import the router for redirection
+import axiosInstance from '@/utils/axios';
+import router from '@/router';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    accessToken: localStorage.getItem('accessToken') || null,
-    refreshToken: localStorage.getItem('refreshToken') || null,
-    user: null,  // Store user info if needed
+    // Changed from accessToken to access_token to match router expectations
+    access_token: localStorage.getItem('access_token') || null,
+    refresh_token: localStorage.getItem('refresh_token') || null,
+    user: JSON.parse(localStorage.getItem('user')) || null,
   }),
+  
+  getters: {
+    // Add a getter for userRole that router uses
+    userRole: (state) => state.user?.role || null,
+    
+    // Add a getter for isAuthenticated
+    isAuthenticated: (state) => !!state.access_token
+  },
+  
   actions: {
     /**
      * Register a new user.
@@ -21,7 +31,7 @@ export const useAuthStore = defineStore('auth', {
         });
 
         console.log('User registered successfully:', response.data);
-        return response.data;  // Return success response
+        return response.data;
       } catch (error) {
         console.error('Registration failed:', error.response?.data || error.message);
         throw new Error(error.response?.data?.detail || 'Registration failed. Please try again.');
@@ -36,13 +46,8 @@ export const useAuthStore = defineStore('auth', {
 
       try {
         const response = await axiosInstance.post('/auth/request-otp/', { whatsapp_number });
-
         console.log('OTP sent successfully:', response.data);
-
-        // Store OTP in localStorage for verification (if needed)
-        // localStorage.setItem('otp', response.data.otp); // Assuming the API returns the OTP
-
-        return response.data; // Return API response for further use
+        return response.data;
       } catch (error) {
         console.error('Error sending OTP:', error);
         throw new Error('Failed to send OTP. Please try again.');
@@ -62,20 +67,28 @@ export const useAuthStore = defineStore('auth', {
         });
 
         // Extract tokens from the response
-        const { access, refresh, user } = response.data; // Assuming API returns `access`, `refresh`, and `user`
+        const { access, refresh, user } = response.data;
 
-        // Save tokens to state and localStorage
-        this.accessToken = access;
-        this.refreshToken = refresh;
+        // Save tokens to state and localStorage - using the same key names as router expects
+        this.access_token = access;
+        this.refresh_token = refresh;
         this.user = user;
-        localStorage.setItem('accessToken', access);
-        localStorage.setItem('refreshToken', refresh);
+        
+        // Store with consistent naming
+        localStorage.setItem('access_token', access);
+        localStorage.setItem('refresh_token', refresh);
         localStorage.setItem('user', JSON.stringify(user));
 
         console.log('OTP verified successfully. Tokens stored.');
 
-        // Redirect user to dashboard
-        router.push({ name: 'AdminDashboard' });
+        // Redirect based on user role
+        if (user.role === 'admin') {
+          router.push({ name: 'AdminDashboard' });
+        } else if (user.role === 'tester') {
+          router.push({ name: 'TesterDashboard' });
+        } else {
+          router.push({ name: 'Home' }); // Fallback to home if role is undefined
+        }
 
         return response.data;
       } catch (error) {
@@ -87,19 +100,29 @@ export const useAuthStore = defineStore('auth', {
     /**
      * Log out the user.
      */
-    logoutUser() {
+    logout() {
       console.log('Logging out user...');
       
       // Clear user data and tokens
-      this.accessToken = null;
-      this.refreshToken = null;
+      this.access_token = null;
+      this.refresh_token = null;
       this.user = null;
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
+      
+      // Clear localStorage with consistent naming
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
       localStorage.removeItem('user');
 
       // Redirect to login page
       router.push({ name: 'Login' });
     },
+    
+    /**
+     * Method to update user data if needed
+     */
+    updateUserData(userData) {
+      this.user = userData;
+      localStorage.setItem('user', JSON.stringify(userData));
+    }
   },
 });

@@ -35,6 +35,9 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/store/auth";
+import { useToast } from 'vue-toastification';
+
+const toast = useToast();
 
 export default {
   setup() {
@@ -48,9 +51,9 @@ export default {
       try {
         await authStore.sendOTP(whatsapp_number.value);
         otpRequested.value = true;
-        alert("OTP sent successfully!");
+        toast.success("OTP sent successfully!");
       } catch (error) {
-        alert("OTP request failed. Please try again.");
+        toast.error("OTP request failed. Please try again.");
         console.error("OTP request failed:", error);
       }
     };
@@ -58,13 +61,20 @@ export default {
     const verifyOTP = async () => {
       try {
         await authStore.verifyOTP(whatsapp_number.value, otp.value);
-        alert("OTP verified successfully. Redirecting to dashboard...");
-        router.push('/admin');
+        toast.success('OTP verified successfully. Redirecting to dashboard...');
+
+        // Redirect based on role
+        if (authStore.userRole === 'admin') {
+          router.push('/admin');
+        } else if (authStore.userRole === 'tester') {
+          router.push('/tester');
+        }
       } catch (error) {
-        alert("Invalid OTP. Please try again.");
-        console.error("Invalid OTP:", error);
+        toast.error('Invalid OTP. Please try again.');
+        console.error('Invalid OTP:', error);
       }
     };
+
 
     return {
       whatsapp_number,

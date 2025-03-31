@@ -48,7 +48,9 @@
 <script>
 import { useAuthStore } from "@/store/auth.js"; // Import Pinia store
 import axios from "@/utils/axios"; // Import axios for API calls
+import { useToast } from 'vue-toastification';
 
+const toast = useToast();
 export default {
   props: ["execution"],
   data() {
@@ -81,14 +83,14 @@ export default {
   methods: {
     async submit() {
       if (!this.executionData.tester) {
-        alert("Tester ID not found. Please log in again.");
+        toast.error("Tester ID not found. Please log in again.");
         return;
       }
 
       // Validate that all steps have a status
       const hasEmptyStepStatus = this.executionData.steps.some((step) => !step.status);
       if (hasEmptyStepStatus) {
-        alert("Please select a status for all steps.");
+        toast.warning("Please select a status for all steps.");
         return;
       }
 
@@ -113,13 +115,13 @@ export default {
         this.$emit("save", response.data);
 
         // Show a success message
-        alert("Test execution submitted successfully!");
+        toast.success("Test execution submitted successfully!");
 
         // Close the modal
         this.$emit("close");
       } catch (error) {
         console.error("Error submitting test execution:", error);
-        alert("Failed to submit test execution. Please try again.");
+        toast.error("Failed to submit test execution. Please try again.");
       }
     },
   },
