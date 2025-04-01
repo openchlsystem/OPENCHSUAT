@@ -21,10 +21,10 @@ from django.urls import path,include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('uat/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('uat/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('', include('uat.urls')),
-    path('api/auth/', include('rest_framework.urls')),
+    path('uat/auth/', include('rest_framework.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
