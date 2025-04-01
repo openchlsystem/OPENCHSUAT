@@ -29,7 +29,8 @@ const onRefreshed = (newToken) => {
 // Request interceptor to attach the access token
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('authToken');
+    // Use access_token to match what's used in the router
+    const token = localStorage.getItem('access_token');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
@@ -61,7 +62,7 @@ axiosInstance.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const refreshToken = localStorage.getItem('refreshToken');
+        const refreshToken = localStorage.getItem('refresh_token'); // Use refresh_token to be consistent
         if (!refreshToken) {
           throw new Error('No refresh token available');
         }
@@ -71,7 +72,7 @@ axiosInstance.interceptors.response.use(
         });
 
         const newAccessToken = response.data.access;
-        localStorage.setItem('authToken', newAccessToken);
+        localStorage.setItem('access_token', newAccessToken); // Store as access_token
         axiosInstance.defaults.headers['Authorization'] = `Bearer ${newAccessToken}`;
 
         // Notify all subscribers about the new token
@@ -80,10 +81,13 @@ axiosInstance.interceptors.response.use(
         // Retry the original request
         return axiosInstance(originalRequest);
       } catch (err) {
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('refreshToken');
-        alert('Your session has expired. Please log in again.');
-        window.location.href = '/login'; // Redirect to login page
+        // Clear tokens
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        
+        // Use window.location.href = '/login' but don't alert first
+        // This will allow the router guard to handle the redirect properly
+        window.location.href = '/login';
         return Promise.reject(err);
       } finally {
         isRefreshing = false;
