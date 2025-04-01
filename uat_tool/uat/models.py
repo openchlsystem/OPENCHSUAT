@@ -50,13 +50,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-<<<<<<< HEAD
-    whatsapp_number = models.CharField(max_length=15, unique=True, help_text="The user's WhatsApp number.")
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='tester', help_text="The role of the user.")
-=======
     whatsapp_number = models.CharField(max_length=15, unique=True,help_text="The user's WhatsApp number.")
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='admin', help_text="The role of the user.")
->>>>>>> f7e06fe5e1d560e113bf540eb4ab715bbcc98a8b
     otp_secret = models.CharField(max_length=255, blank=True, null=True, help_text="The OTP secret for two-factor authentication.")
     is_active = models.BooleanField(default=True, help_text="Indicates whether the user is active.")
     is_staff = models.BooleanField(default=False, help_text="Indicates whether the user is a staff member.")
