@@ -8,6 +8,7 @@ services:
       - ./uat_tool:/app
     env_file:
       - ./uat_tool/.env
+    command: ["./wait-for-db.sh", "python", "manage.py", "runserver", "0.0.0.0:8005"]
     depends_on:
       db:
         condition: service_healthy  # Ensure DB is healthy before starting the backend

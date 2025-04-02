@@ -23,7 +23,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Security settings
 SECRET_KEY = 'django-insecure-i7m)%b6)-%^aqy+5-xlzs5y4-zl--84lr+!9(kjbw+h0@w$h76'
 DEBUG = True
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost','0.0.0.0']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost','0.0.0.0','backend.bitz-itc.com']
 
 # Application definition
 INSTALLED_APPS = [

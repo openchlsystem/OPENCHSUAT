@@ -27,27 +27,27 @@ router.register(r'users', UserViewSet)
 # Define URL patterns
 urlpatterns = [
     # Include router URLs under 'api/'
-    path('api/', include(router.urls)),
+    path('uat/', include(router.urls)),
 
     # Choices endpoints
-    path('api/status-choices/', StatusChoicesView.as_view(), name='status-choices'),
-    path('api/defect-options/', DefectOptionsView.as_view(), name='defect-options'),  # New endpoint
-    path('api/roles/', RolesView.as_view(), name='roles'),
+    path('uat/status-choices/', StatusChoicesView.as_view(), name='status-choices'),
+    path('uat/defect-options/', DefectOptionsView.as_view(), name='defect-options'),  # New endpoint
+    path('uat/roles/', RolesView.as_view(), name='roles'),
 
     # Authentication endpoints
-    path('api/auth/register/', RegisterUserView.as_view(), name='register'),
-    path('api/auth/request-otp/', RequestOTPView.as_view(), name='request-otp'),
-    path('api/auth/verify-otp/', VerifyOTPView.as_view(), name='verify-otp'),
-    path('api/auth/staff-token/', StaffAuthView.as_view(), name='staff-token'),
+    path('uat/auth/register/', RegisterUserView.as_view(), name='register'),
+    path('uat/auth/request-otp/', RequestOTPView.as_view(), name='request-otp'),
+    path('uat/auth/verify-otp/', VerifyOTPView.as_view(), name='verify-otp'),
+    path('uat/auth/staff-token/', StaffAuthView.as_view(), name='staff-token'),
 
     # JWT token endpoints
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('uat/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('uat/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
     # API documentation endpoints
-    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('uat/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('uat/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 
     # Dashboard endpoint
-    path('api/dashboard/', DashboardView.as_view(), name='dashboard'),
+    path('uat/dashboard/', DashboardView.as_view(), name='dashboard'),
 ]
