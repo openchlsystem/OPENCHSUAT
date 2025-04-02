@@ -19,6 +19,8 @@
         <p class="test-meta"><strong>Functionality:</strong> {{ testData.functionality }}</p>
         <p class="test-description"><strong>Description:</strong> {{ testData.description }}</p>
         <p class="test-meta"><strong>Expected Result:</strong> {{ testData.expected_result }}</p>
+       
+        
       </div>
 
       <!-- ✅ Test Steps -->
@@ -26,12 +28,13 @@
         <h5 class="steps-title">Test Steps</h5>
         <ul v-if="testData.steps && testData.steps.length > 0" class="test-steps">
           <li v-for="step in testData.steps" :key="step.id">
-            <div class="step-number">Step {{ step.step_number }}</div>
-            <div class="step-content">
-              <p><strong>Description:</strong> {{ step.description }}</p>
-              <p><strong>Expected Result:</strong> {{ step.expected_result }}</p>
-            </div>
-          </li>
+  <div class="step-number">Step {{ step.step_number }}</div>
+  <div class="step-content">
+    <p><strong>Description:</strong> {{ step.description }}</p>
+    <p><strong>Expected Result:</strong> {{ step.expected_result }}</p>
+  </div>
+</li>
+
         </ul>
         <div v-else class="no-steps">No test steps found.</div>
       </div>
