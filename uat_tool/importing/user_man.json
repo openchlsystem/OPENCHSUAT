@@ -1,0 +1,222 @@
+{
+    "functionality": "User Management",
+    "testCases": [
+      {
+        "title": "System Analytics Capabilities Verification",
+        "description": "Verify the system's analytics capabilities.",
+        "steps": [
+          {
+            "stepNumber": 1,
+            "stepDescription": "Access the analytics dashboard in the system.",
+            "expectedResult": "Analytics dashboard is accessible.",
+            "comments": ""
+          },
+          {
+            "stepNumber": 2,
+            "stepDescription": "Review key performance metrics displayed on the dashboard.",
+            "expectedResult": "Performance metrics are displayed accurately.",
+            "comments": ""
+          },
+          {
+            "stepNumber": 3,
+            "stepDescription": "Apply different data filters and parameters.",
+            "expectedResult": "Analytics update according to selected filters.",
+            "comments": ""
+          },
+          {
+            "stepNumber": 4,
+            "stepDescription": "Drill down into specific metrics for detailed analysis.",
+            "expectedResult": "Detailed analytics are presented correctly.",
+            "comments": ""
+          },
+          {
+            "stepNumber": 5,
+            "stepDescription": "Export analytics data for further analysis.",
+            "expectedResult": "Data exports successfully in usable formats.",
+            "comments": ""
+          },
+          {
+            "stepNumber": 6,
+            "stepDescription": "Verify data visualization components (charts, graphs).",
+            "expectedResult": "Visualizations render correctly and accurately represent data.",
+            "comments": ""
+          }
+        ]
+      },
+      {
+        "title": "User Authentication Process Validation",
+        "description": "Verify user login and authentication process.",
+        "steps": [
+          {
+            "stepNumber": 1,
+            "stepDescription": "Navigate to the login page.",
+            "expectedResult": "Login page is displayed.",
+            "comments": ""
+          },
+          {
+            "stepNumber": 2,
+            "stepDescription": "Enter valid login credentials.",
+            "expectedResult": "User credentials are entered successfully.",
+            "comments": ""
+          },
+          {
+            "stepNumber": 3,
+            "stepDescription": "Click \"Login\" button.",
+            "expectedResult": "User is authenticated and redirected to the home page.",
+            "comments": ""
+          },
+          {
+            "stepNumber": 4,
+            "stepDescription": "Perform negative testing (invalid credentials).",
+            "expectedResult": "Appropriate error messages are displayed.",
+            "comments": ""
+          },
+          {
+            "stepNumber": 5,
+            "stepDescription": "Attempt to bypass login.",
+            "expectedResult": "Unauthorized users are redirected to login page.",
+            "comments": ""
+          }
+        ]
+      },
+      {
+        "title": "User Registration Functionality Testing",
+        "description": "Verify user registration functionality.",
+        "steps": [
+          {
+            "stepNumber": 1,
+            "stepDescription": "Navigate to the users section on the side NAV registration page.",
+            "expectedResult": "Registration page is displayed.",
+            "comments": ""
+          },
+          {
+            "stepNumber": 2,
+            "stepDescription": "Click New User and enter valid user details in the registration form.",
+            "expectedResult": "User details are entered successfully.",
+            "comments": ""
+          },
+          {
+            "stepNumber": 3,
+            "stepDescription": "Click on the \"Create\" button.",
+            "expectedResult": "User is successfully registered and redirected to the login page.",
+            "comments": ""
+          },
+          {
+            "stepNumber": 4,
+            "stepDescription": "Verify that the user's information is stored correctly. Click on the user to reset the password.",
+            "expectedResult": "User's information is stored correctly in the database.",
+            "comments": ""
+          },
+          {
+            "stepNumber": 5,
+            "stepDescription": "Perform negative testing for invalid or duplicate emails. Create a user with the same email and Extension.",
+            "expectedResult": "Appropriate error messages are displayed.",
+            "comments": ""
+          }
+        ]
+      },
+      {
+        "title": "User Roles and Permissions Verification",
+        "description": "Validate the functionality of user roles and permissions.",
+        "steps": [
+          {
+            "stepNumber": 1,
+            "stepDescription": "Login as an administrator.",
+            "expectedResult": "Administrator login is successful.",
+            "comments": ""
+          },
+          {
+            "stepNumber": 2,
+            "stepDescription": "Navigate to the user management section.",
+            "expectedResult": "User management section is accessible.",
+            "comments": ""
+          },
+          {
+            "stepNumber": 3,
+            "stepDescription": "Create a new user with specific roles and permissions.",
+            "expectedResult": "User is created with the specified roles and permissions.",
+            "comments": ""
+          },
+          {
+            "stepNumber": 4,
+            "stepDescription": "Login as the newly created user.",
+            "expectedResult": "Login is successful.",
+            "comments": ""
+          },
+          {
+            "stepNumber": 5,
+            "stepDescription": "Verify access to authorized functions.",
+            "expectedResult": "User can access functions permitted by their role.",
+            "comments": ""
+          },
+          {
+            "stepNumber": 6,
+            "stepDescription": "Attempt to access unauthorized functions.",
+            "expectedResult": "Access is denied with appropriate error messages.",
+            "comments": ""
+          }
+        ]
+      },
+      {
+        "title": "Password Reset Functionality Testing",
+        "description": "Verify the password reset functionality.",
+        "steps": [
+          {
+            "stepNumber": 1,
+            "stepDescription": "Navigate to the login page.",
+            "expectedResult": "Login page is displayed.",
+            "comments": ""
+          },
+          {
+            "stepNumber": 2,
+            "stepDescription": "Click on the \"Forgot Password\" link.",
+            "expectedResult": "Password reset page is displayed.",
+            "comments": ""
+          },
+          {
+            "stepNumber": 3,
+            "stepDescription": "Enter a valid email address.",
+            "expectedResult": "Email address is accepted.",
+            "comments": ""
+          },
+          {
+            "stepNumber": 4,
+            "stepDescription": "Submit the password reset request.",
+            "expectedResult": "Reset request is processed and confirmation message is displayed.",
+            "comments": ""
+          },
+          {
+            "stepNumber": 5,
+            "stepDescription": "Check email for password reset link.",
+            "expectedResult": "Password reset email is received.",
+            "comments": ""
+          },
+          {
+            "stepNumber": 6,
+            "stepDescription": "Click on the password reset link.",
+            "expectedResult": "New password setting page is displayed.",
+            "comments": ""
+          },
+          {
+            "stepNumber": 7,
+            "stepDescription": "Enter and confirm a new password.",
+            "expectedResult": "New password is accepted.",
+            "comments": ""
+          },
+          {
+            "stepNumber": 8,
+            "stepDescription": "Submit the new password.",
+            "expectedResult": "Password is reset successfully.",
+            "comments": ""
+          },
+          {
+            "stepNumber": 9,
+            "stepDescription": "Login with the new password.",
+            "expectedResult": "Login is successful.",
+            "comments": ""
+          }
+        ]
+      }
+    ],
+    "totalTestCases": 5
+  }
