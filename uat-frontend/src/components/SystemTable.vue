@@ -13,7 +13,7 @@
       <tr v-for="(system, index) in systems" :key="system.id">
         <td>{{ index + 1 }}</td>
         <td>{{ system.name }}</td>
-        <td>{{ system.organization?.name || "N/A" }}</td>
+        <td>{{ getOrganizationName(system.organization) }}</td>
         <td>{{ system.description || "N/A" }}</td>
         <td>
           <button class="btn btn-sm btn-warning me-2" @click="$emit('edit', system)">Edit</button>
@@ -25,9 +25,17 @@
 </template>
 
 <script setup>
-defineProps({
-  systems: Array
+const props = defineProps({
+  systems: Array,
+  organizations: Array
 });
+
+const getOrganizationName = (orgId) => {
+  if (!orgId || !props.organizations) return "N/A";
+  
+  const organization = props.organizations.find(org => org.id === orgId);
+  return organization ? organization.name : "N/A";
+};
 </script>
 
 <style scoped>

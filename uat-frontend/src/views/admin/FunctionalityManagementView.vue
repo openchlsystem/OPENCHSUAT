@@ -4,7 +4,8 @@
 
     <!-- Functionality Table -->
     <FunctionalityTable 
-      :functionalities="functionalities" 
+      :functionalities="functionalities"
+      :systems="systems"
       @openModal="openCreateModal"
       @edit="editFunctionality"
       @delete="deleteFunctionality"

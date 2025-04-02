@@ -5,6 +5,7 @@
     <!-- Test Case Table -->
     <TestCaseTable 
       :testCases="testCasesWithFunctionalityNames"
+      :functionalities="functionalities"
       @openModal="openCreateModal"
       @edit="editTestCase"
       @delete="deleteTestCase"
