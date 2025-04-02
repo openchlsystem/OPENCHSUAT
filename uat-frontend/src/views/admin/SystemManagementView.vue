@@ -9,7 +9,8 @@
 
     <!-- System Table Component -->
     <SystemTable 
-      :systems="systems" 
+      :systems="systems"
+      :organizations="organizations" 
       @edit="openModal" 
       @delete="deleteSystem" 
     />

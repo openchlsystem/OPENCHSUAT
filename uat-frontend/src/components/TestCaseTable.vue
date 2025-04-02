@@ -21,7 +21,7 @@
       <tbody>
         <tr v-for="testCase in testCases" :key="testCase.id">
           <td>{{ testCase.title }}</td>
-          <td>{{ testCase.functionalityName || 'N/A' }}</td>
+          <td>{{ getFunctionalityName(testCase.functionality) }}</td>
           <td>{{ testCase.expected_result }}</td>
           <td>{{ testCase.created_by?.first_name || testCase.created_by?.whatsapp_number || 'N/A' }}</td>
           <td>
@@ -50,7 +50,22 @@
 <script>
 export default {
   props: {
-    testCases: Array
+    testCases: Array,
+    functionalities: Array
+  },
+  methods: {
+    getFunctionalityName(functionalityId) {
+      // If testCase already has functionalityName, use it
+      if (this.testCases.find(tc => tc.functionality === functionalityId)?.functionalityName) {
+        return this.testCases.find(tc => tc.functionality === functionalityId).functionalityName;
+      }
+      
+      // Otherwise, look it up from the functionalities array
+      if (!functionalityId || !this.functionalities) return 'N/A';
+      
+      const functionality = this.functionalities.find(func => func.id === functionalityId);
+      return functionality ? functionality.name : 'N/A';
+    }
   }
 };
 </script>
