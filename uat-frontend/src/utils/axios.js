@@ -85,7 +85,7 @@ axiosInstance.interceptors.response.use(
         // Clear tokens
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
-        
+
         // Use window.location.href = '/login' but don't alert first
         // This will allow the router guard to handle the redirect properly
         window.location.href = '/login';
