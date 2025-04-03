@@ -11,7 +11,7 @@ def print_debug(message):
 
 def create_functionality(base_url, auth_token, functionality_data):
     """Create a functionality and return its ID"""
-    url = f"{base_url}/api/functionalities/"
+    url = f"{base_url}/functionalities/"
     headers = {
         "Authorization": f"Bearer {auth_token}",
         "Content-Type": "application/json"
@@ -30,7 +30,7 @@ def create_functionality(base_url, auth_token, functionality_data):
 
 def create_test_case(base_url, auth_token, test_case_data):
     """Create a test case and return its ID"""
-    url = f"{base_url}/api/test-cases/"
+    url = f"{base_url}/test-cases/"
     headers = {
         "Authorization": f"Bearer {auth_token}",
         "Content-Type": "application/json"
@@ -49,7 +49,7 @@ def create_test_case(base_url, auth_token, test_case_data):
 
 def create_test_step(base_url, auth_token, test_step_data):
     """Create a test step"""
-    url = f"{base_url}/api/test-steps/"
+    url = f"{base_url}/test-steps/"
     headers = {
         "Authorization": f"Bearer {auth_token}"
     }
