@@ -28,7 +28,7 @@
 import DashboardCard from '@/components/Admin/DashboardCard.vue';
 import DashboardChart from '@/components/Admin/DashboardChart.vue';
 import RecentActivityTable from '@/components/Admin/RecentActivityTable.vue';
-import axios from 'axios';
+import axios from "@/utils/axios.js";
 
 export default {
   name: 'AdminDashboard',

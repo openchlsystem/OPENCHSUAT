@@ -1,396 +1,396 @@
 {
-    "functionality": "CRM & Contact Management",
-    "testCases": [
-      {
-        "title": "Lead Creation and Assignment Testing",
-        "description": "Validate the creation and assignment of leads to sales representatives.",
-        "steps": [
-          {
-            "stepNumber": 1,
-            "stepDescription": "Create a new lead in the system.",
-            "expectedResult": "Lead is successfully created.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 2,
-            "stepDescription": "Enter valid lead details in the input fields.",
-            "expectedResult": "Lead details are entered accurately.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 3,
-            "stepDescription": "Assign the lead to a sales representative.",
-            "expectedResult": "Lead is successfully assigned to the sales representative.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 4,
-            "stepDescription": "Save the assigned lead.",
-            "expectedResult": "Assigned lead is saved successfully.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 5,
-            "stepDescription": "Retrieve the assigned lead from the system.",
-            "expectedResult": "Assigned lead is retrieved accurately.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 6,
-            "stepDescription": "Verify that the assigned lead details are accurate.",
-            "expectedResult": "Lead details match the entered information.",
-            "comments": ""
-          }
-        ]
-      },
-      {
-        "title": "Lead to Opportunity Conversion Validation",
-        "description": "Verify the process of converting leads to opportunities.",
-        "steps": [
-          {
-            "stepNumber": 1,
-            "stepDescription": "Retrieve an existing lead from the system.",
-            "expectedResult": "Lead is successfully retrieved.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 2,
-            "stepDescription": "Convert the lead to an opportunity.",
-            "expectedResult": "Lead is successfully converted to an opportunity.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 3,
-            "stepDescription": "Enter opportunity details in the input fields.",
-            "expectedResult": "Opportunity details are entered accurately.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 4,
-            "stepDescription": "Save the converted opportunity.",
-            "expectedResult": "Converted opportunity is saved successfully.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 5,
-            "stepDescription": "Retrieve the opportunity from the system.",
-            "expectedResult": "Opportunity is retrieved accurately.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 6,
-            "stepDescription": "Verify that the opportunity details are accurate and linked to the lead.",
-            "expectedResult": "Opportunity details match the entered information and are linked to the lead.",
-            "comments": ""
-          }
-        ]
-      },
-      {
-        "title": "Customer Information Management Verification",
-        "description": "Validate the functionality of updating and deleting customer information.",
-        "steps": [
-          {
-            "stepNumber": 1,
-            "stepDescription": "Retrieve an existing customer record from the system.",
-            "expectedResult": "Customer record is successfully retrieved.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 2,
-            "stepDescription": "Update the customer contact details with new information.",
-            "expectedResult": "Contact details are updated accurately.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 3,
-            "stepDescription": "Save the updated customer record.",
-            "expectedResult": "Customer record is saved successfully.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 4,
-            "stepDescription": "Retrieve the updated customer record from the system.",
-            "expectedResult": "Updated customer record is retrieved accurately.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 5,
-            "stepDescription": "Verify that the updated customer contact details are accurate.",
-            "expectedResult": "Contact details match the updated information.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 6,
-            "stepDescription": "Delete the customer record from the system.",
-            "expectedResult": "Customer record is successfully deleted.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 7,
-            "stepDescription": "Attempt to retrieve the deleted customer record.",
-            "expectedResult": "Deleted customer record is not found in the system.",
-            "comments": ""
-          }
-        ]
-      },
-      {
-        "title": "Sales Pipeline Tracking and Management Testing",
-        "description": "Verify the system's ability to track and manage sales pipelines.",
-        "steps": [
-          {
-            "stepNumber": 1,
-            "stepDescription": "Create a new opportunity in the system.",
-            "expectedResult": "Opportunity is successfully created.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 2,
-            "stepDescription": "Move the opportunity through different pipeline stages.",
-            "expectedResult": "Opportunity progresses through stages correctly.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 3,
-            "stepDescription": "Update opportunity details at each stage.",
-            "expectedResult": "Updates are saved accurately.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 4,
-            "stepDescription": "Generate pipeline reports.",
-            "expectedResult": "Reports show accurate pipeline data.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 5,
-            "stepDescription": "Verify pipeline analytics and forecasting.",
-            "expectedResult": "Analytics provide accurate insights.",
-            "comments": ""
-          }
-        ]
-      },
-      {
-        "title": "Customer Segmentation Capabilities Validation",
-        "description": "Validate the customer segmentation and targeting capabilities.",
-        "steps": [
-          {
-            "stepNumber": 1,
-            "stepDescription": "Access the customer segmentation tools.",
-            "expectedResult": "Segmentation tools are accessible.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 2,
-            "stepDescription": "Create customer segments based on various criteria (demographics, behavior).",
-            "expectedResult": "Segments are created successfully.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 3,
-            "stepDescription": "Save the defined customer segments.",
-            "expectedResult": "Segments are saved correctly.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 4,
-            "stepDescription": "Create targeted marketing campaigns for specific segments.",
-            "expectedResult": "Targeted campaigns are set up successfully.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 5,
-            "stepDescription": "Verify segment analytics and reporting.",
-            "expectedResult": "Analytics provide accurate segment insights.",
-            "comments": ""
-          }
-        ]
-      },
-      {
-        "title": "Customer Interaction Linkage Verification",
-        "description": "Ensure proper linking of customer interactions to respective customer records.",
-        "steps": [
-          {
-            "stepNumber": 1,
-            "stepDescription": "Retrieve an existing customer record from the system.",
-            "expectedResult": "Customer record is successfully retrieved.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 2,
-            "stepDescription": "Initiate a customer interaction, such as a phone call, email, or chat.",
-            "expectedResult": "Customer interaction is successfully initiated.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 3,
-            "stepDescription": "Record the details of the customer interaction.",
-            "expectedResult": "Interaction details are accurately recorded.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 4,
-            "stepDescription": "Link the recorded customer interaction to the respective customer record.",
-            "expectedResult": "Customer interaction is linked to the customer record.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 5,
-            "stepDescription": "Retrieve the customer record and verify the presence of the linked interaction.",
-            "expectedResult": "Linked interaction is found in the customer record.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 6,
-            "stepDescription": "Retrieve the linked interaction and verify that the details are accurate.",
-            "expectedResult": "Linked interaction details match the recorded information.",
-            "comments": ""
-          }
-        ]
-      },
-      {
-        "title": "Contact Management Feature Testing",
-        "description": "Validate the contact management features of the CRM/Call Center System.",
-        "steps": [
-          {
-            "stepNumber": 1,
-            "stepDescription": "Access the contact management section of the CRM/Call Center System.",
-            "expectedResult": "Contact management section is accessible.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 2,
-            "stepDescription": "Create a new contact record with all relevant details.",
-            "expectedResult": "Contact record is created successfully.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 3,
-            "stepDescription": "Search for an existing contact using various criteria.",
-            "expectedResult": "Contact search functionality works accurately.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 4,
-            "stepDescription": "Update an existing contact's information.",
-            "expectedResult": "Contact information is updated successfully.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 5,
-            "stepDescription": "Link a contact to a company or organization.",
-            "expectedResult": "Contact is linked correctly to the company.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 6,
-            "stepDescription": "Associate activities and interactions with a contact.",
-            "expectedResult": "Activities are properly associated with the contact.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 7,
-            "stepDescription": "Create and manage contact groups or lists.",
-            "expectedResult": "Contact groups are managed successfully.",
-            "comments": ""
-          }
-        ]
-      },
-      {
-        "title": "Customer Contact Details Storage Validation",
-        "description": "Ensure accurate storage and retrieval of customer contact details.",
-        "steps": [
-          {
-            "stepNumber": 1,
-            "stepDescription": "Create a new customer record.",
-            "expectedResult": "Customer record is successfully created.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 2,
-            "stepDescription": "Click the Walk-in Activity button, then click New Contact.",
-            "expectedResult": "Forms load correctly.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 3,
-            "stepDescription": "Enter valid customer contact details (Full Name, Email, Phone, Address).",
-            "expectedResult": "Contact details are entered accurately.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 4,
-            "stepDescription": "Save the customer record.",
-            "expectedResult": "Customer record is saved successfully.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 5,
-            "stepDescription": "Retrieve the customer record.",
-            "expectedResult": "Customer record is retrieved accurately.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 6,
-            "stepDescription": "Verify stored customer contact details.",
-            "expectedResult": "Contact details match the entered information.",
-            "comments": ""
-          }
-        ]
-      },
-      {
-        "title": "System Infrastructure Setup Verification",
-        "description": "Verify the proper setup and functioning of the infrastructure for the CRM/Call Center System.",
-        "steps": [
-          {
-            "stepNumber": 1,
-            "stepDescription": "Precondition: Ensure all required infrastructure components are available and properly configured.",
-            "expectedResult": "All components are available and configured.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 2,
-            "stepDescription": "Access the CRM/Call Center System.",
-            "expectedResult": "System is accessible.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 3,
-            "stepDescription": "Verify the availability and responsiveness of the system.",
-            "expectedResult": "The system is accessible and responds promptly to user interactions.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 4,
-            "stepDescription": "Test the connectivity between the CRM/Call Center System and the necessary databases or external systems.",
-            "expectedResult": "The system establishes a stable and reliable connection with the databases and external systems.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 5,
-            "stepDescription": "Verify the functionality of any hardware components (e.g., servers, network devices) involved in the system.",
-            "expectedResult": "The hardware components operate properly and support the required system functionalities.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 6,
-            "stepDescription": "Test system performance under normal conditions (e.g., user load, data volume).",
-            "expectedResult": "The system performs efficiently and provides a smooth user experience without delays or errors.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 7,
-            "stepDescription": "Conduct system backup and restoration procedures.",
-            "expectedResult": "Data backup and restoration processes are successful, ensuring data integrity and availability.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 8,
-            "stepDescription": "Validate disaster recovery mechanisms (if applicable).",
-            "expectedResult": "The system recovers from potential disasters and ensures minimal data loss and downtime.",
-            "comments": ""
-          }
-        ]
-      }
-    ],
-    "totalTestCases": 9
-  }
+  "functionality": "CRM & Contact Management",
+  "testCases": [
+    {
+      "title": "System Infrastructure Setup Verification",
+      "description": "Verify the proper setup and functioning of the infrastructure for the CRM/Call Center System.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Precondition: Ensure all required infrastructure components are available and properly configured.",
+          "expectedResult": "All components are available and configured.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Access the CRM/Call Center System.",
+          "expectedResult": "System is accessible.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Verify the availability and responsiveness of the system.",
+          "expectedResult": "The system is accessible and responds promptly to user interactions.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Test the connectivity between the CRM/Call Center System and the necessary databases or external systems.",
+          "expectedResult": "The system establishes a stable and reliable connection with the databases and external systems.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Verify the functionality of any hardware components (e.g., servers, network devices) involved in the system.",
+          "expectedResult": "The hardware components operate properly and support the required system functionalities.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Test system performance under normal conditions (e.g., user load, data volume).",
+          "expectedResult": "The system performs efficiently and provides a smooth user experience without delays or errors.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Conduct system backup and restoration procedures.",
+          "expectedResult": "Data backup and restoration processes are successful, ensuring data integrity and availability.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Validate disaster recovery mechanisms (if applicable).",
+          "expectedResult": "The system recovers from potential disasters and ensures minimal data loss and downtime.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Contact Management Feature Testing",
+      "description": "Validate the contact management features of the CRM/Call Center System.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Access the contact management section of the CRM/Call Center System.",
+          "expectedResult": "Contact management section is accessible.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Create a new contact record with all relevant details.",
+          "expectedResult": "Contact record is created successfully.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Search for an existing contact using various criteria.",
+          "expectedResult": "Contact search functionality works accurately.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Update an existing contact's information.",
+          "expectedResult": "Contact information is updated successfully.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Link a contact to a company or organization.",
+          "expectedResult": "Contact is linked correctly to the company.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Associate activities and interactions with a contact.",
+          "expectedResult": "Activities are properly associated with the contact.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Create and manage contact groups or lists.",
+          "expectedResult": "Contact groups are managed successfully.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Customer Contact Details Storage Validation",
+      "description": "Ensure accurate storage and retrieval of customer contact details.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Create a new customer record.",
+          "expectedResult": "Customer record is successfully created.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Click the Walk-in Activity button, then click New Contact.",
+          "expectedResult": "Forms load correctly.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Enter valid customer contact details (Full Name, Email, Phone, Address).",
+          "expectedResult": "Contact details are entered accurately.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Save the customer record.",
+          "expectedResult": "Customer record is saved successfully.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Retrieve the customer record.",
+          "expectedResult": "Customer record is retrieved accurately.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Verify stored customer contact details.",
+          "expectedResult": "Contact details match the entered information.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Customer Information Management Verification",
+      "description": "Validate the functionality of updating and deleting customer information.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Retrieve an existing customer record from the system.",
+          "expectedResult": "Customer record is successfully retrieved.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Update the customer contact details with new information.",
+          "expectedResult": "Contact details are updated accurately.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Save the updated customer record.",
+          "expectedResult": "Customer record is saved successfully.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Retrieve the updated customer record from the system.",
+          "expectedResult": "Updated customer record is retrieved accurately.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Verify that the updated customer contact details are accurate.",
+          "expectedResult": "Contact details match the updated information.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Delete the customer record from the system.",
+          "expectedResult": "Customer record is successfully deleted.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Attempt to retrieve the deleted customer record.",
+          "expectedResult": "Deleted customer record is not found in the system.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Customer Interaction Linkage Verification",
+      "description": "Ensure proper linking of customer interactions to respective customer records.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Retrieve an existing customer record from the system.",
+          "expectedResult": "Customer record is successfully retrieved.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Initiate a customer interaction, such as a phone call, email, or chat.",
+          "expectedResult": "Customer interaction is successfully initiated.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Record the details of the customer interaction.",
+          "expectedResult": "Interaction details are accurately recorded.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Link the recorded customer interaction to the respective customer record.",
+          "expectedResult": "Customer interaction is linked to the customer record.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Retrieve the customer record and verify the presence of the linked interaction.",
+          "expectedResult": "Linked interaction is found in the customer record.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Retrieve the linked interaction and verify that the details are accurate.",
+          "expectedResult": "Linked interaction details match the recorded information.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Customer Segmentation Capabilities Validation",
+      "description": "Validate the customer segmentation and targeting capabilities.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Access the customer segmentation tools.",
+          "expectedResult": "Segmentation tools are accessible.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Create customer segments based on various criteria (demographics, behavior).",
+          "expectedResult": "Segments are created successfully.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Save the defined customer segments.",
+          "expectedResult": "Segments are saved correctly.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Create targeted marketing campaigns for specific segments.",
+          "expectedResult": "Targeted campaigns are set up successfully.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Verify segment analytics and reporting.",
+          "expectedResult": "Analytics provide accurate segment insights.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Lead Creation and Assignment Testing",
+      "description": "Validate the creation and assignment of leads to sales representatives.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Create a new lead in the system.",
+          "expectedResult": "Lead is successfully created.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Enter valid lead details in the input fields.",
+          "expectedResult": "Lead details are entered accurately.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Assign the lead to a sales representative.",
+          "expectedResult": "Lead is successfully assigned to the sales representative.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Save the assigned lead.",
+          "expectedResult": "Assigned lead is saved successfully.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Retrieve the assigned lead from the system.",
+          "expectedResult": "Assigned lead is retrieved accurately.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Verify that the assigned lead details are accurate.",
+          "expectedResult": "Lead details match the entered information.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Lead to Opportunity Conversion Validation",
+      "description": "Verify the process of converting leads to opportunities.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Retrieve an existing lead from the system.",
+          "expectedResult": "Lead is successfully retrieved.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Convert the lead to an opportunity.",
+          "expectedResult": "Lead is successfully converted to an opportunity.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Enter opportunity details in the input fields.",
+          "expectedResult": "Opportunity details are entered accurately.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Save the converted opportunity.",
+          "expectedResult": "Converted opportunity is saved successfully.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Retrieve the opportunity from the system.",
+          "expectedResult": "Opportunity is retrieved accurately.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Verify that the opportunity details are accurate and linked to the lead.",
+          "expectedResult": "Opportunity details match the entered information and are linked to the lead.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Sales Pipeline Tracking and Management Testing",
+      "description": "Verify the system's ability to track and manage sales pipelines.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Create a new opportunity in the system.",
+          "expectedResult": "Opportunity is successfully created.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Move the opportunity through different pipeline stages.",
+          "expectedResult": "Opportunity progresses through stages correctly.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Update opportunity details at each stage.",
+          "expectedResult": "Updates are saved accurately.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Generate pipeline reports.",
+          "expectedResult": "Reports show accurate pipeline data.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Verify pipeline analytics and forecasting.",
+          "expectedResult": "Analytics provide accurate insights.",
+          "comments": ""
+        }
+      ]
+    }
+  ],
+  "totalTestCases": 9
+}

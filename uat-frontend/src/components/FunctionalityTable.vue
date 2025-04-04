@@ -1,10 +1,10 @@
 <template>
   <div>
+    <div style="margin-bottom: 20px;"></div>
     <div class="d-flex justify-content-between align-items-center mb-3">
-      <h3>Functionalities</h3>
       <button @click="$emit('openModal')" class="btn btn-primary">+ Add Functionality</button>
     </div>
-
+    <div style="margin-bottom: 20px;"></div>
     <table class="table table-striped">
       <thead class="table-dark">
         <tr>
@@ -20,8 +20,11 @@
           <td>{{ getSystemName(functionality.system) }}</td>
           <td>{{ functionality.description }}</td>
           <td>
-            <button @click="$emit('edit', functionality)" class="btn btn-warning btn-sm">Edit</button>
-            <button @click="$emit('delete', functionality.id)" class="btn btn-danger btn-sm">Delete</button>
+            <div class="d-flex gap-2">
+              <button @click="$emit('edit', functionality)" class="btn btn-warning btn-sm">Edit</button>
+              <button @click="$emit('delete', functionality.id)" class="btn btn-danger btn-sm">Delete</button>
+              <button @click="$emit('viewTestCases', functionality)" class="btn btn-primary btn-sm">Test Cases</button>
+            </div>
           </td>
         </tr>
       </tbody>

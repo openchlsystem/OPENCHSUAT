@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import axios from "@/utils/axios";
+import axios from "@/utils/axios.js";
 import DefectTable from "@/components/Admin/DefectTable.vue";
 import DefectFilter from "@/components/Admin/DefectFilter.vue";
 import DefectDetailModal from "@/components/Admin/DefectDetailModal.vue";

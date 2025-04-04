@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from django.db import transaction
+from django.db import transaction, models
 from .models import (
     Organization, System, Functionality,
     TestCase, TestStep, TestExecution,
@@ -9,7 +9,6 @@ from django.contrib.auth import get_user_model
 from django.db import IntegrityError
 
 User = get_user_model()
-
 
 class OrganizationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -121,9 +120,9 @@ class TestStepSerializer(serializers.ModelSerializer):
         model = TestStep
         fields = [
             'id', 'test_case', 'step_number',
-            'description', 'expected_result', 'attachment'
+            'description', 'expected_result', 'attachment', 'sort_order'
         ]
-        read_only_fields = ['id']
+        read_only_fields = ['id', 'sort_order']
 
 
 class TestCaseSerializer(serializers.ModelSerializer):
@@ -151,7 +150,7 @@ class TestCaseSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'title', 'functionality', 'functionality_id', 'description',
             'expected_result', 'created_by', 'steps', 'assigned_user',
-            'assigned_user_id', 'status', 'created_at'
+            'assigned_user_id', 'status', 'created_at', 'sort_order'  # Added sort_order
         ]
         read_only_fields = ['id', 'created_by', 'created_at', 'steps']
         extra_kwargs = {
@@ -175,15 +174,25 @@ class TestCaseSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """
-        Handle TestCase creation with optional functionality
+        Handle TestCase creation with optional functionality and set sort_order
         """
         functionality = validated_data.pop('functionality', None)
-
+        
         # Remove created_by if it exists in validated_data (it will be set by perform_create)
         validated_data.pop('created_by', None)
-
+        
+        # Calculate the new sort_order
+        if functionality:
+            max_sort_order = TestCase.objects.filter(
+                functionality=functionality
+            ).aggregate(models.Max('sort_order'))['sort_order__max'] or 0
+            sort_order = max_sort_order + 1000
+        else:
+            sort_order = 1000  # Default starting value if no functionality
+        
         test_case = TestCase.objects.create(
             functionality=functionality,
+            sort_order=sort_order,
             **validated_data
         )
         return test_case
@@ -201,6 +210,7 @@ class TestCaseSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+    
 class TestExecutionSerializer(serializers.ModelSerializer):
     test_case = serializers.PrimaryKeyRelatedField(queryset=TestCase.objects.all()) # Serialize test_case as an object
     tester = UserSerializer(read_only=True)  # Serialize tester as an object

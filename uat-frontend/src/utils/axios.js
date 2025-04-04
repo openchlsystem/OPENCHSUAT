@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Define the base URL for your backend API
-//const baseURL = 'http://127.0.0.1:8000/api'; // Replace with your actual backend API URL
+// const baseURL = 'http://127.0.0.1:8000/uat'; // Replace with your actual backend API URL
 const baseURL = 'https://backend.bitz-itc.com/uat'; // Replace with your actual backend API URL
 
 // Create an axios instance
@@ -85,7 +85,7 @@ axiosInstance.interceptors.response.use(
         // Clear tokens
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
-        
+
         // Use window.location.href = '/login' but don't alert first
         // This will allow the router guard to handle the redirect properly
         window.location.href = '/login';

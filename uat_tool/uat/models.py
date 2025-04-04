@@ -120,6 +120,7 @@ class Functionality(models.Model):
     name = models.CharField(max_length=255, help_text="The name of the functionality.")
     system = models.ForeignKey(System, on_delete=models.CASCADE, related_name='functionalities', help_text="The system the functionality belongs to.")
     description = models.TextField(blank=True, null=True, help_text="A brief description of the functionality.")
+    sort_order = models.PositiveIntegerField(default=0, help_text="The sort order of the functionality within the system.")
 
     def __str__(self):
         return f"{self.name} ({self.system.name})"
@@ -142,6 +143,7 @@ class TestCase(models.Model):
     expected_result = models.TextField(help_text="The expected result of the test case.")
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, help_text="The user who created this test case.")
     assigned_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='assigned_test_cases', blank=True, help_text="The user assigned to this test case.")
+    sort_order = models.PositiveIntegerField(default=0, help_text="The sort order of the test case.")
     status = models.CharField(max_length=20, choices=[
         ('draft', 'Draft'),
         ('ready_for_testing', 'Ready for Testing'),
@@ -163,6 +165,7 @@ class TestStep(models.Model):
     description = models.TextField(help_text="A detailed description of the step.")
     expected_result = models.TextField(help_text="The expected result of the step.")
     attachment = models.FileField(upload_to='test_step_attachments/', blank=True, null=True, help_text="An optional attachment for the step.")
+    sort_order = models.PositiveIntegerField(default=0, help_text="The sort order of the step within the test case.")
 
     def __str__(self):
         return f"Step {self.step_number} for {self.test_case.title}"
@@ -182,6 +185,7 @@ class TestExecution(models.Model):
     ], help_text="The status of the test execution.")
     notes = models.TextField(blank=True, null=True, help_text="Additional notes about the execution.")
     started_at = models.DateTimeField(auto_now_add=True, help_text="The date and time when the execution started.")
+    sort_order = models.PositiveIntegerField(default=0, help_text="The sort order of the execution.")
     completed_at = models.DateTimeField(blank=True, null=True, help_text="The date and time when the execution was completed.")
 
     def __str__(self):
