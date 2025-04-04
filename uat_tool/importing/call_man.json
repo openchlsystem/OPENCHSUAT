@@ -1,126 +1,126 @@
 {
-    "functionality": "Call Management",
-    "testCases": [
-      {
-        "title": "Call Queue and Priority Management Verification",
-        "description": "Verify call queuing and priority management.",
-        "steps": [
-          {
-            "stepNumber": 1,
-            "stepDescription": "Simulate multiple inbound calls simultaneously.",
-            "expectedResult": "Multiple inbound calls are initiated.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 2,
-            "stepDescription": "Observe call queuing behavior.",
-            "expectedResult": "Calls are placed in a queue and wait for agent availability.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 3,
-            "stepDescription": "Assign different priority levels to calls.",
-            "expectedResult": "Calls with higher priority are prioritized in the queue.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 4,
-            "stepDescription": "Test queuing under different scenarios (high call volume, priorities).",
-            "expectedResult": "Call queuing behaves as expected.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 5,
-            "stepDescription": "Verify the handling and routing of queued calls.",
-            "expectedResult": "Queued calls are routed based on priority and availability.",
-            "comments": ""
-          }
-        ]
-      },
-      {
-        "title": "Outbound Call Functionality Testing",
-        "description": "Validate the functionality of initiating outbound calls for sales, marketing, and customer service.",
-        "steps": [
-          {
-            "stepNumber": 1,
-            "stepDescription": "Initiate an outbound call for a sales activity.",
-            "expectedResult": "Outbound call is successfully initiated.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 2,
-            "stepDescription": "Provide required caller information (Caller Name, Number).",
-            "expectedResult": "Caller information is accurately provided.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 3,
-            "stepDescription": "Verify call initiation for various scenarios (sales activities, campaigns).",
-            "expectedResult": "Call initiation is successful in each scenario.",
-            "comments": ""
-          }
-        ]
-      },
-      {
-        "title": "IVR System Call Handling Validation",
-        "description": "Verify the automated call handling process through the IVR system.",
-        "steps": [
-          {
-            "stepNumber": 1,
-            "stepDescription": "Initiate an inbound call to the IVR system.",
-            "expectedResult": "Inbound call is successfully initiated.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 2,
-            "stepDescription": "Follow IVR prompts and menu options.",
-            "expectedResult": "IVR guides the caller accurately.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 3,
-            "stepDescription": "Test various call scenarios (different menu options, invalid inputs).",
-            "expectedResult": "IVR responds appropriately.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 4,
-            "stepDescription": "Verify call handling for different call types (sales, support).",
-            "expectedResult": "Calls are handled correctly.",
-            "comments": ""
-          }
-        ]
-      },
-      {
-        "title": "Call Transfer and Escalation Functionality Testing",
-        "description": "Validate call transfer and escalation functionality.",
-        "steps": [
-          {
-            "stepNumber": 1,
-            "stepDescription": "Initiate a customer call.",
-            "expectedResult": "Call is successfully initiated.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 2,
-            "stepDescription": "Transfer the call to another agent.",
-            "expectedResult": "Call is successfully transferred.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 3,
-            "stepDescription": "Escalate the call to a supervisor.",
-            "expectedResult": "Call is successfully escalated.",
-            "comments": ""
-          },
-          {
-            "stepNumber": 4,
-            "stepDescription": "Verify call history and tracking throughout the transfer process.",
-            "expectedResult": "Call history accurately reflects transfers and escalations.",
-            "comments": ""
-          }
-        ]
-      }
-    ],
-    "totalTestCases": 4
-  }
+  "functionality": "Call Management",
+  "testCases": [
+    {
+      "title": "IVR System Call Handling Validation",
+      "description": "Verify the automated call handling process through the IVR system.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Initiate an inbound call to the IVR system.",
+          "expectedResult": "Inbound call is successfully initiated.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Follow IVR prompts and menu options.",
+          "expectedResult": "IVR guides the caller accurately.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Test various call scenarios (different menu options, invalid inputs).",
+          "expectedResult": "IVR responds appropriately.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Verify call handling for different call types (sales, support).",
+          "expectedResult": "Calls are handled correctly.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Call Queue and Priority Management Verification",
+      "description": "Verify call queuing and priority management.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Simulate multiple inbound calls simultaneously.",
+          "expectedResult": "Multiple inbound calls are initiated.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Observe call queuing behavior.",
+          "expectedResult": "Calls are placed in a queue and wait for agent availability.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Assign different priority levels to calls.",
+          "expectedResult": "Calls with higher priority are prioritized in the queue.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Test queuing under different scenarios (high call volume, priorities).",
+          "expectedResult": "Call queuing behaves as expected.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Verify the handling and routing of queued calls.",
+          "expectedResult": "Queued calls are routed based on priority and availability.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Call Transfer and Escalation Functionality Testing",
+      "description": "Validate call transfer and escalation functionality.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Initiate a customer call.",
+          "expectedResult": "Call is successfully initiated.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Transfer the call to another agent.",
+          "expectedResult": "Call is successfully transferred.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Escalate the call to a supervisor.",
+          "expectedResult": "Call is successfully escalated.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Verify call history and tracking throughout the transfer process.",
+          "expectedResult": "Call history accurately reflects transfers and escalations.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Outbound Call Functionality Testing",
+      "description": "Validate the functionality of initiating outbound calls for sales, marketing, and customer service.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Initiate an outbound call for a sales activity.",
+          "expectedResult": "Outbound call is successfully initiated.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Provide required caller information (Caller Name, Number).",
+          "expectedResult": "Caller information is accurately provided.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Verify call initiation for various scenarios (sales activities, campaigns).",
+          "expectedResult": "Call initiation is successful in each scenario.",
+          "comments": ""
+        }
+      ]
+    }
+  ],
+  "totalTestCases": 4
+}

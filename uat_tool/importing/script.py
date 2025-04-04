@@ -11,7 +11,7 @@ def print_debug(message):
 
 def create_functionality(base_url, auth_token, functionality_data):
     """Create a functionality and return its ID"""
-    url = f"{base_url}/api/functionalities/"
+    url = f"{base_url}/functionalities/"
     headers = {
         "Authorization": f"Bearer {auth_token}",
         "Content-Type": "application/json"
@@ -30,7 +30,7 @@ def create_functionality(base_url, auth_token, functionality_data):
 
 def create_test_case(base_url, auth_token, test_case_data):
     """Create a test case and return its ID"""
-    url = f"{base_url}/api/test-cases/"
+    url = f"{base_url}/test-cases/"
     headers = {
         "Authorization": f"Bearer {auth_token}",
         "Content-Type": "application/json"
@@ -49,13 +49,14 @@ def create_test_case(base_url, auth_token, test_case_data):
 
 def create_test_step(base_url, auth_token, test_step_data):
     """Create a test step"""
-    url = f"{base_url}/api/test-steps/"
+    url = f"{base_url}/test-steps/"
     headers = {
-        "Authorization": f"Bearer {auth_token}"
+        "Authorization": f"Bearer {auth_token}",
+        "Content-Type": "application/json"  # Added content type
     }
     
     print_debug(f"Creating test step {test_step_data['step_number']} for test case ID {test_step_data['test_case']}")
-    response = requests.post(url, data=test_step_data, headers=headers)
+    response = requests.post(url, json=test_step_data, headers=headers)  # Changed data to json
     
     if response.status_code in [200, 201]:
         print_debug(f"Successfully created test step: {response.json()}")
@@ -90,7 +91,7 @@ def process_json_file(file_path, base_url, auth_token, system_id):
             # Create test case
             test_case_data = {
                 "title": test_case.get("title", "Unnamed Test Case"),
-                "functionality": functionality_id,
+                "functionality_id": functionality_id,
                 "description": test_case.get("description", "No description provided"),
                 "expected_result": "See individual test steps"
             }
