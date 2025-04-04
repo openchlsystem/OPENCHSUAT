@@ -9,6 +9,7 @@
       @openModal="openCreateModal"
       @edit="editFunctionality"
       @delete="deleteFunctionality"
+      @viewTestCases="navigateToTestCases"
     />
 
     <!-- Functionality Modal -->
@@ -102,6 +103,19 @@ export default {
       console.log("✅ Closing Modal");
       this.selectedFunctionality = null;
       this.showModal = false;
+    },
+
+    navigateToTestCases(functionality) {
+      // Navigate to test cases view with functionality id as parameter
+      this.$router.push({ 
+        name: 'FunctionalityTestCases', 
+        params: { 
+          functionalityId: functionality.id 
+        },
+        query: {
+          functionalityName: functionality.name
+        }
+      });
     }
   },
   mounted() {
