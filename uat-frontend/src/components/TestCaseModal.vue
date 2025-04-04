@@ -20,7 +20,7 @@
           <label for="functionality">Functionality</label>
           <select
             id="functionality"
-            v-model="localTestCase.functionality"
+            v-model="localTestCase.functionality_id"
             class="form-control"
             required
           >
@@ -103,7 +103,7 @@ export default {
       handler(newValue) {
         this.localTestCase = newValue
           ? { ...newValue }
-          : { title: "", functionality: "", description: "", expected_result: "" };
+          : { title: "", functionality_id: "", description: "", expected_result: "" };
       }
     }
   },

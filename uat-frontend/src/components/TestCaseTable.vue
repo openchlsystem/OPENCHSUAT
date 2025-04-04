@@ -21,7 +21,7 @@
       <tbody>
         <tr v-for="testCase in testCases" :key="testCase.id">
           <td>{{ testCase.title }}</td>
-          <td>{{ getFunctionalityName(testCase.functionality) }}</td>
+          <td>{{ getFunctionalityName(testCase.functionality?.id) }}</td>
           <td>{{ testCase.expected_result }}</td>
           <td>{{ testCase.created_by?.first_name || testCase.created_by?.whatsapp_number || 'N/A' }}</td>
           <td>
