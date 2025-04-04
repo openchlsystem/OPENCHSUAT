@@ -25,6 +25,7 @@ const AssignedTests = () => import('@/views/tester/AssignedTestsView.vue');
 const TestExecution = () => import('@/views/tester/TestExecutionView.vue');
 const DefectReport = () => import('@/views/tester/DefectReportView.vue');
 const TestHistory = () => import('@/views/tester/TestHistoryView.vue');
+const AssignedTestDetails = () => import('@/views/tester/AssignedTestDetails.vue'); // <-- Added this import
 
 // Custom JWT decode function (no dependency required)
 function decodeJwt(token) {
@@ -78,6 +79,7 @@ const routes = [
       { path: "", name: "TesterDashboardDefault", component: TesterDashboard },
       { path: 'dashboard', name: 'TesterDashboard', component: TesterDashboard },
       { path: 'assigned-tests', name: 'AssignedTestsView', component: AssignedTests },
+      { path: 'assigned-tests/:id', name: 'AssignedTestDetails', component: AssignedTestDetails }, // <-- New Route
       { path: 'test-execution', name: 'TestExecutionView', component: TestExecution },
       { path: 'defect-reporting', name: 'DefectReportView', component: DefectReport },
       { path: 'test-history', name: 'TestHistoryView', component: TestHistory }
@@ -133,13 +135,11 @@ router.beforeEach((to, from, next) => {
       const decoded = decodeJwt(token);
       if (decoded) {
         const now = Date.now() / 1000;
-        // Skip expiration check if exp is not present
         if (!decoded.exp || decoded.exp > now) {
           isAuthenticated = true;
           console.log("User is authenticated");
         } else {
           console.log("Token expired");
-          // Remove token if expired
           localStorage.removeItem("access_token");
           if (authStore && typeof authStore.logout === 'function') {
             authStore.logout();

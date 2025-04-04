@@ -10,7 +10,6 @@ from django.db import IntegrityError
 
 User = get_user_model()
 
-
 class OrganizationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organization

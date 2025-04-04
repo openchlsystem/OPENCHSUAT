@@ -22,7 +22,6 @@
     />
   </div>
 </template>
-
 <script>
 import axios from "@/utils/axios.js";
 import FunctionalityTable from "@/components/FunctionalityTable.vue";
