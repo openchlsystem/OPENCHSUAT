@@ -25,6 +25,7 @@ const AssignedTests = () => import('@/views/tester/AssignedTestsView.vue');
 const TestExecution = () => import('@/views/tester/TestExecutionView.vue');
 const DefectReport = () => import('@/views/tester/DefectReportView.vue');
 const TestHistory = () => import('@/views/tester/TestHistoryView.vue');
+const AssignedTestDetails = () => import('@/views/tester/AssignedTestDetails.vue'); // <-- Added this import
 
 // Custom JWT decode function (no dependency required)
 function decodeJwt(token) {
@@ -73,6 +74,7 @@ const routes = [
       { path: "", name: "TesterDashboardDefault", component: TesterDashboard },
       { path: 'dashboard', name: 'TesterDashboard', component: TesterDashboard },
       { path: 'assigned-tests', name: 'AssignedTestsView', component: AssignedTests },
+      { path: 'assigned-tests/:id', name: 'AssignedTestDetails', component: AssignedTestDetails }, // <-- New Route
       { path: 'test-execution', name: 'TestExecutionView', component: TestExecution },
       { path: 'defect-reporting', name: 'DefectReportView', component: DefectReport },
       { path: 'test-history', name: 'TestHistoryView', component: TestHistory }
@@ -94,7 +96,6 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   console.log(`Navigation to: ${to.path}`);
   
-  // Try to get the auth store
   let authStore;
   try {
     authStore = useAuthStore();
@@ -103,11 +104,9 @@ router.beforeEach((to, from, next) => {
     console.error("Failed to access auth store:", error);
   }
   
-  // Check for token in localStorage
   const token = localStorage.getItem("access_token");
   console.log("Token exists:", !!token);
   
-  // Get user from localStorage as fallback
   let userRole = null;
   if (authStore?.userRole) {
     userRole = authStore.userRole;
@@ -121,20 +120,17 @@ router.beforeEach((to, from, next) => {
     }
   }
   
-  // Determine if the user is authenticated
   let isAuthenticated = false;
   if (token) {
     try {
       const decoded = decodeJwt(token);
       if (decoded) {
         const now = Date.now() / 1000;
-        // Skip expiration check if exp is not present
         if (!decoded.exp || decoded.exp > now) {
           isAuthenticated = true;
           console.log("User is authenticated");
         } else {
           console.log("Token expired");
-          // Remove token if expired
           localStorage.removeItem("access_token");
           if (authStore && typeof authStore.logout === 'function') {
             authStore.logout();
@@ -146,18 +142,15 @@ router.beforeEach((to, from, next) => {
     }
   }
   
-  // Handle routes requiring authentication
   if (to.meta.requiresAuth) {
     if (!isAuthenticated) {
       console.log("Authentication required, redirecting to login");
       return next('/login');
     }
     
-    // Check role requirements
     if (to.meta.role && to.meta.role !== userRole) {
       console.log(`Role mismatch. Required: ${to.meta.role}, User has: ${userRole}`);
       
-      // Redirect based on user's actual role
       if (userRole === 'admin') {
         console.log("Redirecting to admin dashboard");
         return next('/admin/dashboard');
@@ -170,11 +163,9 @@ router.beforeEach((to, from, next) => {
       }
     }
     
-    // All checks passed
     console.log("Authentication and role checks passed");
     return next();
   } 
-  // Handle login/register when already authenticated
   else if ((to.path === '/login' || to.path === '/register') && isAuthenticated) {
     console.log("User already authenticated, redirecting based on role");
     
@@ -190,7 +181,6 @@ router.beforeEach((to, from, next) => {
     }
   }
   
-  // Allow navigation for public routes
   console.log("Proceeding with navigation");
   return next();
 });

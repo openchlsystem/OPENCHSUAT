@@ -25,9 +25,12 @@
             </span>
           </td>
           <td>
-            <button class="btn btn-outline-primary btn-sm" @click="viewDetails(test)">
-              <i class="fas fa-eye"></i> View
-            </button>
+            <router-link :to="'/tester/assigned-tests/' + test.id">
+  <button class="btn btn-primary btn-sm">
+    <i class="fas fa-eye"></i> View
+  </button>
+</router-link>
+
           </td>
         </tr>
       </tbody>
@@ -43,20 +46,17 @@ export default {
   methods: {
     getPriorityClass(priority) {
       return {
-        'badge-danger': priority === 'High',
-        'badge-warning': priority === 'Medium',
-        'badge-success': priority === 'Low',
+        "badge-danger": priority === "High",
+        "badge-warning": priority === "Medium",
+        "badge-success": priority === "Low",
       };
     },
     getStatusClass(status) {
       return {
-        'badge-success': status === 'Passed',
-        'badge-warning': status === 'Pending',
-        'badge-danger': status === 'Failed',
+        "badge-success": status === "Passed",
+        "badge-warning": status === "Pending",
+        "badge-danger": status === "Failed",
       };
-    },
-    viewDetails(test) {
-      this.$emit('openTestModal', test);
     },
   },
 };
@@ -66,6 +66,9 @@ export default {
 .table-container {
   border-radius: 10px;
   overflow: hidden;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  background: white;
+  padding: 15px;
 }
 
 .table thead {
@@ -78,8 +81,8 @@ export default {
 }
 
 .badge {
-  padding: 5px 10px;
-  font-size: 12px;
+  padding: 6px 12px;
+  font-size: 13px;
   border-radius: 12px;
 }
 
@@ -98,13 +101,16 @@ export default {
   color: white;
 }
 
-.btn-outline-primary {
-  border-radius: 5px;
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 6px;
   transition: 0.3s;
 }
 
-.btn-outline-primary:hover {
+.btn-primary:hover {
   background-color: #0056b3;
-  color: white;
 }
 </style>

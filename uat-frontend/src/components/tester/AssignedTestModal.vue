@@ -4,8 +4,8 @@
     @hidden="$emit('close')"
     centered
     size="lg"
-    class="modern-modal"
     hide-footer
+    class="custom-modal"
   >
     <template #modal-header>
       <h4 class="modal-title">Test Case Details</h4>
@@ -19,8 +19,6 @@
         <p class="test-meta"><strong>Functionality:</strong> {{ testData.functionality }}</p>
         <p class="test-description"><strong>Description:</strong> {{ testData.description }}</p>
         <p class="test-meta"><strong>Expected Result:</strong> {{ testData.expected_result }}</p>
-       
-        
       </div>
 
       <!-- ✅ Test Steps -->
@@ -28,13 +26,12 @@
         <h5 class="steps-title">Test Steps</h5>
         <ul v-if="testData.steps && testData.steps.length > 0" class="test-steps">
           <li v-for="step in testData.steps" :key="step.id">
-  <div class="step-number">Step {{ step.step_number }}</div>
-  <div class="step-content">
-    <p><strong>Description:</strong> {{ step.description }}</p>
-    <p><strong>Expected Result:</strong> {{ step.expected_result }}</p>
-  </div>
-</li>
-
+            <div class="step-number">Step {{ step.step_number }}</div>
+            <div class="step-content">
+              <p><strong>Description:</strong> {{ step.description }}</p>
+              <p><strong>Expected Result:</strong> {{ step.expected_result }}</p>
+            </div>
+          </li>
         </ul>
         <div v-else class="no-steps">No test steps found.</div>
       </div>
@@ -50,22 +47,21 @@
 <script setup>
 import { defineProps, defineEmits } from "vue";
 
-const props = defineProps({
+defineProps({
   show: Boolean,
   testData: Object,
 });
 
-const emit = defineEmits(["close"]);
+defineEmits(["close"]);
 </script>
 
 <style scoped>
-/* 🎨 Modern Classic Styling */
-.modern-modal {
-  background: rgba(255, 255, 255, 0.97);
-  border-radius: 10px;
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
-  max-height: 90vh;
-  overflow: hidden;
+/* Center BootstrapVue modal */
+.custom-modal >>> .modal-dialog {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
 }
 
 /* 📝 Modal Header */
