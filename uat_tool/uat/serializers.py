@@ -212,13 +212,19 @@ class TestCaseSerializer(serializers.ModelSerializer):
         return instance
     
 class TestExecutionSerializer(serializers.ModelSerializer):
-    test_case = serializers.PrimaryKeyRelatedField(queryset=TestCase.objects.all()) # Serialize test_case as an object
-    tester = UserSerializer(read_only=True)  # Serialize tester as an object
+    # Change this to use a nested serializer for test_case
+    test_case = TestCaseSerializer(read_only=True)
+    test_case_id = serializers.PrimaryKeyRelatedField(
+        queryset=TestCase.objects.all(),
+        source='test_case',
+        write_only=True,
+        required=False
+    )
+    tester = UserSerializer(read_only=True)
 
     class Meta:
         model = TestExecution
-        fields = ['id', 'test_case', 'tester', 'status', 'notes', 'started_at', 'completed_at']
-
+        fields = ['id', 'test_case', 'test_case_id', 'tester', 'status', 'notes', 'started_at', 'completed_at']
 
 class DefectSerializer(serializers.ModelSerializer):
     execution = TestExecutionSerializer(read_only=True)

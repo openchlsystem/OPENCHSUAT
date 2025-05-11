@@ -361,16 +361,49 @@ class TestStepViewSet(viewsets.ModelViewSet):
     queryset = TestStep.objects.all()
     serializer_class = TestStepSerializer
 
-
 class TestExecutionViewSet(viewsets.ModelViewSet):
     queryset = TestExecution.objects.all()
     serializer_class = TestExecutionSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        """
+        Return a queryset that includes related test_case and tester data.
+        """
+        return TestExecution.objects.select_related('test_case', 'tester')
+    
     def perform_create(self, serializer):
+        """
+        Set the current user as the tester when creating a test execution.
+        """
         serializer.save(tester=self.request.user)
-
-
+        
+    @action(detail=False, methods=['get'])
+    def executions(self, request):
+        """
+        Custom action to get all test executions.
+        This can be accessed at /uat/executions/
+        """
+        executions = self.get_queryset()
+        serializer = self.get_serializer(executions, many=True)
+        return Response(serializer.data)
+        
+    @action(detail=True, methods=['post'])
+    def complete(self, request, pk=None):
+        """
+        Mark a test execution as completed.
+        """
+        execution = self.get_object()
+        execution.completed_at = now()
+        
+        # Update status if provided
+        status = request.data.get('status')
+        if status and status in dict(TestExecution._meta.get_field('status').choices):
+            execution.status = status
+            
+        execution.save()
+        serializer = self.get_serializer(execution)
+        return Response(serializer.data)
 class DefectViewSet(viewsets.ModelViewSet):
     queryset = Defect.objects.all().order_by("-created_at")
     serializer_class = DefectSerializer
