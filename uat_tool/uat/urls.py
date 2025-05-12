@@ -50,4 +50,5 @@ urlpatterns = [
 
     # Dashboard endpoint
     path('uat/dashboard/', DashboardView.as_view(), name='dashboard'),
+    path('uat/executions/', TestExecutionViewSet.as_view({'get': 'executions'}), name='executions-list'),
 ]
