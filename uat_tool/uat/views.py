@@ -110,6 +110,102 @@ class DashboardView(APIView):
         }
 
         return Response({"stats": stats}, status=status.HTTP_200_OK)
+class TesterDashboardView(APIView):
+    """
+    API View to fetch dashboard statistics for testers.
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        user = request.user
+        
+        # Check if user is a tester
+        if user.role != 'tester':
+            return Response(
+                {"error": "Only testers can access this dashboard."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        try:
+            # Get test cases assigned to this tester
+            assigned_tests_count = TestCase.objects.filter(assigned_user=user).count()
+            
+            # Get test executions by this tester
+            executions = TestExecution.objects.filter(tester=user)
+            executed_tests_count = executions.count()
+            
+            # Calculate pending tests (assigned but not executed)
+            executed_test_case_ids = executions.values_list('test_case_id', flat=True)
+            pending_tests_count = TestCase.objects.filter(
+                assigned_user=user
+            ).exclude(
+                id__in=executed_test_case_ids
+            ).count()
+            
+            # Count passed, failed, and other status tests
+            passed_tests_count = executions.filter(
+                status__in=['pass', 'passed']
+            ).count()
+            
+            failed_tests_count = executions.filter(
+                status__in=['fail', 'failed']
+            ).count()
+            
+            blocked_tests_count = executions.filter(
+                status__in=['blocked', 'on_hold']
+            ).count()
+            
+            # Get defects reported by this tester
+            reported_defects_count = Defect.objects.filter(
+                reported_by=user
+            ).count()
+            
+            # Get recent activities for this tester
+            recent_executions = TestExecution.objects.filter(
+                tester=user
+            ).select_related('test_case').order_by('-started_at')[:10]
+            
+            recent_activities = []
+            for execution in recent_executions:
+                try:
+                    test_case_title = execution.test_case.title if execution.test_case else "Unknown Test Case"
+                    
+                    recent_activities.append({
+                        'id': execution.id,
+                        'description': f"Test Execution: {test_case_title}",
+                        'status': execution.status,
+                        'date': execution.started_at.strftime('%Y-%m-%d %H:%M') if execution.started_at else 'N/A'
+                    })
+                except Exception as e:
+                    print(f"Error processing execution {execution.id}: {str(e)}")
+            
+            # Prepare response data
+            stats = {
+                'assigned_tests': assigned_tests_count,
+                'executed_tests': executed_tests_count,
+                'pending_tests': pending_tests_count,
+                'passed_tests': passed_tests_count,
+                'failed_tests': failed_tests_count,
+                'blocked_tests': blocked_tests_count,
+                'reported_defects': reported_defects_count
+            }
+            
+            return Response({
+                'stats': stats,
+                'recent_activities': recent_activities
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            # Log the error
+            import traceback
+            print(f"Error in tester dashboard: {str(e)}")
+            print(traceback.format_exc())
+            
+            # Return error response
+            return Response(
+                {"error": "Failed to fetch dashboard data.", "message": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )    
 
 
 class TestCaseViewSet(viewsets.ModelViewSet):
@@ -366,44 +462,35 @@ class TestExecutionViewSet(viewsets.ModelViewSet):
     serializer_class = TestExecutionSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
-        """
-        Return a queryset that includes related test_case and tester data.
-        """
-        return TestExecution.objects.select_related('test_case', 'tester')
-    
     def perform_create(self, serializer):
-        """
-        Set the current user as the tester when creating a test execution.
-        """
         serializer.save(tester=self.request.user)
         
     @action(detail=False, methods=['get'])
     def executions(self, request):
         """
         Custom action to get all test executions.
-        This can be accessed at /uat/executions/
+        This can be accessed at /uat/test-executions/executions/
         """
         executions = self.get_queryset()
         serializer = self.get_serializer(executions, many=True)
         return Response(serializer.data)
-        
-    @action(detail=True, methods=['post'])
-    def complete(self, request, pk=None):
-        """
-        Mark a test execution as completed.
-        """
-        execution = self.get_object()
-        execution.completed_at = now()
-        
-        # Update status if provided
-        status = request.data.get('status')
-        if status and status in dict(TestExecution._meta.get_field('status').choices):
-            execution.status = status
-            
-        execution.save()
-        serializer = self.get_serializer(execution)
-        return Response(serializer.data)
+
+# class DefectViewSet(viewsets.ModelViewSet):
+#     queryset = Defect.objects.all().order_by("-created_at")
+#     serializer_class = DefectSerializer
+#     permission_classes = [IsAuthenticated]
+
+#     def perform_create(self, serializer):
+#         """
+#         Minimal validation - just save with current user as reporter
+#         """
+#         serializer.save(reported_by=self.request.user)
+
+#     def get_queryset(self):
+#         """
+#         Basic queryset filtering without strict permissions
+#         """
+#         return super().get_queryset()
 class DefectViewSet(viewsets.ModelViewSet):
     queryset = Defect.objects.all().order_by("-created_at")
     serializer_class = DefectSerializer
@@ -411,10 +498,62 @@ class DefectViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         """
-        Minimal validation - just save with current user as reporter
+        Set the current authenticated user as the reporter when creating a defect.
         """
         serializer.save(reported_by=self.request.user)
 
+    def create(self, request, *args, **kwargs):
+        """
+        Custom create method that handles test_case_id and converts it to execution_id.
+        """
+        data = request.data.copy()
+        
+        # Check if test_case_id is provided but execution_id is not
+        if 'test_case_id' in data and 'execution_id' not in data:
+            try:
+                # Get the test case ID
+                test_case_id = data.pop('test_case_id')
+                test_case = TestCase.objects.get(id=test_case_id)
+                
+                # Find the most recent execution for this test case, or create a new one
+                execution = TestExecution.objects.filter(
+                    test_case=test_case
+                ).order_by('-started_at').first()
+                
+                if not execution:
+                    # Create a new execution if none exists
+                    execution = TestExecution.objects.create(
+                        test_case=test_case,
+                        tester=request.user,
+                        status='in_progress',
+                        started_at=now()
+                    )
+                
+                # Add the execution_id to the request data
+                data['execution_id'] = execution.id
+                
+            except TestCase.DoesNotExist:
+                return Response(
+                    {"test_case_id": ["Invalid test case ID."]},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+        
+        # Continue with standard create process using the modified data
+        serializer = self.get_serializer(data=data)
+        
+        if not serializer.is_valid():
+            print(f"Defect validation errors: {serializer.errors}")
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        self.perform_create(serializer)
+        
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+            headers=headers
+        )
+    
     def get_queryset(self):
         """
         Basic queryset filtering without strict permissions
