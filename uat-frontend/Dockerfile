@@ -1,18 +1,42 @@
-# Use Node.js image
-FROM node:18
+# Build stage
+FROM node:18-alpine AS builder
 
-# Set the working directory
 WORKDIR /app
 
-# Copy package files and install dependencies
-COPY package.json package-lock.json ./
+# Install dependencies
+COPY package*.json ./
 RUN npm install
 
-# Copy the entire frontend project
+# Copy source files
 COPY . .
 
-# Expose the frontend port
-EXPOSE 5173
+# Build application
+RUN npm run build
 
-# Run the frontend
-CMD ["npm", "run", "dev"]
+# Runtime stage
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy built assets
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
+
+# Environment variables
+ENV NODE_ENV=production
+ENV PORT=5100
+
+# Expose port
+EXPOSE 5100
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD wget -qO- http://localhost:5173/ || exit 1
+
+# Run as non-root user
+RUN chown -R node:node /app
+USER node
+
+# Startup command
+CMD ["npm", "run", "preview"]
