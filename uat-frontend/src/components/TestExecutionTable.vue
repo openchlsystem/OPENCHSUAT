@@ -14,7 +14,7 @@
         <!-- Loading State -->
         <tr v-if="loading">
           <td colspan="5" class="text-center">
-            <div class="spinner-border text-primary" role="status">
+            <div class="spinner-border text-success" role="status">
               <span class="sr-only">Loading...</span>
             </div>
           </td>
@@ -28,13 +28,20 @@
         <!-- Data Rows -->
         <tr v-for="(test, index) in testExecutions" :key="test.id">
           <td>{{ index + 1 }}</td>
-          <td>{{ test.title }}</td>
-          <td>{{ test.functionality }}</td>
+          <td>{{ getTestCaseTitle(test) }}</td>
+          <td>{{ getFunctionalityName(test) }}</td>
           <td>
-            <span :class="getStatusClass(test.status)">{{ test.status || "Pending" }}</span>
+            <span :class="getStatusClass(test.status)">{{ formatStatus(test.status) }}</span>
           </td>
           <td>
-            <button class="btn btn-primary btn-sm" @click="$emit('execute', test)">Execute</button>
+            <button 
+              v-if="!isTestExecuted(test)"
+              class="btn btn-success btn-sm" 
+              @click="$emit('execute', test)"
+            >
+              Execute
+            </button>
+            <span v-else class="badge badge-success">Already Executed</span>
           </td>
         </tr>
       </tbody>
@@ -55,14 +62,141 @@ export default {
     },
   },
   methods: {
+    getTestCaseTitle(test) {
+      // Handle cases where test case might be a string, JSON string, or an object
+      if (!test) return 'Unknown Test';
+      
+      // If test is a string, try to parse JSON
+      if (typeof test === 'string') {
+        try {
+          const parsed = JSON.parse(test);
+          return parsed.name || parsed.title || 'Untitled Test';
+        } catch (e) {
+          // If not valid JSON, check for name pattern
+          const match = test.match(/"name"\s*:\s*"([^"]+)"/);
+          if (match && match[1]) return match[1];
+          
+          // Otherwise return the string itself (if not too long)
+          return test.length > 30 ? test.substring(0, 30) + '...' : test;
+        }
+      }
+      
+      // If test is an object
+      if (typeof test === 'object' && test !== null) {
+        // Check for title property
+        if (test.title) {
+          if (typeof test.title === 'string') return test.title;
+          if (typeof test.title === 'object' && test.title.name) return test.title.name;
+        }
+        
+        // Check for name property
+        if (test.name) return test.name;
+      }
+      
+      return 'Untitled Test';
+    },
+    
+    getFunctionalityName(test) {
+      if (!test) return 'N/A';
+      
+      // If test is a string, try to parse JSON
+      if (typeof test === 'string') {
+        try {
+          const parsed = JSON.parse(test);
+          if (parsed.functionality) {
+            if (typeof parsed.functionality === 'string') return parsed.functionality;
+            if (typeof parsed.functionality === 'object' && parsed.functionality.name) {
+              return parsed.functionality.name;
+            }
+          }
+          return parsed.description || 'N/A';
+        } catch (e) {
+          // If not valid JSON, check for description pattern
+          const match = test.match(/"description"\s*:\s*"([^"]+)"/);
+          if (match && match[1]) return match[1];
+          return 'N/A';
+        }
+      }
+      
+      // If test is an object
+      if (typeof test === 'object' && test !== null) {
+        // Check for functionality property
+        if (test.functionality) {
+          if (typeof test.functionality === 'string') return test.functionality;
+          if (typeof test.functionality === 'object' && test.functionality.name) {
+            return test.functionality.name;
+          }
+        }
+        
+        // Check for description property
+        if (test.description) return test.description;
+        
+        // Check for system property
+        if (test.system) {
+          if (typeof test.system === 'string') return test.system;
+          if (typeof test.system === 'object' && test.system.name) {
+            return test.system.name;
+          }
+        }
+      }
+      
+      return 'N/A';
+    },
+    
+    isTestExecuted(test) {
+      // Check if the test has been executed by looking at execution history
+      if (!test) return false;
+      
+      // We need to check status more carefully - include all possible "executed" status values
+      const status = typeof test.status === 'string' ? test.status.toLowerCase() : '';
+      
+      // Explicitly check for executed statuses and treat all other statuses as non-executed
+      // Include 'completed' to handle cases where status was changed to 'completed'
+      return ['executed', 'passed', 'failed', 'completed'].includes(status);
+    },
+    
+    formatStatus(status) {
+      if (!status) return "Pending";
+      
+      // Convert known statuses to proper names
+      const statusString = String(status).toLowerCase();
+      
+      // If the test has been executed in any way, show "Completed"
+      if (['executed', 'passed', 'failed', 'completed'].includes(statusString)) {
+        return "Completed";
+      }
+      
+      switch (statusString) {
+        case "pending":
+          return "Pending";
+        case "draft":
+          return "Pending"; // Convert "draft" to "Pending"
+        case "in_progress":
+        case "in progress":
+          return "In Progress";
+        default:
+          // Convert to proper case for unknown statuses
+          return statusString.charAt(0).toUpperCase() + statusString.slice(1);
+      }
+    },
+    
     getStatusClass(status) {
-      switch (status) {
-        case "Passed":
-          return "badge badge-success";
-        case "Failed":
-          return "badge badge-danger";
-        case "In Progress":
+      if (!status) return "badge badge-secondary";
+      
+      const statusString = String(status).toLowerCase();
+      
+      // If the test has been executed in any way, use success style
+      if (['executed', 'passed', 'failed', 'completed'].includes(statusString)) {
+        return "badge badge-success";
+      }
+      
+      switch (statusString) {
+        case "in_progress":
+        case "in progress":
           return "badge badge-warning";
+        case "draft":
+        case "pending":
+          return "badge badge-secondary";
         default:
           return "badge badge-secondary";
       }
@@ -109,6 +243,15 @@ export default {
   border-radius: 4px;
 }
 
+.btn-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+}
+
 .text-center {
   text-align: center;
 }
@@ -118,7 +261,7 @@ export default {
   width: 2rem;
   height: 2rem;
   vertical-align: text-bottom;
-  border: 0.25em solid currentColor;
+  border: 0.25em solid #28a745;
   border-right-color: transparent;
   border-radius: 50%;
   animation: spinner-border 0.75s linear infinite;

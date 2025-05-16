@@ -1,0 +1,676 @@
+{
+  "functionality": "Quality Assurance",
+  "testCases": [
+    {
+      "title": "QA Form Display and Navigation",
+      "description": "This test case verifies the functionality of accessing and navigating the Quality Assurance form interface, including form loading and field display.",
+      "expectedResult": "The QA form should be accessible and display all relevant fields for quality assessment.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Login to the system with supervisor credentials.",
+          "expectedResult": "User should be successfully logged in with supervisor privileges.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Navigate to the QA section or locate QA menu option.",
+          "expectedResult": "QA section or menu should be accessible to supervisor users.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Access the call listing for QA purposes.",
+          "expectedResult": "Call listing page should display with calls available for QA assessment.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Select a call from the listing to perform QA.",
+          "expectedResult": "Selected call details should be presented.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Initiate the QA assessment process for the selected call.",
+          "expectedResult": "QA form should open with all required fields and sections.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Verify all required QA categories and criteria are present.",
+          "expectedResult": "All QA assessment categories and criteria should be displayed according to the QA template.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Check for presence of scoring options for each criterion.",
+          "expectedResult": "Each criterion should have appropriate scoring options (e.g., rating scale, yes/no).",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Verify comment fields are available for providing feedback.",
+          "expectedResult": "Comment fields should be present for adding assessment feedback.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Verify audio player is present in the QA form.",
+          "expectedResult": "Audio player should be displayed for the selected call recording.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Verify navigation options within the QA form.",
+          "expectedResult": "Form should have clear navigation controls (save, submit, cancel, etc.).",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "QA Form Audio Player Functionality",
+      "description": "This test case verifies the functionality of the audio player within the QA form, including playback controls and audio quality.",
+      "expectedResult": "The audio player should load the correct call recording and provide functional playback controls.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Access the QA form for a specific call.",
+          "expectedResult": "QA form should open with audio player component visible.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Verify the audio player automatically loads the correct call recording.",
+          "expectedResult": "Audio player should display with the correct call recording loaded.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Test the play button on the audio player.",
+          "expectedResult": "Recording should begin playing when play button is clicked.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Test the pause button on the audio player.",
+          "expectedResult": "Recording should pause when pause button is clicked.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Test the rewind or seek backward function.",
+          "expectedResult": "Recording should rewind to an earlier point in the call.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Test the fast forward or seek forward function if available.",
+          "expectedResult": "Recording should advance to a later point in the call.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Test the volume control if available.",
+          "expectedResult": "Audio volume should adjust according to volume control changes.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Test the playback progress indicator.",
+          "expectedResult": "Progress indicator should accurately reflect current position in the recording.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Verify audio quality of the recording.",
+          "expectedResult": "Audio should be clear and of sufficient quality for assessment purposes.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Test clicking on different points in the progress bar if available.",
+          "expectedResult": "Playback should jump to the selected position in the recording.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "QA Assessment Scoring",
+      "description": "This test case verifies the functionality of scoring call quality using the various criteria and point systems in the QA form.",
+      "expectedResult": "QA scoring functionality should work correctly, allowing supervisors to assign scores and calculate total results.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Access the QA form for a specific call.",
+          "expectedResult": "QA form should open with scoring criteria displayed.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Identify all scoring categories available in the form.",
+          "expectedResult": "All required QA categories should be present with their respective criteria.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Test assigning scores to individual criteria within the first category.",
+          "expectedResult": "Scores should be accepted and reflected in the form for each criterion.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Verify category subtotal calculation if applicable.",
+          "expectedResult": "Category subtotal should update based on individual criterion scores.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Complete scoring for all categories in the QA form.",
+          "expectedResult": "All categories should accept scores without errors.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Verify total QA score calculation.",
+          "expectedResult": "Total QA score should be calculated correctly as the sum of all category scores.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Test entering scores outside the acceptable range if applicable.",
+          "expectedResult": "System should prevent or warn about invalid score entries.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Test N/A or Not Applicable options if available.",
+          "expectedResult": "N/A selections should be handled correctly in score calculations.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Test scoring field validation for required fields.",
+          "expectedResult": "System should enforce required scoring fields before submission.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Verify score percentage calculation if applicable.",
+          "expectedResult": "Score percentage should be calculated correctly based on points awarded vs. total possible points.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "QA Assessment Comments and Feedback",
+      "description": "This test case verifies the functionality to add comments and feedback to QA assessments.",
+      "expectedResult": "Supervisors should be able to add detailed comments and feedback that are properly saved with the assessment.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Access the QA form for a specific call.",
+          "expectedResult": "QA form should open with comment fields available.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Identify all comment fields available in the form.",
+          "expectedResult": "Comment fields should be present at both category and overall assessment levels.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Test entering a short comment in a category-level comment field.",
+          "expectedResult": "Comment should be accepted and displayed in the field.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Test entering a longer comment with special characters.",
+          "expectedResult": "Longer comments and special characters should be handled correctly.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Test character limits on comment fields if applicable.",
+          "expectedResult": "System should enforce character limits and provide feedback when exceeded.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Enter comments in all available comment fields throughout the assessment.",
+          "expectedResult": "All comment fields should accept input without errors.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Test entering constructive feedback in the overall assessment comment field.",
+          "expectedResult": "Overall feedback should be accepted and displayed appropriately.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Verify comment field validation for required comment fields if applicable.",
+          "expectedResult": "System should enforce required comment fields before submission.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Test rich text formatting if supported (bold, italics, etc.).",
+          "expectedResult": "Rich text formatting should be applied correctly in comment fields if supported.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Verify comments are preserved when navigating between sections of the form.",
+          "expectedResult": "Comments should persist when navigating between different parts of the assessment form.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "QA Form Submission and Saving",
+      "description": "This test case verifies the functionality to save and submit completed QA assessments.",
+      "expectedResult": "QA assessments should be successfully saved and submitted with all scores and comments preserved.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Complete a QA assessment with scores and comments.",
+          "expectedResult": "QA form should be filled with valid scores and comments.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Test the Save function if available (for saving work in progress).",
+          "expectedResult": "Assessment should save successfully with confirmation message.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Navigate away from the saved assessment and return to verify data persistence.",
+          "expectedResult": "Previously saved data should be preserved and displayed correctly upon return.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Test the Submit function to finalize the assessment.",
+          "expectedResult": "Assessment should submit successfully with confirmation message.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Test submission with incomplete required fields.",
+          "expectedResult": "System should prevent submission and highlight missing required fields.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Test submission with invalid data entry.",
+          "expectedResult": "System should prevent submission and provide error messages for invalid data.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Verify the submitted assessment appears in the completed assessments list.",
+          "expectedResult": "Completed assessment should be visible in the appropriate listing with correct status.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Test cancellation of an assessment in progress.",
+          "expectedResult": "System should prompt for confirmation before discarding unsaved changes.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Test auto-save functionality if applicable.",
+          "expectedResult": "System should automatically save assessment data at specified intervals.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Verify notification or confirmation of successful submission.",
+          "expectedResult": "User should receive clear confirmation that submission was successful.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "QA Call Search and Filtering",
+      "description": "This test case verifies the functionality to search and filter calls for quality assessment.",
+      "expectedResult": "Supervisors should be able to effectively search and filter the call listing to find specific calls for QA.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the call listing for QA purposes.",
+          "expectedResult": "Call listing page should load with search and filter options visible.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Identify all available search fields and filters.",
+          "expectedResult": "Search fields should include date, agent, phone number, disposition, etc.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Test searching for calls by date range.",
+          "expectedResult": "System should return calls within the specified date range.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Test searching for calls by specific agent or extension.",
+          "expectedResult": "System should return calls handled by the specified agent/extension.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Test searching for calls by phone number.",
+          "expectedResult": "System should return calls with the specified phone number.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Test filtering calls by disposition status (answered, missed, etc.).",
+          "expectedResult": "System should filter calls by the selected disposition status.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Test filtering calls by call duration.",
+          "expectedResult": "System should filter calls by the specified duration range.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Test filtering calls by QA status (assessed, not assessed).",
+          "expectedResult": "System should filter calls by their QA assessment status.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Test combining multiple search criteria.",
+          "expectedResult": "System should return only calls matching all specified criteria.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Verify search result display and sorting options.",
+          "expectedResult": "Search results should be clearly displayed with relevant call information and sorting options.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "QA Results Viewing",
+      "description": "This test case verifies the functionality to view completed QA assessment results.",
+      "expectedResult": "Completed QA assessments should be accessible with all scores, comments, and details correctly displayed.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the QA results or completed assessments section.",
+          "expectedResult": "QA results listing should load with completed assessments visible.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Identify search and filter options for finding specific assessments.",
+          "expectedResult": "Search and filter options should be available for navigating assessment results.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Select a completed assessment to view its details.",
+          "expectedResult": "Assessment details should open with complete information displayed.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Verify all scoring categories and individual criteria scores are displayed.",
+          "expectedResult": "All scores should be visible with their respective categories and criteria.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Verify all comments and feedback are displayed.",
+          "expectedResult": "All comments and feedback should be visible in their respective sections.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Verify total score and score percentage are displayed.",
+          "expectedResult": "Total score and percentage should be displayed and calculated correctly.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Verify assessment metadata is displayed (date, time, assessor, agent).",
+          "expectedResult": "Metadata should be displayed accurately for the assessment.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Test the audio playback capability within the results view if available.",
+          "expectedResult": "Call recording should be playable from the assessment results view.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Test printing or exporting the assessment results if available.",
+          "expectedResult": "Assessment results should print or export correctly with all information included.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Verify access controls for viewing assessment results.",
+          "expectedResult": "Assessment results should only be viewable by authorized users.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "QA Results Reporting",
+      "description": "This test case verifies the functionality to generate and view reports based on QA assessment data.",
+      "expectedResult": "QA reports should accurately compile and present assessment data for analysis and review.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the QA reporting section.",
+          "expectedResult": "QA reporting interface should load with report options visible.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Identify available report types and formats.",
+          "expectedResult": "Different report types should be available (agent performance, team performance, etc.).",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Select and generate an individual agent performance report.",
+          "expectedResult": "Agent performance report should generate with QA scores and metrics.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Verify the report contains accurate agent assessment data.",
+          "expectedResult": "Report should display correct QA scores and assessment counts for the agent.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Select and generate a team or department performance report.",
+          "expectedResult": "Team report should generate with aggregated QA data for multiple agents.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Test filtering report data by date range.",
+          "expectedResult": "Report should update to show only data from the specified date range.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Test filtering report data by assessment criteria or categories.",
+          "expectedResult": "Report should filter to show performance in selected criteria or categories.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Verify trend analysis or comparison reports if available.",
+          "expectedResult": "Trend reports should show QA performance changes over time.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Test exporting report data in different formats (Excel, PDF, etc.).",
+          "expectedResult": "Reports should export correctly in the selected format with all data preserved.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Verify visualization options for report data (charts, graphs).",
+          "expectedResult": "Visual representations of report data should display accurately.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "QA Assessment Modification",
+      "description": "This test case verifies the functionality to edit or modify existing QA assessments if allowed.",
+      "expectedResult": "Authorized users should be able to modify QA assessments with changes properly saved and tracked.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the completed QA assessments listing.",
+          "expectedResult": "Completed assessments listing should load.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Select a completed assessment and attempt to access edit mode.",
+          "expectedResult": "Edit option should be available for authorized users within the allowed timeframe.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Verify edit permissions and restrictions.",
+          "expectedResult": "System should enforce edit permissions based on user role and assessment status.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Modify scores for several criteria in the assessment.",
+          "expectedResult": "Score modifications should be accepted in edit mode.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Modify comments in several sections of the assessment.",
+          "expectedResult": "Comment modifications should be accepted in edit mode.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Save the modified assessment.",
+          "expectedResult": "Modified assessment should save successfully with confirmation message.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Verify total score and percentage recalculation after modifications.",
+          "expectedResult": "Total score and percentage should update based on the modified individual scores.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Verify audit trail or modification history if available.",
+          "expectedResult": "System should track and display who made changes and when.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Test modification time limits if applicable.",
+          "expectedResult": "System should enforce time limits on how long after submission an assessment can be modified.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Verify notification of assessment modifications if applicable.",
+          "expectedResult": "Relevant users should be notified when an assessment is modified.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "QA Template Management",
+      "description": "This test case verifies the functionality to manage QA assessment templates if available.",
+      "expectedResult": "QA templates should be effectively created, modified, and applied to assessments.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the QA template management section if available.",
+          "expectedResult": "QA template management interface should load.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Review existing assessment templates.",
+          "expectedResult": "Existing templates should be listed with names and descriptions.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Access the template creation function if available.",
+          "expectedResult": "Template creation interface should load with necessary fields.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Create a new assessment category within a template.",
+          "expectedResult": "New category should be added successfully to the template.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Add assessment criteria to the new category.",
+          "expectedResult": "New criteria should be added with point values and descriptions.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Save the modified or new template.",
+          "expectedResult": "Template should save successfully and appear in the template list.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Test template activation/deactivation if applicable.",
+          "expectedResult": "Template activation status should change as expected.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Test assigning templates to specific call types or departments.",
+          "expectedResult": "Templates should be assignable to specific areas or call types.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Verify template versioning if supported.",
+          "expectedResult": "Template versions should be tracked with change history.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Test using the newly created/modified template for an assessment.",
+          "expectedResult": "New/modified template should be available and function correctly during assessment.",
+          "comments": ""
+        }
+      ]
+    }
+  ],
+  "totalTestCases": 10
+}

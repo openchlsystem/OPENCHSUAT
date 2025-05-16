@@ -1,12 +1,11 @@
+// ReportsView.vue - Complete Updated File
 <template>
   <div class="container mt-4">
     <h2 class="text-center text-primary mb-4">Executed Test Reports</h2>
-
     <ReportTable
       :executions="executions"
       @view="openModal"
     />
-
     <ReportModal
       v-if="showModal"
       :execution="selectedExecution"
@@ -27,8 +26,12 @@ const showModal = ref(false)
 
 onMounted(async () => {
   try {
+    // Fetch test executions - now with proper test case data from backend
     const res = await axios.get('/test-executions/')
     executions.value = res.data
+    
+    // Log for debugging
+    console.log('Loaded test executions:', executions.value)
   } catch (error) {
     console.error('Error loading reports:', error)
   }
