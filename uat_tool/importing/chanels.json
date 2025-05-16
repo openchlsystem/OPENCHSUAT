@@ -1,0 +1,439 @@
+{
+  "functionality": "Other Channels Management",
+  "testCases": [
+    {
+      "title": "Other Channels Listing and Display",
+      "description": "This test case verifies the functionality of the Other Channels listing, including column display and pagination.",
+      "expectedResult": "The Other Channels list should display all messages from different channels with correct information in appropriate columns.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Login to the system with valid credentials.",
+          "expectedResult": "User should be successfully logged in.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Navigate to the Other Channels section.",
+          "expectedResult": "Other Channels listing page should load with message records displayed.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Verify all expected columns are present in the message listing.",
+          "expectedResult": "Columns should include: Date, Direction, Phone, Extension, Source, Messages, Replies, Disposition, and other relevant columns.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Verify message records display correct information.",
+          "expectedResult": "Each message record should display appropriate data in all columns.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Verify different source types are displayed correctly (WhatsApp, Safepal, Walkin, etc.).",
+          "expectedResult": "Different source types should be clearly indicated in the Source column.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Test the pagination controls if multiple pages of messages exist.",
+          "expectedResult": "Pagination controls should navigate between pages of message records.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Verify message and reply counts are displayed correctly.",
+          "expectedResult": "Message and reply counts should accurately reflect the conversation activity.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "View WhatsApp Conversation",
+      "description": "This test case verifies the functionality to view and interact with WhatsApp conversations.",
+      "expectedResult": "WhatsApp conversations should be displayed correctly with message history and interaction options.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the Other Channels section.",
+          "expectedResult": "Other Channels listing page should load.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Locate a WhatsApp message in the list.",
+          "expectedResult": "WhatsApp messages should be identifiable by the Source column showing \"whatsApp\".",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Click on the WhatsApp message record.",
+          "expectedResult": "Conversation view should open showing the WhatsApp chat history with the contact.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Verify message bubbles are displayed in a chat-like format.",
+          "expectedResult": "Messages should be displayed in conversation bubbles with timestamps.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Verify contact information is displayed at the top (phone number and channel).",
+          "expectedResult": "Contact header should show \"whatsApp\" and the phone number.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Verify message timestamps are displayed correctly.",
+          "expectedResult": "Each message should show time sent and days ago information.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Verify the Edit button is present if applicable.",
+          "expectedResult": "Edit button should be visible at the top right of the conversation view.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Locate and test the message input field if available.",
+          "expectedResult": "Message input field should be available for responding to the conversation.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Test sending a message response if functionality exists.",
+          "expectedResult": "Message should be sent and appear in the conversation history.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Test returning to the message list from the conversation view.",
+          "expectedResult": "Back button should return to the Other Channels listing.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "View Walkin Conversation",
+      "description": "This test case verifies the functionality to view and interact with Walkin conversations.",
+      "expectedResult": "Walkin conversations should be displayed correctly with message history and interaction options.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the Other Channels section.",
+          "expectedResult": "Other Channels listing page should load.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Locate a Walkin message in the list.",
+          "expectedResult": "Walkin messages should be identifiable by the Source column showing \"walkin\".",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Click on the Walkin message record.",
+          "expectedResult": "Conversation view should open showing the Walkin interaction history.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Verify message display format for Walkin conversations.",
+          "expectedResult": "Messages should be displayed in an appropriate format for Walkin interactions.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Verify contact or agent information is displayed at the top.",
+          "expectedResult": "Header should show \"Walkin\" and relevant identification information.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Verify message timestamps are displayed correctly.",
+          "expectedResult": "Each message should show time sent and days ago information.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Verify the Edit button is present if applicable.",
+          "expectedResult": "Edit button should be visible at the top right of the conversation view.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Test the specific interaction options available for Walkin conversations.",
+          "expectedResult": "Walkin-specific interaction options should function correctly.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Test returning to the message list from the conversation view.",
+          "expectedResult": "Back button should return to the Other Channels listing.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "View Safepal Report",
+      "description": "This test case verifies the functionality to view detailed information from Safepal reports.",
+      "expectedResult": "Safepal reports should display structured case information with all relevant details.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the Other Channels section.",
+          "expectedResult": "Other Channels listing page should load.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Locate a Safepal message in the list.",
+          "expectedResult": "Safepal messages should be identifiable by the Source column showing \"safepal\".",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Click on the Safepal message record.",
+          "expectedResult": "Report view should open showing the detailed Safepal report information.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Verify the Safepal ID is displayed at the top.",
+          "expectedResult": "Header should show \"SafePal\" and the unique report ID.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Verify timestamp information is displayed correctly.",
+          "expectedResult": "Timestamp field should show the report submission date and time.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Verify reporter information is displayed correctly.",
+          "expectedResult": "Reporter Nickname field should show the reporter's nickname.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Verify category information is displayed correctly.",
+          "expectedResult": "Category field should show the incident category (e.g., Distress).",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Verify victim information is displayed correctly.",
+          "expectedResult": "Victim Name, Age, and Gender fields should show the victim's information.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Verify perpetrator information is displayed correctly.",
+          "expectedResult": "Perpetrator Name, Age, and Gender fields should show the perpetrator's information.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Test returning to the message list from the report view.",
+          "expectedResult": "Back button should return to the Other Channels listing.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Search and Filter Messages",
+      "description": "This test case verifies the functionality to search and filter messages in the Other Channels section.",
+      "expectedResult": "Search and filter functionality should allow users to find specific messages based on various criteria.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the Other Channels section.",
+          "expectedResult": "Other Channels listing page should load.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Locate and click the Search button.",
+          "expectedResult": "Search interface should appear with search fields.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Test searching by phone number.",
+          "expectedResult": "Search results should show messages matching the entered phone number.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Test searching by date or date range.",
+          "expectedResult": "Search results should show messages within the specified date range.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Test filtering by source (WhatsApp, Safepal, Walkin).",
+          "expectedResult": "Search results should show only messages from the selected source.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Test filtering by direction (Inbound, Outbound).",
+          "expectedResult": "Search results should show only messages with the selected direction.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Test combining multiple search criteria.",
+          "expectedResult": "Search results should match all specified criteria.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Test the List view button.",
+          "expectedResult": "Messages should display in list format.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Test the Reports view button if available.",
+          "expectedResult": "Messages should display in report/chart format if applicable.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Test the Download button.",
+          "expectedResult": "Message data should download in the specified format.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Message Response and Interaction",
+      "description": "This test case verifies the functionality to respond to messages and interact with conversations from different channels.",
+      "expectedResult": "Users should be able to respond to messages and perform appropriate actions for each channel type.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the Other Channels section.",
+          "expectedResult": "Other Channels listing page should load.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Open a WhatsApp conversation.",
+          "expectedResult": "WhatsApp conversation view should open.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Locate and use the message input field to compose a response.",
+          "expectedResult": "Message input field should allow text entry.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Send the response message.",
+          "expectedResult": "Message should be sent and appear in the conversation history.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Return to the message list and verify message count update.",
+          "expectedResult": "Message count in the list should reflect the new message.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Open a Safepal report and identify action options.",
+          "expectedResult": "Appropriate action options for Safepal reports should be available.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Perform an available action for the Safepal report (e.g., escalate, respond).",
+          "expectedResult": "Action should be processed successfully.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Test any available quick response templates or predefined messages.",
+          "expectedResult": "Quick response options should be available and functional.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Test the process of creating a case from a channel message if available.",
+          "expectedResult": "Case creation from message should function correctly.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Test message disposition or status update functionality if available.",
+          "expectedResult": "Message disposition or status should update correctly.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Channel Integration and Message Reception",
+      "description": "This test case verifies that messages from different channels are properly received and displayed in the system.",
+      "expectedResult": "Messages from all integrated channels should be correctly received, processed, and displayed in the Other Channels section.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Ensure the system is configured to receive messages from WhatsApp.",
+          "expectedResult": "WhatsApp integration should be active.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Send a test message to the system via WhatsApp if possible.",
+          "expectedResult": "Message should be received and appear in the Other Channels list.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Verify the Safepal integration is functioning correctly.",
+          "expectedResult": "Safepal reports should be received and displayed properly.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Verify the Walkin channel is functioning correctly.",
+          "expectedResult": "Walkin interactions should be recorded and displayed properly.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Verify any other integrated channels are functioning correctly.",
+          "expectedResult": "All other integrated channels should be receiving and displaying messages properly.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Test notification or alert functionality for new messages if applicable.",
+          "expectedResult": "System should notify users of new incoming messages as configured.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Verify message metadata is captured correctly (timestamp, source, etc.).",
+          "expectedResult": "All message metadata should be accurately recorded and displayed.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Test system behavior when receiving messages during high volume periods.",
+          "expectedResult": "System should handle message reception properly during high volume.",
+          "comments": ""
+        }
+      ]
+    }
+  ],
+  "totalTestCases": 7
+}

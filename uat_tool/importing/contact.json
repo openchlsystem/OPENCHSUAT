@@ -1,0 +1,384 @@
+{
+  "functionality": "Contact Management",
+  "testCases": [
+    {
+      "title": "Contact Listing and Display",
+      "description": "This test case verifies the functionality of the Contacts listing, including column display and pagination.",
+      "expectedResult": "The Contacts list should display all contacts with correct information in appropriate columns and provide pagination controls.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Login to the system with valid credentials.",
+          "expectedResult": "User should be successfully logged in.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Navigate to the Contacts section.",
+          "expectedResult": "Contacts listing page should load with contact records displayed.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Verify all expected columns are present in the contact listing.",
+          "expectedResult": "Columns should include: Full Name, Gender, Age Group, Phone, Location, Created By, Created On, and Status.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Verify contact records display correct information.",
+          "expectedResult": "Each contact record should display appropriate data in all columns.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Test the pagination controls if multiple pages of contacts exist.",
+          "expectedResult": "Pagination controls should navigate between pages of contact records.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Verify page information display if available.",
+          "expectedResult": "Page information should accurately reflect current page and total records.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Contact Search Functionality",
+      "description": "This test case verifies the functionality to search and filter contacts based on various criteria.",
+      "expectedResult": "The search function should filter contacts based on entered criteria and display matching results.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the Contacts section.",
+          "expectedResult": "Contacts listing page should load.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Click on the Search button.",
+          "expectedResult": "Search Contact modal should open with search fields.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Verify all search fields are present.",
+          "expectedResult": "Search fields should include: Name, Phone, Age, Sex, Location, ID Type, Nationality, Language, and Tribe.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Test searching by Name only.",
+          "expectedResult": "System should filter contacts to show only those matching the entered name.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Test searching by Phone number.",
+          "expectedResult": "System should filter contacts to show only those matching the entered phone number.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Test searching by Age (using dropdown).",
+          "expectedResult": "System should filter contacts to show only those within the selected age range.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Test searching by Sex (using dropdown).",
+          "expectedResult": "System should filter contacts to show only those matching the selected gender.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Test searching by Location (using dropdown).",
+          "expectedResult": "System should filter contacts to show only those in the selected location.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Test searching by other criteria (ID Type, Nationality, Language, Tribe).",
+          "expectedResult": "System should filter contacts based on each selected criterion.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Test combining multiple search criteria.",
+          "expectedResult": "System should filter contacts to show only those matching all entered criteria.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 11,
+          "stepDescription": "Test the Apply button to execute the search.",
+          "expectedResult": "Search should execute and filtered results should display in the contact list.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 12,
+          "stepDescription": "Test the Cancel button to dismiss the search.",
+          "expectedResult": "Search modal should close without applying filters.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Contact Details View",
+      "description": "This test case verifies the functionality to view detailed information for an existing contact.",
+      "expectedResult": "Contact details should be displayed accurately with all relevant information.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the Contacts section.",
+          "expectedResult": "Contacts listing page should load with contact records.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Click on a contact record in the list.",
+          "expectedResult": "Contact Details modal should open showing detailed information for the selected contact.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Verify basic contact information is displayed.",
+          "expectedResult": "Details should include: Fullname and Age.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Verify demographic information is displayed.",
+          "expectedResult": "Details should include: Sex, Nearest Landmark, Nationality.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Verify identification information is displayed.",
+          "expectedResult": "Details should include: ID Type, ID Number, Language.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Verify refugee status information is displayed.",
+          "expectedResult": "Details should include: Is a Refugee field and Tribe.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Verify contact information is displayed.",
+          "expectedResult": "Details should include: Phone Number, Alternative Contact, Email.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Verify the information displayed matches the contact record.",
+          "expectedResult": "All displayed information should be accurate for the selected contact.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Test closing the Contact Details modal.",
+          "expectedResult": "Modal should close and return to the contact list view.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Contact Creation",
+      "description": "This test case verifies the functionality to create new contacts in the system.",
+      "expectedResult": "New contacts should be successfully created with all specified information.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the Contacts section.",
+          "expectedResult": "Contacts listing page should load.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Locate and click a 'New Contact' or 'Add' button if available.",
+          "expectedResult": "New Contact form should open.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Verify all required fields are present in the form.",
+          "expectedResult": "Form should include necessary fields for contact creation (Name, Phone, etc.).",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Test creating a contact without filling required fields.",
+          "expectedResult": "System should prevent submission and highlight required fields.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Fill in basic contact information (Name, Phone).",
+          "expectedResult": "Fields should accept input without errors.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Set demographic information (Age, Sex, Location).",
+          "expectedResult": "Dropdown fields should allow selection of appropriate values.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Fill in identification information (ID Type, ID Number).",
+          "expectedResult": "Fields should accept input without errors.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Set language and nationality information.",
+          "expectedResult": "Dropdown fields should allow selection of appropriate values.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Indicate refugee status if applicable.",
+          "expectedResult": "Refugee status options should be selectable.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Add additional contact information (Alternative Contact, Email).",
+          "expectedResult": "Fields should accept input without errors.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 11,
+          "stepDescription": "Submit the new contact form.",
+          "expectedResult": "Contact should be created successfully and appear in the contacts list.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 12,
+          "stepDescription": "Verify the new contact appears with correct information.",
+          "expectedResult": "New contact should be displayed with all entered information.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Contact Editing",
+      "description": "This test case verifies the functionality to edit existing contact information.",
+      "expectedResult": "Contact information should be successfully updated with changes preserved in the system.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the Contacts section.",
+          "expectedResult": "Contacts listing page should load.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Click on a contact record to view details.",
+          "expectedResult": "Contact Details modal should open.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Locate and click an Edit button if available.",
+          "expectedResult": "Contact details should become editable.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Modify the contact's name.",
+          "expectedResult": "Name field should be editable and accept changes.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Modify demographic information (Age, Sex).",
+          "expectedResult": "Demographic fields should be editable and accept changes.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Modify location information.",
+          "expectedResult": "Location field should be editable and accept changes.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Modify phone number.",
+          "expectedResult": "Phone number field should be editable and accept changes.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Save the changes.",
+          "expectedResult": "Changes should be saved successfully and reflected in the contact list.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Verify changes persist by reopening the contact details.",
+          "expectedResult": "Updated information should be displayed when viewing contact details again.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Contact Association with Cases",
+      "description": "This test case verifies the functionality to associate contacts with cases in the system.",
+      "expectedResult": "Contacts should be successfully associated with cases and this relationship should be maintained.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the Contacts section.",
+          "expectedResult": "Contacts listing page should load.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Select a contact to use for case association.",
+          "expectedResult": "Contact details should be accessible.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Locate a function to associate the contact with a case (if available).",
+          "expectedResult": "Case association interface should be accessible.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Alternatively, navigate to case creation and select this contact.",
+          "expectedResult": "Case creation should allow selection of existing contacts.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Create or select a case to associate with the contact.",
+          "expectedResult": "Case should be selectable/creatable for association.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Confirm the association between contact and case.",
+          "expectedResult": "System should confirm successful association.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Verify the association is reflected in the contact details.",
+          "expectedResult": "Contact details should show associated case(s) if such functionality exists.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Verify the association is reflected in the case details.",
+          "expectedResult": "Case details should show associated contact(s).",
+          "comments": ""
+        }
+      ]
+    }
+  ],
+  "totalTestCases": 6
+}

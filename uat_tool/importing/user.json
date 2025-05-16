@@ -1,0 +1,433 @@
+{
+  "functionality": "User Management",
+  "testCases": [
+    {
+      "title": "User Listing and Display",
+      "description": "This test case verifies the functionality of the System Users listing, including column display and pagination.",
+      "expectedResult": "The System Users list should display all users with correct information in appropriate columns and provide pagination controls.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Login to the system with administrator credentials.",
+          "expectedResult": "User should be successfully logged in with administrator privileges.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Navigate to the System Users section.",
+          "expectedResult": "System Users listing page should load with user records displayed.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Verify all expected columns are present in the user listing.",
+          "expectedResult": "Columns should include: Username, First Name, Last Name, Phone, Email, Extension, Role, Is Active, Created On, and Created By.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Verify user records display correct information.",
+          "expectedResult": "Each user record should display appropriate data in all columns.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Test the pagination controls if multiple pages of users exist.",
+          "expectedResult": "Pagination controls should navigate between pages of user records.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Verify page information display (e.g., \"1 - 14 of 14\").",
+          "expectedResult": "Page information should accurately reflect current page and total records.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "User Search Functionality",
+      "description": "This test case verifies the functionality to search and filter users based on various criteria.",
+      "expectedResult": "The search function should filter users based on entered criteria and display matching results.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the System Users section.",
+          "expectedResult": "System Users listing page should load.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Click on the Search button.",
+          "expectedResult": "Search User modal should open with search fields.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Verify all search fields are present.",
+          "expectedResult": "Search fields should include: Username, First Name, Last Name, Phone, Email, Extension, Role, Is Active, Created On, and Created By.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Test searching by Username only.",
+          "expectedResult": "System should filter users to show only those matching the entered username.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Test searching by First Name and Last Name.",
+          "expectedResult": "System should filter users to show only those matching the entered names.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Test searching by Role (using dropdown).",
+          "expectedResult": "System should filter users to show only those with the selected role.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Test searching by Is Active status.",
+          "expectedResult": "System should filter users to show only active or inactive users based on selection.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Test searching by Created On date.",
+          "expectedResult": "System should filter users to show only those created on the selected date.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Test combining multiple search criteria.",
+          "expectedResult": "System should filter users to show only those matching all entered criteria.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Test the Apply button to execute the search.",
+          "expectedResult": "Search should execute and filtered results should display in the user list.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 11,
+          "stepDescription": "Test the Cancel button to dismiss the search.",
+          "expectedResult": "Search modal should close without applying filters.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "New User Creation",
+      "description": "This test case verifies the functionality to create new user accounts in the system.",
+      "expectedResult": "New users should be successfully created with all specified information and appropriate system-generated values.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the System Users section.",
+          "expectedResult": "System Users listing page should load.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Click on the New button.",
+          "expectedResult": "New User modal should open with empty user form.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Verify all required fields are present in the form.",
+          "expectedResult": "Form should include: Username, First Name, Last Name, Phone, Email, Extension (auto-generated), Role, and Is Active fields.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Test creating a user without filling required fields.",
+          "expectedResult": "System should prevent submission and highlight required fields.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Fill in all required fields with valid data.",
+          "expectedResult": "All fields should accept input without errors.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Verify Extension is auto-generated and displayed.",
+          "expectedResult": "Extension field should show \"Autogenerated:\" and a number.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Select a Role from the dropdown.",
+          "expectedResult": "Role should be selectable from available options (Administrator, Supervisor, Counsellor, Case Manager).",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Set Is Active status.",
+          "expectedResult": "Is Active status should be selectable (Yes/No).",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Click Create button.",
+          "expectedResult": "New user should be created successfully and appear in the user list.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Verify the new user appears with correct information.",
+          "expectedResult": "New user should be displayed with all entered information and system-generated values.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 11,
+          "stepDescription": "Test the Cancel button during user creation.",
+          "expectedResult": "Form should close without creating a user.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "User Details View",
+      "description": "This test case verifies the functionality to view detailed information for an existing user.",
+      "expectedResult": "User details should be displayed accurately with all relevant information.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the System Users section.",
+          "expectedResult": "System Users listing page should load with user records.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Click on a user record in the list.",
+          "expectedResult": "User Details modal should open showing detailed information for the selected user.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Verify all user information fields are displayed.",
+          "expectedResult": "Details should include: Username, Full Names, Phone, Email, Extension, Role, Is Active, Created On, and Created By.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Verify the information displayed matches the user record.",
+          "expectedResult": "All displayed information should match what appears in the user list for the selected user.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Verify the Edit button is present.",
+          "expectedResult": "Edit button should be visible for users with appropriate permissions.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Verify the dropdown menu next to Edit button.",
+          "expectedResult": "Dropdown should be present with additional options.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Close the User Details modal.",
+          "expectedResult": "Modal should close and return to the user list view.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "User Editing",
+      "description": "This test case verifies the functionality to edit existing user information.",
+      "expectedResult": "User information should be successfully updated with changes preserved in the system.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the System Users section.",
+          "expectedResult": "System Users listing page should load.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Click on a user record to view details.",
+          "expectedResult": "User Details modal should open.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Click on the Edit button.",
+          "expectedResult": "User details should become editable.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Modify the First Name field.",
+          "expectedResult": "First Name should be editable and accept changes.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Modify the Last Name field.",
+          "expectedResult": "Last Name should be editable and accept changes.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Modify the Phone number.",
+          "expectedResult": "Phone number should be editable and accept changes.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Modify the Email address.",
+          "expectedResult": "Email should be editable and accept changes.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Change the Role selection if applicable.",
+          "expectedResult": "Role should be changeable via dropdown.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Change the Is Active status if applicable.",
+          "expectedResult": "Is Active status should be changeable.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Save the changes.",
+          "expectedResult": "Changes should be saved successfully and reflected in the user list.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 11,
+          "stepDescription": "Verify changes persist by reopening the user details.",
+          "expectedResult": "Updated information should be displayed when viewing user details again.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Password Reset Functionality",
+      "description": "This test case verifies the functionality to reset a user's password.",
+      "expectedResult": "User passwords should be reset successfully with appropriate security measures.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the System Users section.",
+          "expectedResult": "System Users listing page should load.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Click on a user record to view details.",
+          "expectedResult": "User Details modal should open.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Click on the dropdown menu next to the Edit button.",
+          "expectedResult": "Dropdown menu should expand with options.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Select the Reset Password option.",
+          "expectedResult": "Password reset confirmation dialog should appear.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Confirm the password reset action.",
+          "expectedResult": "System should process the reset and display confirmation message.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Verify system behavior after password reset (e.g., email notification, temporary password).",
+          "expectedResult": "System should handle post-reset actions according to design (notification, temporary password generation, etc.).",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Test login with the reset credentials if applicable.",
+          "expectedResult": "Login should work with reset credentials and possibly prompt for password change.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "User Deactivation and Reactivation",
+      "description": "This test case verifies the functionality to deactivate and reactivate user accounts.",
+      "expectedResult": "Users should be successfully deactivated and reactivated with appropriate system behavior for each state.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the System Users section.",
+          "expectedResult": "System Users listing page should load.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Click on an active user record to view details.",
+          "expectedResult": "User Details modal should open showing an active user.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Click the Edit button.",
+          "expectedResult": "User details should become editable.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Change Is Active status from Yes to No.",
+          "expectedResult": "Is Active dropdown should allow selection of No.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Save the changes.",
+          "expectedResult": "Changes should save successfully and user status should update to inactive.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Verify the user's active status in the user list.",
+          "expectedResult": "User should show as inactive in the user listing.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Test login with the deactivated user's credentials (if applicable).",
+          "expectedResult": "System should prevent login for deactivated users.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Reactivate the user by editing and changing Is Active back to Yes.",
+          "expectedResult": "User should be reactivated successfully.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Verify the user's active status after reactivation.",
+          "expectedResult": "User should show as active in the user listing.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Test login with the reactivated user's credentials (if applicable).",
+          "expectedResult": "System should allow login for reactivated users.",
+          "comments": ""
+        }
+      ]
+    }
+  ],
+  "totalTestCases": 6
+}

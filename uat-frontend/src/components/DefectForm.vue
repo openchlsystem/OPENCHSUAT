@@ -1,3 +1,5 @@
+// Final DefectForm.vue - Simplified with test_case_id only
+
 <template>
   <div class="modal-overlay">
     <div class="modal-content">
@@ -19,7 +21,8 @@
         <!-- Related Test Case -->
         <div class="form-group">
           <label>Related Test Case <span class="required">*</span></label>
-          <select v-model="defect.execution" class="form-control" required>
+          <select v-model="defect.test_case_id" class="form-control" required>
+            <option value="">-- Select a test case --</option>
             <option v-for="test in testCases" :key="test.id" :value="test.id">
               {{ test.title }}
             </option>
@@ -30,7 +33,8 @@
         <div class="form-group">
           <label>Severity <span class="required">*</span></label>
           <select v-model="defect.severity" class="form-control" required>
-            <option v-for="severity in defectOptions.severity_options" :key="severity.label" :value="severity.value">
+            <option value="">-- Select severity --</option>
+            <option v-for="severity in severityOptions" :key="severity.value" :value="severity.value">
               {{ severity.label }}
             </option>
           </select>
@@ -42,84 +46,158 @@
           <input type="file" @change="handleFileUpload" class="form-control" />
         </div>
 
-        <!-- Form Buttons -->
-        <div class="form-buttons">
-          <button type="submit" class="btn btn-orange">Submit</button>
-          <button type="button" @click="$emit('close')" class="btn btn-secondary">Cancel</button>
+        <!-- Error Message -->
+        <div v-if="errorMessage" class="alert alert-danger mt-3">
+          {{ errorMessage }}
         </div>
 
-        <!-- Error Message -->
-        <p v-if="errorMessage" class="error-text">{{ errorMessage }}</p>
+        <!-- Form Buttons -->
+        <div class="form-buttons mt-4">
+          <button type="button" @click="$emit('close')" class="btn btn-secondary">Cancel</button>
+          <button type="submit" class="btn btn-orange" :disabled="isSubmitting">
+            <span v-if="isSubmitting" class="spinner-border spinner-border-sm me-1" role="status"></span>
+            Submit
+          </button>
+        </div>
       </form>
     </div>
   </div>
 </template>
 
 <script>
+import axios from '@/utils/axios';
+
 export default {
   props: { 
-    testCases: Array, 
-    defectOptions: Array 
+    testCases: {
+      type: Array,
+      required: true
+    },
+    defectOptions: {
+      type: Object,
+      required: true
+    }
   },
+  
   data() {
     return {
       defect: {
         title: "",
         description: "",
-        execution: "",
-        severity: "Medium",
-        execution_id: "",
-        reported_by_id: "",
-        evidence: null
+        test_case_id: "",
+        severity: "",
+        attachment: null
       },
-      errorMessage: ""
+      errorMessage: "",
+      isSubmitting: false
     };
   },
+  
+  computed: {
+    severityOptions() {
+      return this.defectOptions?.severity_options || [];
+    }
+  },
+  
   methods: {
     handleFileUpload(event) {
-      this.defect.evidence = event.target.files[0];
+      this.defect.attachment = event.target.files[0];
     },
+    
     async submit() {
-      if (!this.defect.execution) {
-        this.errorMessage = "Please select a related test case.";
-        return;
-      }
-
+      if (!this.validate()) return;
+      
       this.errorMessage = "";
-
-      const formData = new FormData();
-      formData.append("title", this.defect.title);
-      formData.append("description", this.defect.description);
-      formData.append("execution_id", this.defect.execution);
-      formData.append("severity", this.defect.severity);
-
-      // formData.append("reported_by_id", testCases.assigned_user);
-      const selectedTestCase = this.testCases.find(test => test.id === this.defect.execution);
-      if (selectedTestCase && selectedTestCase.assigned_user) {
-        console.log("{{reported_by_id}}")
-        formData.append("reported_by_id", selectedTestCase.assigned_user);
-      }
-
-
-      if (this.defect.evidence) {
-        formData.append("evidence", this.defect.evidence);
-      }
-
+      this.isSubmitting = true;
+      
       try {
-        console.log("Submitting defect:", Object.fromEntries(formData));
+        const formData = new FormData();
+        formData.append("title", this.defect.title);
+        formData.append("description", this.defect.description);
+        formData.append("test_case_id", this.defect.test_case_id);
+        formData.append("severity", this.defect.severity);
         
-        // Emit formData to parent
-        this.$emit("submit", formData);
-      } catch (error) {
-        console.error("Error submitting defect:", error.response?.data || error);
-
-        if (error.response?.data) {
-          const errors = error.response.data;
-          this.errorMessage = Object.values(errors).flat().join(" ");
-        } else {
-          this.errorMessage = "Failed to submit defect. Please check the required fields.";
+        if (this.defect.attachment) {
+          formData.append("attachment", this.defect.attachment);
         }
+        
+        // Log form data for debugging
+        console.log("Submitting defect with data:");
+        for (let [key, value] of formData.entries()) {
+          console.log(`${key}: ${value}`);
+        }
+        
+        // Send the request
+        const response = await axios.post("/defects/", formData, {
+          headers: { "Content-Type": "multipart/form-data" }
+        });
+        
+        console.log("Defect created successfully:", response.data);
+        
+        // Emit success event to parent
+        this.$emit("submit-success", response.data);
+        
+        // Close the modal
+        this.$emit("close");
+        
+      } catch (error) {
+        console.error("Error submitting defect:", error);
+        
+        // Set error message
+        if (error.response && error.response.data) {
+          // Extract error message from response
+          const errorData = error.response.data;
+          
+          if (typeof errorData === 'object') {
+            const errorMessages = [];
+            
+            // Format error messages for display
+            Object.entries(errorData).forEach(([field, errors]) => {
+              if (Array.isArray(errors)) {
+                errors.forEach(error => errorMessages.push(`${field}: ${error}`));
+              } else if (typeof errors === 'string') {
+                errorMessages.push(`${field}: ${errors}`);
+              }
+            });
+            
+            if (errorMessages.length > 0) {
+              this.errorMessage = errorMessages.join(', ');
+            } else {
+              this.errorMessage = "Failed to submit defect. Please check the form.";
+            }
+          } else {
+            this.errorMessage = errorData.toString();
+          }
+        } else {
+          this.errorMessage = error.message || "Failed to submit defect";
+        }
+      } finally {
+        this.isSubmitting = false;
       }
+    },
+    
+    validate() {
+      if (!this.defect.title.trim()) {
+        this.errorMessage = "Defect name is required.";
+        return false;
+      }
+      
+      if (!this.defect.description.trim()) {
+        this.errorMessage = "Defect description is required.";
+        return false;
+      }
+      
+      if (!this.defect.test_case_id) {
+        this.errorMessage = "Please select a test case.";
+        return false;
+      }
+      
+      if (!this.defect.severity) {
+        this.errorMessage = "Please select a severity level.";
+        return false;
+      }
+      
+      return true;
     }
   }
 };
@@ -137,20 +215,24 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1000;
 }
 
 .modal-content {
   background: white;
   padding: 25px;
   border-radius: 8px;
-  width: 450px;
+  width: 500px;
+  max-width: 90vw;
+  max-height: 85vh;
+  overflow-y: auto;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .modal-title {
   color: #ff6600;
   text-align: center;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 /* Form Styling */
@@ -180,10 +262,6 @@ textarea {
   resize: vertical;
 }
 
-.file-input {
-  border: none;
-}
-
 /* Buttons */
 .form-buttons {
   display: flex;
@@ -191,7 +269,7 @@ textarea {
 }
 
 .btn {
-  padding: 8px 12px;
+  padding: 8px 16px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -210,18 +288,11 @@ textarea {
 }
 
 .btn-secondary {
-  background: black;
+  background: #6c757d;
   color: white;
 }
 
 .btn-secondary:hover {
-  background: #333;
-}
-
-/* Error Message */
-.error-text {
-  color: red;
-  font-weight: bold;
-  margin-top: 10px;
+  background: #5a6268;
 }
 </style>

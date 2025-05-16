@@ -8,7 +8,7 @@ from .views import (
     TestExecutionViewSet, DefectViewSet, RegisterUserView,
     RequestOTPView, VerifyOTPView, StaffAuthView,
     UserViewSet, DashboardView, RolesView, StatusChoicesView,
-    DefectOptionsView  # Add the new view here
+    DefectOptionsView, TesterDashboardView  # Add the new view here
 )
 
 # Initialize the DefaultRouter
@@ -50,4 +50,6 @@ urlpatterns = [
 
     # Dashboard endpoint
     path('uat/dashboard/', DashboardView.as_view(), name='dashboard'),
+    path('uat/tester-dashboard/', TesterDashboardView.as_view(), name='tester-dashboard'),
+    path('uat/executions/', TestExecutionViewSet.as_view({'get': 'executions'}), name='executions-list'),
 ]

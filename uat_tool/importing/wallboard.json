@@ -1,0 +1,342 @@
+{
+  "functionality": "Wallboard",
+  "testCases": [
+    {
+      "title": "Wallboard Display and Real-Time Information",
+      "description": "This test case verifies the functionality of the Wallboard display, including real-time information about counselors online and calls in queue.",
+      "expectedResult": "The Wallboard should accurately display real-time information about counselors and calls in queue with proper updates.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Login to the system with valid credentials.",
+          "expectedResult": "User should be successfully logged in.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Navigate to the Wallboard section.",
+          "expectedResult": "Wallboard should load showing counselors online and calls in queue sections.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Verify the Counsellors Online section is displayed with correct count.",
+          "expectedResult": "Counsellors Online section should show the actual number of counselors currently online.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Verify all expected columns are present in the counselors table.",
+          "expectedResult": "Columns should include: Ext., Name, Caller, Answered, Missed, Talk Time, Queue Status, Duration.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Verify counselor records display correct information.",
+          "expectedResult": "Each online counselor should display appropriate data in all columns.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Verify the Calls in Queue section is displayed with correct count.",
+          "expectedResult": "Calls in Queue section should show the actual number of calls currently waiting.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Verify Queue Status displays correctly for each counselor.",
+          "expectedResult": "Queue Status should accurately show if counselor is Available or in another state.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Verify Duration timer is updating in real-time.",
+          "expectedResult": "Duration should continuously update to show how long the counselor has been in the current state.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Wallboard Real-Time Updates",
+      "description": "This test case verifies that the Wallboard updates in real-time when system conditions change.",
+      "expectedResult": "The Wallboard should dynamically update to reflect changes in counselor status and call queue without manual refresh.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the Wallboard section.",
+          "expectedResult": "Wallboard should load with current information.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Note the current number of counselors online.",
+          "expectedResult": "Counsellors Online count should be visible.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "In another browser or device, have a counselor join the queue.",
+          "expectedResult": "Without manual refresh, the Wallboard should update to show the additional counselor.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Verify the Counsellors Online count increases accordingly.",
+          "expectedResult": "Count should increase by one to reflect the newly joined counselor.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Have the counselor leave the queue.",
+          "expectedResult": "Without manual refresh, the Wallboard should update to remove the counselor.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Verify the Counsellors Online count decreases accordingly.",
+          "expectedResult": "Count should decrease by one to reflect the departed counselor.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Simulate or generate an incoming call to the queue.",
+          "expectedResult": "Without manual refresh, the Calls in Queue count should increase.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Have a counselor answer the queued call.",
+          "expectedResult": "Without manual refresh, the Calls in Queue count should decrease and the counselor's status should update to show they are on a call.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Monitor the duration timer for an active counselor.",
+          "expectedResult": "Duration timer should increment in real-time without page refresh.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Counselor Status Monitoring",
+      "description": "This test case verifies the ability to monitor the status of individual counselors through the Wallboard.",
+      "expectedResult": "The Wallboard should accurately display and update the status of each counselor with relevant call metrics.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the Wallboard section.",
+          "expectedResult": "Wallboard should load with counselor information.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Identify a specific counselor in the list.",
+          "expectedResult": "Counselor details should be visible in the list.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Verify the extension number is displayed correctly.",
+          "expectedResult": "Extension number should match the assigned extension.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Verify the counselor's name is displayed correctly.",
+          "expectedResult": "Name should match the counselor's actual name in the system.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Verify the Answered call count is displayed.",
+          "expectedResult": "Answered column should show the number of calls answered by this counselor.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Verify the Missed call count is displayed.",
+          "expectedResult": "Missed column should show the number of calls missed by this counselor.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Verify Talk Time is displayed if applicable.",
+          "expectedResult": "Talk Time column should show the cumulative or current talk time.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Have the counselor change their status (take a call, go unavailable, etc.).",
+          "expectedResult": "Status change should be reflected in the Wallboard in real-time.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Verify queue status indicators (Available, Busy, etc.).",
+          "expectedResult": "Status indicators should clearly show the current state of each counselor.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Verify how caller information is displayed when a counselor is on a call.",
+          "expectedResult": "Caller information should be displayed in the appropriate column when a counselor is actively on a call.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Call Queue Monitoring",
+      "description": "This test case verifies the functionality to monitor calls waiting in the queue through the Wallboard.",
+      "expectedResult": "The Calls in Queue section should accurately display the number and details of calls waiting in the queue.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the Wallboard section.",
+          "expectedResult": "Wallboard should load with the Calls in Queue section visible.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Verify the current number of calls in queue is displayed.",
+          "expectedResult": "Calls in Queue count should show the actual number of waiting calls.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "If calls are in queue, verify if additional details are displayed.",
+          "expectedResult": "Details such as wait time or caller information should be displayed if available.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Simulate or generate a new incoming call.",
+          "expectedResult": "Calls in Queue count should increase and the new call should be visible if detailed view is available.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Monitor the queue as a counselor answers a call.",
+          "expectedResult": "Calls in Queue count should decrease when a call is answered.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Verify queue metrics update in real-time.",
+          "expectedResult": "All queue metrics should update dynamically without manual refresh.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Test scenarios with multiple calls in queue if possible.",
+          "expectedResult": "Multiple queued calls should be accurately represented.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Verify call priority display if applicable.",
+          "expectedResult": "If calls have different priorities, this should be indicated in the queue display.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Wallboard Permissions and Access",
+      "description": "This test case verifies that appropriate permissions and access controls are in place for the Wallboard.",
+      "expectedResult": "Access to the Wallboard should be properly controlled based on user roles and permissions.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Login as an administrator or supervisor.",
+          "expectedResult": "User should be successfully logged in with admin or supervisor privileges.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Navigate to the Wallboard section.",
+          "expectedResult": "Wallboard should be accessible and display complete information.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Logout and login as a regular counselor or agent.",
+          "expectedResult": "User should be successfully logged in with counselor privileges.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Attempt to access the Wallboard.",
+          "expectedResult": "Access should be granted or restricted according to the system's permission settings for counselors.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "If accessible to counselors, verify what information is visible.",
+          "expectedResult": "Information display should be appropriate to the counselor's permission level.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Test access by users with other roles if applicable.",
+          "expectedResult": "Access should be controlled appropriately for all user roles.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Verify if any customization options exist for the Wallboard display.",
+          "expectedResult": "If customization is available, it should function according to the user's permissions.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Wallboard Performance and Reliability",
+      "description": "This test case verifies the performance and reliability of the Wallboard under various conditions.",
+      "expectedResult": "The Wallboard should perform consistently and reliably regardless of system load or extended viewing periods.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the Wallboard and leave it open for an extended period (several hours).",
+          "expectedResult": "Wallboard should continue to update correctly without freezing or displaying errors.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Monitor resource usage during extended Wallboard viewing.",
+          "expectedResult": "Resource usage (memory, CPU) should remain within acceptable limits.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Test Wallboard performance during high call volume periods.",
+          "expectedResult": "Wallboard should update correctly and maintain performance during high system activity.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Test Wallboard performance with many counselors online simultaneously.",
+          "expectedResult": "Wallboard should handle and display information for a large number of counselors without performance degradation.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Test Wallboard recovery after network interruption.",
+          "expectedResult": "Wallboard should recover and resume updates after temporary network issues.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Test Wallboard behavior when displayed on different devices or screen sizes.",
+          "expectedResult": "Wallboard should adapt appropriately to different display environments.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Test the refresh rate or update frequency of the Wallboard.",
+          "expectedResult": "Updates should occur frequently enough to provide current information but not so frequently as to cause performance issues.",
+          "comments": ""
+        }
+      ]
+    }
+  ],
+  "totalTestCases": 6
+}

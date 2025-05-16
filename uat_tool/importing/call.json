@@ -1,0 +1,676 @@
+{
+  "functionality": "Reporting and Analytics",
+  "testCases": [
+    {
+      "title": "Dashboard Data Visualization",
+      "description": "This test case verifies the functionality of the dashboard visualizations, including charts, graphs, and numerical indicators displaying call and case data.",
+      "expectedResult": "Dashboard should accurately display current data in various visualization formats with proper labeling and accurate counts.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Login to the system with valid credentials.",
+          "expectedResult": "User should be successfully logged in and redirected to the dashboard.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Navigate to the dashboard or main reporting section.",
+          "expectedResult": "Dashboard should load with various visualization elements.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Verify Case Categories pie chart.",
+          "expectedResult": "Pie chart should display case distribution by category with accurate counts.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Verify Case per Location pie chart.",
+          "expectedResult": "Pie chart should display case distribution by location with accurate counts.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Verify Daily Cases line/bar chart.",
+          "expectedResult": "Chart should display daily case counts over time.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Verify Case Status information.",
+          "expectedResult": "Case status section should show accurate counts of ongoing and closed cases.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Verify Priority distribution display.",
+          "expectedResult": "Priority distribution should show accurate counts of cases by priority level.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Check that total counts match across different visualizations.",
+          "expectedResult": "Total case count should be consistent across all dashboard elements.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Verify all visualization elements have proper labels and legends.",
+          "expectedResult": "All charts and graphs should have clear labels, legends, and tooltips if applicable.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Verify responsiveness of dashboard.",
+          "expectedResult": "Dashboard should adapt appropriately to different screen sizes.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Dashboard Date Range Filtering",
+      "description": "This test case verifies the functionality to filter dashboard data by different date ranges and time periods.",
+      "expectedResult": "Dashboard data should update correctly based on the selected date range filters.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the dashboard.",
+          "expectedResult": "Dashboard should load with default date range.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Verify the default date range display.",
+          "expectedResult": "Current date range should be displayed (e.g., \"This Month\" with specific dates).",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Click on the date range dropdown.",
+          "expectedResult": "Date range options should appear.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Select \"This Month\" option.",
+          "expectedResult": "Dashboard should update to show data for the current month.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Verify data consistency after filter change.",
+          "expectedResult": "All visualizations should update to reflect the selected date range.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Select a different date range option.",
+          "expectedResult": "Dashboard should update to show data for the previous month.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Test custom date range selection if available.",
+          "expectedResult": "Dashboard should update to show data for the custom date range.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Verify that total counts update appropriately.",
+          "expectedResult": "Total counts should reflect only data within the selected date range.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Test the date navigation controls if available.",
+          "expectedResult": "Navigation controls should allow moving to previous/next time periods.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Reset to default date range.",
+          "expectedResult": "Dashboard should return to default date range display.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Case Type Filtering",
+      "description": "This test case verifies the functionality to filter dashboard data by case types (VAC, GBV, or both).",
+      "expectedResult": "Dashboard data should update correctly based on the selected case type filters.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the dashboard.",
+          "expectedResult": "Dashboard should load with default case type filter.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Verify the default case type filter display.",
+          "expectedResult": "Current case type filter should be displayed (e.g., \"Both VAC & GBV\").",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Click on the case type dropdown.",
+          "expectedResult": "Case type options should appear.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Select \"Both VAC & GBV\" option.",
+          "expectedResult": "Dashboard should update to show data for both VAC and GBV cases.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Verify data consistency after filter change.",
+          "expectedResult": "All visualizations should update to reflect the selected case types.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Select \"VAC only\" option if available.",
+          "expectedResult": "Dashboard should update to show data for VAC cases only.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Verify data consistency after filter change.",
+          "expectedResult": "All visualizations should update to reflect VAC cases only.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Select \"GBV only\" option if available.",
+          "expectedResult": "Dashboard should update to show data for GBV cases only.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Verify data consistency after filter change.",
+          "expectedResult": "All visualizations should update to reflect GBV cases only.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Reset to default case type filter.",
+          "expectedResult": "Dashboard should return to default case type filter.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Chart Type Switching",
+      "description": "This test case verifies the functionality to switch between different chart types for data visualization.",
+      "expectedResult": "Charts should correctly change type while maintaining the same data representation.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the dashboard or reports section.",
+          "expectedResult": "Dashboard should load with default chart types.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Locate the chart type selector for a specific chart (e.g., X-Axis, Y-Axis options).",
+          "expectedResult": "Chart type selector should be available.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Identify and verify current chart type.",
+          "expectedResult": "Current chart type should be displayed or indicated.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Switch to \"Pie Chart\" type if not already selected.",
+          "expectedResult": "Chart should change to pie chart format while maintaining the same data.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Verify data consistency after chart type change.",
+          "expectedResult": "Data represented should be the same as before, just in a different format.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Switch to \"Bar Chart\" type if available.",
+          "expectedResult": "Chart should change to bar chart format.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Switch to \"Line Chart\" type if available.",
+          "expectedResult": "Chart should change to line chart format.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Test chart-specific options if available (e.g., stacked bars).",
+          "expectedResult": "Chart-specific options should modify the visualization accordingly.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Verify chart legends update appropriately.",
+          "expectedResult": "Legends should update to match the current chart type.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Reset to default chart type.",
+          "expectedResult": "Chart should return to default type.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Time Period Granularity Selection",
+      "description": "This test case verifies the functionality to change the time period granularity (e.g., year, month, week, day, hour) for time-based charts.",
+      "expectedResult": "Time-based charts should update to display data at the selected granularity level.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the dashboard or reports section with time-based charts.",
+          "expectedResult": "Time-based charts should be visible with default granularity.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Locate the X-Axis options for time granularity.",
+          "expectedResult": "X-Axis options should be available (Year, Month, Week, Day, Hourly).",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Select \"Year\" option.",
+          "expectedResult": "Chart should update to show data aggregated by year.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Verify data aggregation at yearly level.",
+          "expectedResult": "Data should be correctly aggregated and displayed by year.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Select \"Month\" option.",
+          "expectedResult": "Chart should update to show data aggregated by month.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Select \"Week\" option.",
+          "expectedResult": "Chart should update to show data aggregated by week.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Select \"Day\" option.",
+          "expectedResult": "Chart should update to show data aggregated by day.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Select \"Hourly\" option if available.",
+          "expectedResult": "Chart should update to show data aggregated by hour.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Verify X-axis labels update appropriately.",
+          "expectedResult": "X-axis labels should reflect the selected time granularity.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Verify data consistency across different granularities.",
+          "expectedResult": "Total values should remain consistent regardless of granularity.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Call Statistics Reporting",
+      "description": "This test case verifies the functionality to view and analyze call statistics reports, including call volumes, durations, and dispositions.",
+      "expectedResult": "Call statistics reports should accurately display call data with appropriate filtering and grouping options.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the call statistics or reports section.",
+          "expectedResult": "Call statistics reports should load.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Verify call volume metrics.",
+          "expectedResult": "Call volume metrics should show accurate counts of calls by type.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Verify call duration metrics.",
+          "expectedResult": "Call duration metrics should show accurate average, min, and max durations.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Verify call disposition breakdown.",
+          "expectedResult": "Call disposition breakdown should show accurate counts by disposition type.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Test filtering call data by date range.",
+          "expectedResult": "Report should update to show data for the selected date range.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Test filtering call data by agent if applicable.",
+          "expectedResult": "Report should update to show data for the selected agent.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Test grouping call data by different dimensions.",
+          "expectedResult": "Report should update to group data by the selected dimension.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Test exporting call statistics report.",
+          "expectedResult": "Report should export in the specified format.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Verify call statistics visualizations if available.",
+          "expectedResult": "Visualizations should accurately represent the call data.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Verify totals and averages calculation.",
+          "expectedResult": "Totals and averages should be calculated correctly.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Case Statistics Reporting",
+      "description": "This test case verifies the functionality to view and analyze case statistics reports, including case volumes, categories, statuses, and resolution times.",
+      "expectedResult": "Case statistics reports should accurately display case data with appropriate filtering and grouping options.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the case statistics or reports section.",
+          "expectedResult": "Case statistics reports should load.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Verify case volume metrics.",
+          "expectedResult": "Case volume metrics should show accurate counts of cases.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Verify case category breakdown.",
+          "expectedResult": "Case category breakdown should show accurate counts by category.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Verify case status breakdown.",
+          "expectedResult": "Case status breakdown should show accurate counts by status.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Verify case priority breakdown.",
+          "expectedResult": "Case priority breakdown should show accurate counts by priority level.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Test filtering case data by date range.",
+          "expectedResult": "Report should update to show data for the selected date range.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Test filtering case data by agent/owner if applicable.",
+          "expectedResult": "Report should update to show data for the selected owner.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Test grouping case data by different dimensions.",
+          "expectedResult": "Report should update to group data by the selected dimension.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Test exporting case statistics report.",
+          "expectedResult": "Report should export in the specified format.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Verify case lifecycle metrics if available.",
+          "expectedResult": "Lifecycle metrics (time to resolve, etc.) should be calculated correctly.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Report Download Functionality",
+      "description": "This test case verifies the functionality to download reports in various formats (e.g., CSV, Excel, PDF).",
+      "expectedResult": "Reports should be successfully downloaded in the specified format with all relevant data included.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to a report or data view with download functionality.",
+          "expectedResult": "Report should load with download option visible.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Click on the \"Download\" button.",
+          "expectedResult": "Download options should appear if multiple formats are available.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Select CSV format if available.",
+          "expectedResult": "Report should download in CSV format.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Verify the downloaded CSV file.",
+          "expectedResult": "CSV file should contain all relevant data with proper formatting.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Select Excel format if available.",
+          "expectedResult": "Report should download in Excel format.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Verify the downloaded Excel file.",
+          "expectedResult": "Excel file should contain all relevant data with proper formatting.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Select PDF format if available.",
+          "expectedResult": "Report should download in PDF format.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Verify the downloaded PDF file.",
+          "expectedResult": "PDF file should contain all relevant data with proper formatting.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Test downloading with different filters applied.",
+          "expectedResult": "Downloaded report should reflect the applied filters.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Test downloading large datasets if applicable.",
+          "expectedResult": "Large datasets should download completely without errors.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Custom Report Creation",
+      "description": "This test case verifies the functionality to create custom reports with user-defined metrics, filters, and visualizations.",
+      "expectedResult": "Custom reports should be successfully created with the specified parameters and display accurate data.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the custom report creation section if available.",
+          "expectedResult": "Custom report creation interface should load.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Initiate creating a new custom report.",
+          "expectedResult": "New report configuration interface should appear.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Set report name and description.",
+          "expectedResult": "Name and description should be saved.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Select data source or report type.",
+          "expectedResult": "Data source should be selected.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Select metrics to include.",
+          "expectedResult": "Selected metrics should be added to the report.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Configure filters.",
+          "expectedResult": "Filters should be configured.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Select grouping dimensions.",
+          "expectedResult": "Grouping should be configured.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Select visualization type.",
+          "expectedResult": "Visualization should be configured.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Save the custom report.",
+          "expectedResult": "Report should be saved successfully.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Run the custom report.",
+          "expectedResult": "Report should execute and display accurate results.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Scheduled Report Delivery",
+      "description": "This test case verifies the functionality to schedule automatic report generation and delivery.",
+      "expectedResult": "Reports should be automatically generated and delivered according to the specified schedule.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the report scheduling section if available.",
+          "expectedResult": "Report scheduling interface should load.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Select a report to schedule.",
+          "expectedResult": "Report should be selected.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Configure schedule frequency.",
+          "expectedResult": "Frequency should be configured.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Set specific schedule details.",
+          "expectedResult": "Schedule details should be configured.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Configure delivery method.",
+          "expectedResult": "Delivery method should be configured.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Set delivery recipients.",
+          "expectedResult": "Recipients should be configured.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Configure report format.",
+          "expectedResult": "Format should be configured.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Save the schedule configuration.",
+          "expectedResult": "Schedule should be saved successfully.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Verify the scheduled report appears in the list.",
+          "expectedResult": "Scheduled report should be visible in the list.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Verify report is delivered according to schedule (may require waiting).",
+          "expectedResult": "Report should be delivered at the scheduled time.",
+          "comments": ""
+        }
+      ]
+    }
+  ],
+  "totalTestCases": 10
+}

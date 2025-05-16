@@ -1,0 +1,361 @@
+{
+  "functionality": "Categories Management",
+  "testCases": [
+    {
+      "title": "Categories Listing and Display",
+      "description": "This test case verifies the functionality of the Categories listing, including the hierarchical display of categories and subcategories.",
+      "expectedResult": "The Categories list should display all categories and subcategories in a hierarchical tree structure with expansion controls.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Login to the system with valid credentials.",
+          "expectedResult": "User should be successfully logged in.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Navigate to the Categories section.",
+          "expectedResult": "Categories listing page should load with category records displayed in a tree structure.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Verify top-level categories are displayed.",
+          "expectedResult": "Top-level categories should be visible with expansion (+) icons.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Verify pagination controls if multiple pages of categories exist.",
+          "expectedResult": "Pagination controls should navigate between pages of categories.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Verify page information display (e.g., \"1 - 10 of 39\").",
+          "expectedResult": "Page information should accurately reflect current page and total records.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Category Expansion and Navigation",
+      "description": "This test case verifies the functionality to expand and navigate the hierarchical category structure.",
+      "expectedResult": "Categories should expand to show subcategories and collapse to hide them when the appropriate controls are used.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the Categories section.",
+          "expectedResult": "Categories listing page should load.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Click the expansion (+) icon next to a category (e.g., Age Group).",
+          "expectedResult": "Category should expand to show its subcategories, and the icon should change to a collapse (-) icon.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Verify subcategories are displayed correctly.",
+          "expectedResult": "Subcategories should be indented and listed under the parent category.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Click the collapse (-) icon next to the expanded category.",
+          "expectedResult": "Subcategories should be hidden, and the icon should change back to an expansion (+) icon.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Test expansion and collapse for multiple categories.",
+          "expectedResult": "All categories should expand and collapse correctly.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Test expanding multiple categories simultaneously.",
+          "expectedResult": "Multiple categories can be expanded at the same time.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Test expanding nested subcategories if applicable.",
+          "expectedResult": "Nested subcategories should expand and display their own subcategories.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "New Category Creation",
+      "description": "This test case verifies the functionality to create new top-level categories.",
+      "expectedResult": "New categories should be successfully created and appear in the category listing.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the Categories section.",
+          "expectedResult": "Categories listing page should load.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Click the \"+ New\" button at the bottom of the category list.",
+          "expectedResult": "A text input field should appear for entering the new category name.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Enter a name for the new category in the input field.",
+          "expectedResult": "Text should be entered in the field.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Click the \"Save\" button.",
+          "expectedResult": "New category should be created and appear in the category list.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Test creating a category with an empty name.",
+          "expectedResult": "System should prevent creation and display an error message.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Test creating a category with a duplicate name if applicable.",
+          "expectedResult": "System should prevent creation and display an error message.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Test the cancel function (X button) during category creation.",
+          "expectedResult": "Creation should be canceled and input field should disappear.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "New Subcategory Creation",
+      "description": "This test case verifies the functionality to create new subcategories under existing categories.",
+      "expectedResult": "New subcategories should be successfully created under the selected parent category.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the Categories section.",
+          "expectedResult": "Categories listing page should load.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Expand a category that will be the parent of the new subcategory.",
+          "expectedResult": "Parent category should expand to show existing subcategories.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Click the \"+\" icon next to a specific subcategory entry or at the subcategory level.",
+          "expectedResult": "A text input field should appear for entering the new subcategory name.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Enter a name for the new subcategory in the input field.",
+          "expectedResult": "Text should be entered in the field.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Click the \"Save\" button.",
+          "expectedResult": "New subcategory should be created and appear under the parent category.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Test creating a subcategory with an empty name.",
+          "expectedResult": "System should prevent creation and display an error message.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Test creating a subcategory with a duplicate name under the same parent if applicable.",
+          "expectedResult": "System should prevent creation and display an error message.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Test the cancel function (X button) during subcategory creation.",
+          "expectedResult": "Creation should be canceled and input field should disappear.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Category Editing",
+      "description": "This test case verifies the functionality to edit existing categories and subcategories.",
+      "expectedResult": "Categories and subcategories should be successfully renamed with changes preserved in the system.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the Categories section.",
+          "expectedResult": "Categories listing page should load.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Locate an existing category to edit.",
+          "expectedResult": "Category should be visible in the list.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Identify and click an edit option for the category if available.",
+          "expectedResult": "Category name should become editable in an input field.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Modify the category name.",
+          "expectedResult": "Category name should be editable and accept changes.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Save the changes.",
+          "expectedResult": "Changes should be saved successfully and reflected in the category list.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Repeat editing process for a subcategory.",
+          "expectedResult": "Subcategory should be editable in the same manner as categories.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Test canceling the edit operation.",
+          "expectedResult": "Edit should be canceled and original name should be retained.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Test editing to an empty name.",
+          "expectedResult": "System should prevent saving with an empty name.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Test editing to a duplicate name if applicable.",
+          "expectedResult": "System should prevent duplicate names at the same level.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Category Deletion",
+      "description": "This test case verifies the functionality to delete categories and subcategories.",
+      "expectedResult": "Categories and subcategories should be successfully deleted from the system when no longer needed.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Navigate to the Categories section.",
+          "expectedResult": "Categories listing page should load.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Locate an existing category or subcategory to delete.",
+          "expectedResult": "Category/subcategory should be visible in the list.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Identify and click a delete option for the category if available.",
+          "expectedResult": "Delete confirmation dialog should appear.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Confirm the deletion.",
+          "expectedResult": "Category should be deleted and removed from the list.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Test deleting a category that has subcategories.",
+          "expectedResult": "System should either prevent deletion or confirm deletion of all subcategories.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Test deleting a category that is in use by cases if applicable.",
+          "expectedResult": "System should warn if the category is in use and confirm the action.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Test canceling the deletion operation.",
+          "expectedResult": "Deletion should be canceled and category should remain in the list.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Category Usage in Case Management",
+      "description": "This test case verifies that categories are properly available for selection in case management forms.",
+      "expectedResult": "Categories and subcategories should be available for selection in relevant case management forms and fields.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Create a new category for testing.",
+          "expectedResult": "New category should be created successfully.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Navigate to a case creation or edit form.",
+          "expectedResult": "Case form should load with category selection fields.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Locate category selection fields (e.g., Case Category dropdown).",
+          "expectedResult": "Category selection field should be present.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Open the category selection dropdown.",
+          "expectedResult": "Dropdown should display available categories, including the newly created one.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Select a category from the dropdown.",
+          "expectedResult": "Category should be selectable and applied to the case.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Complete and save the case with the selected category.",
+          "expectedResult": "Case should save with the selected category.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Verify the category appears correctly in case listing or details.",
+          "expectedResult": "Selected category should be displayed with the case.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Test filtering cases by the selected category if applicable.",
+          "expectedResult": "Case filtering by category should work correctly.",
+          "comments": ""
+        }
+      ]
+    }
+  ],
+  "totalTestCases": 7
+}
