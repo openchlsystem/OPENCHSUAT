@@ -1,12 +1,13 @@
-# Use official Python image
 FROM python:3.12-slim
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
+    default-libmysqlclient-dev \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Create and activate virtual environment
+# Create virtual environment
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
@@ -20,15 +21,15 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
-# Database directory setup
-RUN mkdir -p /var/lib/sqlite \
-    && chown -R 1000:1000 /var/lib/sqlite
-
 # Run as non-root user
 USER 1000
 
 # Expose port
 EXPOSE 8000
 
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=5s \
+  CMD curl -f http://localhost:8000/ || exit 1
+
 # Startup command
-CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+CMD ["bash", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
