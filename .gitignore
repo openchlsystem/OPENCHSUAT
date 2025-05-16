@@ -47,3 +47,5 @@ htmlcov/
 /OPENCHSUAT/uat_tool/uat/migrations/__pycache__/
 
 
+**/__pycache__/
+**/*.pyc
