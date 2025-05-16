@@ -1,23 +1,35 @@
-# Use official Python image as base. 3.13.2
-FROM python:3.13.2
+FROM python:3.12-slim
 
-# Set the working directory
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    default-libmysqlclient-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create virtual environment
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Set working directory
 WORKDIR /app
 
-# Copy and install dependencies
+# Install Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the wait-for-db.sh script
-COPY wait-for-db.sh /app/wait-for-db.sh
-RUN chmod +x /app/wait-for-db.sh
-
-
-# Copy the entire backend project
+# Copy application code
 COPY . .
 
-# Expose port
-EXPOSE 8005
+# Run as non-root user
+USER 1000
 
-# Run migrations and start the server
-CMD python manage.py migrate && gunicorn --bind 0.0.0.0:8005 uat_tool.wsgi:application
+# Expose port
+EXPOSE 8000
+
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=5s \
+  CMD curl -f http://localhost:8000/ || exit 1
+
+# Startup command
+CMD ["bash", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]

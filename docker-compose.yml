@@ -1,46 +1,29 @@
+# version: '3.8'
+
 services:
   backend:
     build: ./uat_tool
-    container_name: uat_backend
     ports:
-      - "8005:8005"
+      - "8000:8000"
     volumes:
       - ./uat_tool:/app
-    env_file:
-      - ./uat_tool/.env
-    command: ["./wait-for-db.sh", "python", "manage.py", "runserver", "0.0.0.0:8005"]
-    depends_on:
-      db:
-        condition: service_healthy  # Ensure DB is healthy before starting the backend
+      - sqlite_data:/var/lib/sqlite
+    environment:
+      - DEBUG=1
+      - DATABASE_URL=sqlite:////var/lib/sqlite/db.sqlite3
+      - PYTHONPATH=/app
+      - PATH=/opt/venv/bin:$PATH
+    restart: unless-stopped
 
   frontend:
     build: ./uat-frontend
-    container_name: uat_frontend
     ports:
-      - "5173:5173"
-    volumes:
-      - ./uat-frontend:/app
-      - /app/node_modules
+      - "5100:5100"
     depends_on:
       - backend
-
-  db:
-    image: mysql:8.0
-    container_name: uat_db
-    restart: always
     environment:
-      MYSQL_DATABASE: uat_db
-      MYSQL_USER: uat_user
-      MYSQL_PASSWORD: uat_password
-      MYSQL_ROOT_PASSWORD: root_password
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      retries: 5
-      interval: 5s
+      - VITE_API_URL=http://backend:8000
+    restart: unless-stopped
 
 volumes:
-  mysql_data:  # Make sure this is defined here
+  sqlite_data:
