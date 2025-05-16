@@ -1,0 +1,736 @@
+{
+  "functionality": "Case Management",
+  "testCases": [
+    {
+      "title": "Walk In Functionality",
+      "description": "This test case verifies the functionality of the Walk In button, including color change and the Activity History interface. It tests the ability to search, filter, and navigate through activities in the Walk In section.",
+      "expectedResult": "The Walk In button should change color when clicked, and the Activity History interface should allow users to search, filter, and navigate through activities.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Login to the system with valid credentials.",
+          "expectedResult": "User should be successfully logged in and redirected to the dashboard.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Locate and click the green 'Walk In' button at the top of the page.",
+          "expectedResult": "Button should change color from green to orange and the Walk In interface should open.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Verify the Walk In interface displays the 'Activity History' section.",
+          "expectedResult": "Activity History should be visible with search field and 'New Activity' button.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Verify navigation controls are present (List, Reports, etc.).",
+          "expectedResult": "Navigation controls should be displayed at the top right of the Walk In interface.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Test the 'Close' button functionality.",
+          "expectedResult": "When clicked, the Walk In interface should close and return to the previous screen.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Reopen the Walk In interface by clicking the Walk In button again.",
+          "expectedResult": "The Walk In interface should reopen.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Test the search functionality in the Activity History section.",
+          "expectedResult": "Search results should display relevant activities.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Filter Activity History by Reporter Phone.",
+          "expectedResult": "Activity History should filter to show only activities related to the specified phone number.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Test pagination controls if applicable.",
+          "expectedResult": "Pagination controls should work correctly to navigate between pages of activities.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "New Reporter Creation",
+      "description": "This test case verifies the process of creating a new reporter in the system. It tests the reporter registration form, validation of required fields, and successful creation of a new reporter record.",
+      "expectedResult": "A new reporter should be successfully created and saved in the system, appearing in the Activity History.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Open the Walk In interface by clicking the Walk In button.",
+          "expectedResult": "Walk In interface should open.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Click on 'New Activity' button.",
+          "expectedResult": "New Activity dialog should open.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Click on 'New Reporter' button.",
+          "expectedResult": "New Reporter form should open.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Test the form with empty required fields.",
+          "expectedResult": "System should prevent form submission and highlight required fields.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Fill in all required fields in the New Reporter form (Name, Age, DOB, Location, Sex, Phone Number, etc.).",
+          "expectedResult": "All fields should accept input.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Test dropdown fields (Location, Sex, ID Type, Nationality, etc.).",
+          "expectedResult": "All dropdowns should expand and allow selection.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Test the refugee status radio buttons (Yes/No/Unknown).",
+          "expectedResult": "Radio buttons should function correctly.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Click 'Create' button.",
+          "expectedResult": "Reporter should be created successfully and appear in the system.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Verify the newly created reporter appears in the Activity History.",
+          "expectedResult": "New Reporter Created activity should be visible in Activity History.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Case Creation from Existing Reporter",
+      "description": "This test case verifies the process of creating a new case using an existing reporter. It tests the case creation form, required fields validation, and the ability to set department, category, GBV status, narrative, plan, priority, status, and escalation.",
+      "expectedResult": "A new case should be successfully created with all entered information and associated with the selected reporter.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Open the Walk In interface by clicking the Walk In button.",
+          "expectedResult": "Walk In interface should open.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Click on 'New Activity' button.",
+          "expectedResult": "New Activity dialog should open.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Search and select an existing reporter.",
+          "expectedResult": "Reporter should be selected.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Check the 'Create a New Case' checkbox.",
+          "expectedResult": "Checkbox should be selected.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Click 'New Activity' button.",
+          "expectedResult": "New Case form should open with the selected reporter information pre-filled.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Verify reporter information is displayed correctly.",
+          "expectedResult": "Reporter section should show the correct name and phone number.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Select a Department (116 or Labor).",
+          "expectedResult": "Department radio button should be selected.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Select a Case Category from the dropdown.",
+          "expectedResult": "Category should be selected in the dropdown.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Specify if the case is GBV related.",
+          "expectedResult": "Appropriate radio button should be selected.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Fill in the Case Narrative text area.",
+          "expectedResult": "Text should be entered in the field.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 11,
+          "stepDescription": "Fill in the Case Plan text area.",
+          "expectedResult": "Text should be entered in the field.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 12,
+          "stepDescription": "Test the 'Reporter is also a Client' checkbox.",
+          "expectedResult": "Checkbox should toggle on/off.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 13,
+          "stepDescription": "Set Priority from the dropdown.",
+          "expectedResult": "Priority should be selected.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 14,
+          "stepDescription": "Set Status from the dropdown.",
+          "expectedResult": "Status should be selected.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 15,
+          "stepDescription": "Set Escalated To if applicable.",
+          "expectedResult": "Escalation target should be selected.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 16,
+          "stepDescription": "Click 'Create' button.",
+          "expectedResult": "Case should be created successfully and a confirmation should appear.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 17,
+          "stepDescription": "Verify the newly created case appears in the Activity History.",
+          "expectedResult": "Case Created activity should be visible in Activity History.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Adding Client to a Case",
+      "description": "This test case verifies the process of adding a client to a case. It tests the client registration form, validation of required fields, and successful association of a client with a case.",
+      "expectedResult": "A client should be successfully added to the case and appear in the Clients section of the case form.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Start creating a new case or open an existing case in edit mode.",
+          "expectedResult": "Case form should be displayed.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Click on the 'Add a Client' button in the Clients section.",
+          "expectedResult": "New Client form should open.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Test the form with empty required fields.",
+          "expectedResult": "System should prevent form submission and highlight required fields.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Fill in all required fields in the New Client form (Name, Age, DOB, Location, Sex, Phone Number, etc.).",
+          "expectedResult": "All fields should accept input.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Test dropdown fields (Location, Sex, ID Type, Nationality, etc.).",
+          "expectedResult": "All dropdowns should expand and allow selection.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Test the refugee status radio buttons (Yes/No/Unknown).",
+          "expectedResult": "Radio buttons should function correctly.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Fill in the Relationship fields (Reporter's Relationship with Client, etc.).",
+          "expectedResult": "All relationship fields should accept input.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Fill in household information (Number of Adults, Household Type, etc.).",
+          "expectedResult": "All household fields should accept input.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Fill in guardian information if applicable.",
+          "expectedResult": "Guardian fields should accept input.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Click 'Create' button.",
+          "expectedResult": "Client should be added to the case successfully.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 11,
+          "stepDescription": "Verify the newly added client appears in the Clients section of the case.",
+          "expectedResult": "Client should be listed in the Clients section.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Adding Perpetrator to a Case",
+      "description": "This test case verifies the process of adding a perpetrator to a case. It tests the perpetrator registration form, validation of required fields, and successful association of a perpetrator with a case.",
+      "expectedResult": "A perpetrator should be successfully added to the case and appear in the Perpetrators section of the case form.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Start creating a new case or open an existing case in edit mode.",
+          "expectedResult": "Case form should be displayed.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Click on the 'Add a Perpetrator' button in the Perpetrators section.",
+          "expectedResult": "New Perpetrator form should open.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Test the form with empty required fields.",
+          "expectedResult": "System should prevent form submission and highlight required fields.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Fill in all required fields in the New Perpetrator form (Name, Age, DOB, Location, Sex, etc.).",
+          "expectedResult": "All fields should accept input.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Test dropdown fields (Location, Sex, ID Type, Nationality, etc.).",
+          "expectedResult": "All dropdowns should expand and allow selection.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Test the refugee status radio buttons (Yes/No/Unknown).",
+          "expectedResult": "Radio buttons should function correctly.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Fill in the Relationship fields (Relationship with Client, Shares Home with Client).",
+          "expectedResult": "Relationship fields should accept selections.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Fill in health, profession, and marital status fields.",
+          "expectedResult": "All fields should accept selections.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Fill in guardian information if applicable.",
+          "expectedResult": "Guardian fields should accept input.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Fill in additional details if applicable.",
+          "expectedResult": "Additional details field should accept input.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 11,
+          "stepDescription": "Click 'Create' button.",
+          "expectedResult": "Perpetrator should be added to the case successfully.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 12,
+          "stepDescription": "Verify the newly added perpetrator appears in the Perpetrators section of the case.",
+          "expectedResult": "Perpetrator should be listed in the Perpetrators section.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "File Attachment to a Case",
+      "description": "This test case verifies the functionality to attach files to a case. It tests file upload, validation of file formats and sizes, and successful association of files with a case.",
+      "expectedResult": "Files should be successfully attached to the case and appear in the Related Files section of the case form.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Start creating a new case or open an existing case in edit mode.",
+          "expectedResult": "Case form should be displayed.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Click on 'Attach a File' in the Related Files section.",
+          "expectedResult": "File attachment interface should appear.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Test attaching a file with invalid format (if restrictions exist).",
+          "expectedResult": "System should reject the file and display an error message.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Test attaching a file with valid format.",
+          "expectedResult": "File should be attached successfully.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Verify the attached file appears in the Related Files section.",
+          "expectedResult": "File should be listed in the Related Files section.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Test the maximum file size limit if applicable.",
+          "expectedResult": "System should reject files exceeding the size limit.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Test attaching multiple files if allowed.",
+          "expectedResult": "All files should be attached successfully.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Test removing an attached file if applicable.",
+          "expectedResult": "File should be removed from the list.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Case Escalation and Priority/Status Management",
+      "description": "This test case verifies the functionality to set case priority, status, and escalation. It tests the ability to assign different priority levels, change case status, and escalate cases to appropriate users.",
+      "expectedResult": "Case priority, status, and escalation settings should be successfully applied and saved with the case.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Start creating a new case or open an existing case in edit mode.",
+          "expectedResult": "Case form should be displayed.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Test setting different priority levels.",
+          "expectedResult": "Priority dropdown should allow selection and save the selected priority.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Test setting different statuses.",
+          "expectedResult": "Status dropdown should allow selection and save the selected status.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Test the escalation functionality.",
+          "expectedResult": "Escalation dropdown should allow selection and save the escalation target.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Create a case with escalation specified.",
+          "expectedResult": "Case should be created with the specified escalation.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Login as the escalation target user.",
+          "expectedResult": "User should be able to see the escalated case.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Verify the escalated case appears correctly in the case list.",
+          "expectedResult": "Escalated case should be visible and marked as escalated.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Test changing the escalation target.",
+          "expectedResult": "Escalation target should be updated successfully.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Services and Information Source",
+      "description": "This test case verifies the functionality to select services offered and information source for a case. It tests the selection of services and information source options from dropdowns and their association with a case.",
+      "expectedResult": "Services offered and information source should be successfully selected and saved with the case.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Start creating a new case or open an existing case in edit mode.",
+          "expectedResult": "Case form should be displayed.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Select Services Offered from the dropdown.",
+          "expectedResult": "Services dropdown should allow selection.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Test selecting multiple services if applicable.",
+          "expectedResult": "All selected services should be saved with the case.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Select 'How did you know about 116?' information source.",
+          "expectedResult": "Information source dropdown should allow selection.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Create or update the case with services and source information.",
+          "expectedResult": "Case should save with the selected services and information source.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Verify the services and source information are saved correctly.",
+          "expectedResult": "Services and source information should be displayed correctly when the case is viewed.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Test Case Management in Admin Dashboard",
+      "description": "This test case verifies the functionality to manage test cases in the admin dashboard. It tests the creation, editing, and deletion of test cases, as well as the management of test steps.",
+      "expectedResult": "Test cases should be successfully created, edited, and deleted in the admin dashboard, and test steps should be properly managed.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Login as an administrator.",
+          "expectedResult": "Admin should be logged in and redirected to Admin Dashboard.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Navigate to the Test Case Management section.",
+          "expectedResult": "Test Case Management section should be displayed.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Click on 'Add Test Case' button.",
+          "expectedResult": "Add New Test Case form should open.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Fill in the Test Case Title.",
+          "expectedResult": "Title field should accept input.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Select Functionality from the dropdown.",
+          "expectedResult": "Functionality dropdown should allow selection.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Enter Description.",
+          "expectedResult": "Description field should accept input.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Enter Expected Result.",
+          "expectedResult": "Expected Result field should accept input.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Click 'Create' button.",
+          "expectedResult": "Test case should be created successfully and appear in the list.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Test the Edit functionality.",
+          "expectedResult": "Edit form should open with existing data.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Test the Delete functionality.",
+          "expectedResult": "Confirmation should appear before deletion.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 11,
+          "stepDescription": "Test the 'View Steps' functionality.",
+          "expectedResult": "Test steps for the selected test case should be displayed.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 12,
+          "stepDescription": "Test the 'Add Step' functionality.",
+          "expectedResult": "Add Step form should open.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 13,
+          "stepDescription": "Fill in Step Number, Description, and Expected Result.",
+          "expectedResult": "All fields should accept input.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 14,
+          "stepDescription": "Test file attachment in test step if applicable.",
+          "expectedResult": "File should be attached successfully.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 15,
+          "stepDescription": "Save the test step.",
+          "expectedResult": "Step should be saved and appear in the test steps list.",
+          "comments": ""
+        }
+      ]
+    },
+    {
+      "title": "Full Case Management Workflow",
+      "description": "This test case verifies the complete end-to-end workflow of case management. It tests the process from creating a reporter to closing a case, including all intermediate steps and verifications.",
+      "expectedResult": "The entire case management workflow should function correctly from reporter creation to case closure, with all data properly saved and displayed.",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "stepDescription": "Login to the system with valid credentials.",
+          "expectedResult": "User should be successfully logged in.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 2,
+          "stepDescription": "Click on the Walk In button.",
+          "expectedResult": "Walk In interface should open.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 3,
+          "stepDescription": "Create a new reporter.",
+          "expectedResult": "Reporter should be created successfully.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 4,
+          "stepDescription": "Create a new case for the reporter.",
+          "expectedResult": "Case should be created successfully.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 5,
+          "stepDescription": "Add a client to the case.",
+          "expectedResult": "Client should be added successfully.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 6,
+          "stepDescription": "Add a perpetrator to the case.",
+          "expectedResult": "Perpetrator should be added successfully.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 7,
+          "stepDescription": "Attach a file to the case.",
+          "expectedResult": "File should be attached successfully.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 8,
+          "stepDescription": "Set priority, status, and escalation.",
+          "expectedResult": "Settings should be saved successfully.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 9,
+          "stepDescription": "Complete and submit the case.",
+          "expectedResult": "Case should be created and appear in the system.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 10,
+          "stepDescription": "Verify the case appears in the case list.",
+          "expectedResult": "Case should be visible in the list with correct information.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 11,
+          "stepDescription": "Open the case for editing.",
+          "expectedResult": "Case should open in edit mode.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 12,
+          "stepDescription": "Update case information.",
+          "expectedResult": "Updates should be saved successfully.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 13,
+          "stepDescription": "Verify case history/trail if applicable.",
+          "expectedResult": "Case history should show all updates.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 14,
+          "stepDescription": "Close the case.",
+          "expectedResult": "Case should be marked as closed.",
+          "comments": ""
+        },
+        {
+          "stepNumber": 15,
+          "stepDescription": "Verify reporting and visualization.",
+          "expectedResult": "Case should appear correctly in reports and visualizations.",
+          "comments": ""
+        }
+      ]
+    }
+  ],
+  "totalTestCases": 10
+}

@@ -1,48 +1,29 @@
-// TestCaseListView.vue - Enhanced Organization Sections Only
-
+<!-- TestCaseManagementView.vue -->
 <template>
   <div class="container mt-4">
-    <h2 class="mb-4">Test Case Management</h2>
-
-    <!-- Add Test Case button -->
-    <div class="d-flex justify-content-end mb-3">
-      <button @click="openCreateModal()" class="btn btn-primary">
-        <i class="fas fa-plus me-1"></i> Add Test Case
-      </button>
-    </div>
-
-    <!-- Organizations with Test Cases -->
-    <div class="organization-container">
-      <div v-for="org in organizations" :key="org.id" class="organization-section mb-4">
-        <!-- Organization Header -->
-        <div class="organization-header" @click="toggleOrganization(org.id)">
-          <div class="d-flex align-items-center">
-            <i :class="isOrgExpanded(org.id) ? 'fas fa-chevron-down' : 'fas fa-chevron-right'" class="me-2"></i>
-            <span class="organization-name">{{ org.name }}</span>
-            <span class="badge bg-primary ms-2">{{ getTestCasesForOrg(org.id).length }}</span>
-          </div>
-        </div>
-
-        <!-- Test Cases Table - Using your existing TestCaseTable component -->
-        <div v-if="isOrgExpanded(org.id)" class="organization-content mt-2">
-          <TestCaseTable 
-            :testCases="getTestCasesForOrg(org.id)"
-            :functionalities="functionalities"
-            @openModal="openCreateModal"
-            @edit="editTestCase"
-            @delete="deleteTestCase"
-            @assign="openAssignModal"
-            @viewSteps="openTestSteps"
-            @addStep="openAddStepModal"
-          />
-          
-          <!-- Show message if no test cases for this organization -->
-          <div v-if="getTestCasesForOrg(org.id).length === 0" class="no-test-cases">
-            <p class="text-muted mb-0">No test cases found for this organization.</p>
-          </div>
-        </div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h2 class="mb-4">
+        Test Case Management
+        <span v-if="functionalityName" class="functionality-filter-label">({{ functionalityName }})</span>
+      </h2>
+      <div v-if="isFunctionalityFiltered">
+        <button @click="clearFunctionalityFilter" class="btn btn-secondary">
+          Show All Test Cases
+        </button>
       </div>
     </div>
+
+    <!-- Test Case Table -->
+    <TestCaseTable 
+      :testCases="filteredTestCases"
+      :functionalities="functionalities"
+      @openModal="openCreateModal"
+      @edit="editTestCase"
+      @delete="deleteTestCase"
+      @assign="openAssignModal"
+      @viewSteps="openTestSteps"
+      @addStep="openAddStepModal"
+    />
 
     <!-- Test Case Modal (Add/Edit Test Cases) -->
     <TestCaseModal
@@ -102,56 +83,95 @@ export default {
     return {
       testCases: [],
       functionalities: [],
-      organizations: [],
-      systems: [],
       selectedTestCase: null,
       showModal: false,
       showAssignModal: false,
       showStepsModal: false,
       showAddStepModal: false,
-      expandedOrgs: new Set(), // Track which organizations are expanded
+      functionalityId: null,
+      functionalityName: "",
+      isFunctionalityFiltered: false
     };
   },
+  computed: {
+    // Filter test cases by functionality ID
+    filteredTestCases() {
+      if (!this.isFunctionalityFiltered) {
+        return this.testCasesWithFunctionalityNames;
+      }
+      
+      console.log(`Filtering test cases for functionality ID: ${this.functionalityId}`);
+      
+      const filtered = this.testCases.filter(testCase => {
+        // Handle different possible data structures for functionality
+        const testCaseFunctionalityId = 
+          testCase.functionality_id !== undefined ? testCase.functionality_id :
+          testCase.functionality !== undefined ? 
+            (typeof testCase.functionality === 'object' ? testCase.functionality.id : testCase.functionality) :
+          null;
+        
+        console.log(`Test Case: ${testCase.title}, Functionality ID: ${testCaseFunctionalityId}`);
+        
+        // Compare as strings to avoid type mismatches
+        return String(testCaseFunctionalityId) === String(this.functionalityId);
+      });
+      
+      // Add functionality names to filtered test cases
+      return filtered.map(testCase => {
+        const functionality = this.functionalities.find(func => 
+          func.id === testCase.functionality || 
+          func.id === testCase.functionality_id || 
+          func.id === testCase.functionality?.id
+        );
+        return {
+          ...testCase,
+          functionalityName: functionality ? functionality.name : 'N/A'
+        };
+      });
+    },
+    
+    // Map functionality names to test cases
+    testCasesWithFunctionalityNames() {
+      return this.testCases.map(testCase => {
+        const functionality = this.functionalities.find(func => 
+          func.id === testCase.functionality || 
+          func.id === testCase.functionality_id || 
+          func.id === testCase.functionality?.id
+        );
+        return {
+          ...testCase,
+          functionalityName: functionality ? functionality.name : 'N/A'
+        };
+      });
+    }
+  },
   methods: {
-    // Toggle organization expanded state
-    toggleOrganization(orgId) {
-      if (this.expandedOrgs.has(orgId)) {
-        this.expandedOrgs.delete(orgId);
-      } else {
-        this.expandedOrgs.add(orgId);
+    // Check URL for functionality_id parameter
+    checkFunctionalityFilter() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const functionalityIdParam = urlParams.get('functionality_id');
+      const functionalityNameParam = urlParams.get('functionality_name');
+      
+      if (functionalityIdParam) {
+        this.functionalityId = parseInt(functionalityIdParam);
+        this.functionalityName = functionalityNameParam || "";
+        this.isFunctionalityFiltered = true;
+        console.log("Functionality filter active:", this.functionalityId, this.functionalityName);
       }
     },
     
-    // Check if organization is expanded
-    isOrgExpanded(orgId) {
-      return this.expandedOrgs.has(orgId);
-    },
-    
-    // Get test cases for a specific organization
-    getTestCasesForOrg(orgId) {
-      // Get the systems for this organization
-      const systemIds = this.systems
-        .filter(system => system.organization === orgId)
-        .map(system => system.id);
-      
-      // Get the functionalities for these systems
-      const functionalityIds = this.functionalities
-        .filter(func => systemIds.includes(func.system))
-        .map(func => func.id);
-      
-      // Get test cases for these functionalities
-      return this.testCases.filter(testCase => 
-        functionalityIds.includes(testCase.functionality?.id)
-      );
+    // Clear functionality filter
+    clearFunctionalityFilter() {
+      window.location.href = '/admin/test-cases';
     },
     
     async fetchTestCases() {
       try {
         const response = await axios.get("/test-cases/");
         this.testCases = response.data;
+        console.log(`Fetched ${this.testCases.length} test cases`);
       } catch (error) {
         console.error("Error fetching test cases:", error);
-        toast.error("Failed to fetch test cases");
       }
     },
     
@@ -159,39 +179,24 @@ export default {
       try {
         const response = await axios.get("/functionalities/");
         this.functionalities = response.data;
-      } catch (error) {
-        console.error("Error fetching functionalities:", error);
-        toast.error("Failed to fetch functionalities");
-      }
-    },
-    
-    async fetchOrganizations() {
-      try {
-        const response = await axios.get("/organizations/");
-        this.organizations = response.data;
         
-        // Auto-expand the first organization if there are any
-        if (this.organizations.length > 0) {
-          this.expandedOrgs.add(this.organizations[0].id);
+        // If we have a functionality filter but no name, try to get it
+        if (this.isFunctionalityFiltered && !this.functionalityName) {
+          const functionality = this.functionalities.find(f => f.id === this.functionalityId);
+          if (functionality) {
+            this.functionalityName = functionality.name;
+          }
         }
       } catch (error) {
-        console.error("Error fetching organizations:", error);
-        toast.error("Failed to fetch organizations");
-      }
-    },
-    
-    async fetchSystems() {
-      try {
-        const response = await axios.get("/systems/");
-        this.systems = response.data;
-      } catch (error) {
-        console.error("Error fetching systems:", error);
-        toast.error("Failed to fetch systems");
+        console.error("Error fetching functionalities:", error);
       }
     },
     
     openCreateModal() {
-      this.selectedTestCase = null;
+      // If creating a new test case with a functionality filter, pre-select that functionality
+      this.selectedTestCase = this.isFunctionalityFiltered 
+        ? { functionality: this.functionalityId } 
+        : null;
       this.showModal = true;
     },
     
@@ -251,14 +256,8 @@ export default {
     
     async deleteTestCase(id) {
       if (confirm("Are you sure you want to delete this test case?")) {
-        try {
-          await axios.delete(`/test-cases/${id}/`);
-          this.fetchTestCases();
-          toast.success("Test case deleted successfully");
-        } catch (error) {
-          console.error("Error deleting test case:", error);
-          toast.error("Failed to delete test case");
-        }
+        await axios.delete(`/test-cases/${id}/`);
+        this.fetchTestCases();
       }
     },
     
@@ -266,15 +265,13 @@ export default {
       try {
         if (testCase.id) {
           await axios.put(`/test-cases/${testCase.id}/`, testCase);
-          toast.success("Test case updated successfully");
         } else {
           await axios.post("/test-cases/", testCase);
-          toast.success("Test case created successfully");
         }
         this.closeModal();
       } catch (error) {
         console.error("Error saving test case:", error);
-        toast.error("Failed to save test case");
+        toast.error("Error saving test case");
       }
     },
     
@@ -283,51 +280,21 @@ export default {
     }
   },
   mounted() {
-    this.fetchOrganizations();
-    this.fetchSystems();
-    this.fetchFunctionalities();
+    // First check if we're filtering by functionality
+    this.checkFunctionalityFilter();
+    
+    // Then fetch test cases and functionalities
     this.fetchTestCases();
+    this.fetchFunctionalities();
   }
 };
 </script>
 
 <style scoped>
-.organization-container {
-  margin-top: 1rem;
-}
-
-.organization-section {
-  border: 1px solid #dee2e6;
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-.organization-header {
-  background-color: #f8f9fa;
-  padding: 12px 15px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.organization-header:hover {
-  background-color: #e9ecef;
-}
-
-.organization-name {
-  font-weight: 600;
-  font-size: 16px;
-  color: #333;
-}
-
-.organization-content {
-  padding: 0;
-  background-color: #fff;
-}
-
-.no-test-cases {
-  padding: 20px;
-  text-align: center;
-  background-color: #f8f9fa;
-  border-top: 1px solid #dee2e6;
+.functionality-filter-label {
+  font-size: 0.8em;
+  color: #6c757d;
+  font-weight: normal;
+  margin-left: 10px;
 }
 </style>
