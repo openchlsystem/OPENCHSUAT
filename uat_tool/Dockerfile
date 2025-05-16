@@ -1,23 +1,34 @@
-# Use official Python image as base. 3.13.2
-FROM python:3.13.2
+# Use official Python image
+FROM python:3.12-slim
 
-# Set the working directory
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create and activate virtual environment
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Set working directory
 WORKDIR /app
 
-# Copy and install dependencies
+# Install Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the wait-for-db.sh script
-COPY wait-for-db.sh /app/wait-for-db.sh
-RUN chmod +x /app/wait-for-db.sh
-
-
-# Copy the entire backend project
+# Copy application code
 COPY . .
 
-# Expose port
-EXPOSE 8005
+# Database directory setup
+RUN mkdir -p /var/lib/sqlite \
+    && chown -R 1000:1000 /var/lib/sqlite
 
-# Run migrations and start the server
-CMD python manage.py migrate && gunicorn --bind 0.0.0.0:8005 uat_tool.wsgi:application
+# Run as non-root user
+USER 1000
+
+# Expose port
+EXPOSE 8000
+
+# Startup command
+CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
