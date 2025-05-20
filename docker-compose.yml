@@ -4,7 +4,7 @@ services:
   backend:
     build: ./uat_tool
     ports:
-      - "8000:8000"
+      - "8005:8005"
     volumes:
       - ./uat_tool:/app
       - sqlite_data:/var/lib/sqlite
