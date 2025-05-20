@@ -23,6 +23,7 @@ services:
       - backend
     environment:
       - VITE_API_URL=http://backend:8000
+      - VITE_ALLOWED_HOSTS=uat.bitz-itc.com,localhost
     restart: unless-stopped
 
   nginx:
