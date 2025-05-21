@@ -5,6 +5,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     default-libmysqlclient-dev \
     curl \
+    bash \
     && rm -rf /var/lib/apt/lists/*
 
 # Create virtual environment
@@ -21,9 +22,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
-# Run as non-root user
-USER 1000
-
 # Expose port
 EXPOSE 8000
 
@@ -31,5 +29,5 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s \
   CMD curl -f http://localhost:8000/ || exit 1
 
-# Startup command
-CMD ["bash", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+# Use absolute path to bash
+CMD ["/bin/bash", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
