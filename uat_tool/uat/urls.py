@@ -2,6 +2,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+
 from .views import (
     OrganizationViewSet, SystemViewSet,
     FunctionalityViewSet, TestCaseViewSet, TestStepViewSet,
@@ -26,30 +27,30 @@ router.register(r'users', UserViewSet)
 
 # Define URL patterns
 urlpatterns = [
-    # Include router URLs under 'api/'
-    path('uat/', include(router.urls)),
+    # Include router URLs under '/'
+    path('/', include(router.urls)),
 
     # Choices endpoints
-    path('uat/status-choices/', StatusChoicesView.as_view(), name='status-choices'),
-    path('uat/defect-options/', DefectOptionsView.as_view(), name='defect-options'),  # New endpoint
-    path('uat/roles/', RolesView.as_view(), name='roles'),
+    path('status-choices/', StatusChoicesView.as_view(), name='status-choices'),
+    path('defect-options/', DefectOptionsView.as_view(), name='defect-options'),  # New endpoint
+    path('roles/', RolesView.as_view(), name='roles'),
 
     # Authentication endpoints
-    path('uat/auth/register/', RegisterUserView.as_view(), name='register'),
-    path('uat/auth/request-otp/', RequestOTPView.as_view(), name='request-otp'),
-    path('uat/auth/verify-otp/', VerifyOTPView.as_view(), name='verify-otp'),
-    path('uat/auth/staff-token/', StaffAuthView.as_view(), name='staff-token'),
+    path('auth/register/', RegisterUserView.as_view(), name='register'),
+    path('auth/request-otp/', RequestOTPView.as_view(), name='request-otp'),
+    path('auth/verify-otp/', VerifyOTPView.as_view(), name='verify-otp'),
+    path('auth/staff-token/', StaffAuthView.as_view(), name='staff-token'),
 
     # JWT token endpoints
-    path('uat/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('uat/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
-    # API documentation endpoints
-    path('uat/schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('uat/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    #  documentation endpoints
+    path('schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 
     # Dashboard endpoint
-    path('uat/dashboard/', DashboardView.as_view(), name='dashboard'),
-    path('uat/tester-dashboard/', TesterDashboardView.as_view(), name='tester-dashboard'),
-    path('uat/executions/', TestExecutionViewSet.as_view({'get': 'executions'}), name='executions-list'),
+    path('dashboard/', DashboardView.as_view(), name='dashboard'),
+    path('tester-dashboard/', TesterDashboardView.as_view(), name='tester-dashboard'),
+    path('executions/', TestExecutionViewSet.as_view({'get': 'executions'}), name='executions-list'),
 ]

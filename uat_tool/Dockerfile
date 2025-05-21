@@ -23,11 +23,13 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Expose port
-EXPOSE 8000
+EXPOSE 8005
 
 # Healthcheck
 HEALTHCHECK --interval=30s --timeout=5s \
-  CMD curl -f http://localhost:8000/ || exit 1
+  CMD curl -f http://localhost:8005/ || exit 1
 
 # Use absolute path to bash
 CMD ["/bin/bash", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+# Startup command
+CMD ["bash", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8005"]
