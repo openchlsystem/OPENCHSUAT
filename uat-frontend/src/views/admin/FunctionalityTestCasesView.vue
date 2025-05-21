@@ -96,7 +96,7 @@
   </template>
   
   <script>
-  import axios from "@/utils/axios";
+  import axiosInstance from "@/utils/axios.js";
   import TestCaseModal from "@/components/TestCaseModal.vue";
   import TestStepsView from "@/components/TestStepsModal.vue";
   import AddTestStepModal from "@/components/AddStepModal.vue";
@@ -130,7 +130,7 @@
         this.loading = true;
         try {
           // Use the endpoint with functionality_id filter
-          const response = await axios.get(`/test-cases/?functionality_id=${this.functionalityId}`);
+          const response = await axiosInstance.get(`uat/test-cases/?functionality_id=${this.functionalityId}`);
           // Sort test cases by sort_order just to be sure
           this.testCases = response.data.sort((a, b) => a.sort_order - b.sort_order);
           console.log("Fetched test cases:", this.testCases);
@@ -144,7 +144,7 @@
   
       async fetchFunctionality() {
         try {
-          const response = await axios.get(`/functionalities/${this.functionalityId}/`);
+          const response = await axiosInstance.get(`uat/functionalities/${this.functionalityId}/`);
           this.functionality = response.data;
           this.functionalityName = response.data.name;
         } catch (error) {
@@ -200,10 +200,10 @@
       async saveTestCase(testCase) {
         try {
           if (testCase.id) {
-            await axios.put(`/test-cases/${testCase.id}/`, testCase);
+            await axiosInstance.put(`uat/test-cases/${testCase.id}/`, testCase);
             toast.success("Test case updated successfully");
           } else {
-            await axios.post("/test-cases/", testCase);
+            await axiosInstance.post("uat/test-cases/", testCase);
             toast.success("Test case created successfully");
           }
           this.closeModal();
@@ -216,7 +216,7 @@
       async deleteTestCase(id) {
         if (confirm("Are you sure you want to delete this test case?")) {
           try {
-            await axios.delete(`/test-cases/${id}/`);
+            await axiosInstance.delete(`uat/test-cases/${id}/`);
             this.testCases = this.testCases.filter(tc => tc.id !== id);
             toast.success("Test case deleted successfully");
           } catch (error) {
@@ -286,7 +286,7 @@
   
       async updateTestCaseOrder(testCaseId, newPosition) {
         try {
-          await axios.post('/test-cases/reorder/', {
+          await axiosInstance.post('uat/test-cases/reorder/', {
             functionality_id: this.functionalityId,
             testcase_id: testCaseId,
             new_position: newPosition

@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import axios from "@/utils/axios";
+import axiosInstance from "@/utils/axios.js";
 
 export default {
   props: {
@@ -32,7 +32,7 @@ export default {
     };
   },
   async mounted() {
-    const response = await axios.get("/users/?role=tester");
+    const response = await axiosInstance.get("uat/users/?role=tester");
     this.testers = response.data;
   },
   methods: {

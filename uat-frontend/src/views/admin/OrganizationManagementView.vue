@@ -23,7 +23,7 @@
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
-import api from "@/utils/axios.js"; // Import global Axios instance
+import axiosInstance from "@/utils/axios.js"; // Import global Axios instance
 import OrganizationTable from "@/components/Admin/OrganizationTable.vue";
 import OrganizationModal from "@/components/Admin/OrganizationModal.vue";
 // Reactive state
@@ -33,7 +33,7 @@ const selectedOrganization = ref(null);
 // Fetch Organizations
 const fetchOrganizations = async () => {
   try {
-    const response = await api.get("/organizations/");
+    const response = await axiosInstance.get("uat/organizations/");
     organizations.value = response.data;
   } catch (error) {
     console.error("Error fetching organizations:", error);
@@ -57,9 +57,9 @@ const closeModal = () => {
 const saveOrganization = async (data) => {
   try {
     if (data.id) {
-      await api.put(`/organizations/${data.id}/`, data);
+      await axiosInstance.put(`uat/organizations/${data.id}/`, data);
     } else {
-      await api.post("/organizations/", data);
+      await axiosInstance.post("uat/organizations/", data);
     }
     fetchOrganizations(); // Refresh list
     closeModal();
@@ -71,7 +71,7 @@ const saveOrganization = async (data) => {
 const deleteOrganization = async (id) => {
   if (confirm("Are you sure you want to delete this organization?")) {
     try {
-      await api.delete(`/organizations/${id}/`);
+      await axiosInstance.delete(`uat/organizations/${id}/`);
       fetchOrganizations(); // Refresh list
     } catch (error) {
       console.error("Error deleting organization:", error);

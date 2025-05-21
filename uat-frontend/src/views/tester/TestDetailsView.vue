@@ -42,7 +42,7 @@
   </template>
   
   <script>
-  import axios from "@/utils/axios.js";
+  import axiosInstance from "@/utils/axios.js";
   
   export default {
     name: "AssignedTestDetails",
@@ -54,7 +54,7 @@
     async created() {
       const testId = this.$route.params.id;
       try {
-        const response = await axios.get(`/test-cases/${testId}`);
+        const response = await axiosInstance.get(`uat/test-cases/${testId}`);
         this.testData = response.data;
       } catch (error) {
         console.error("Error fetching test details:", error);

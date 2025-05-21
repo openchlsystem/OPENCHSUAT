@@ -13,7 +13,7 @@
 
 <script>
 import AssignedTestTable from "@/components/tester/AssignedTestTable.vue";
-import axios from "@/utils/axios.js";
+import axiosInstance from "@/utils/axios.js";;
 
 export default {
   name: "AssignedTestsView",
@@ -25,7 +25,7 @@ export default {
   },
   async created() {
     try {
-      const response = await axios.get("/test-cases/");
+      const response = await axiosInstance.get("uat/test-cases/");
       this.assignedTests = response.data;
     } catch (error) {
       console.error("Error fetching assigned tests:", error);

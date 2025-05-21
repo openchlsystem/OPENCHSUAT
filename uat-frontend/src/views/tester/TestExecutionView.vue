@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import axios from "@/utils/axios.js";
+import axiosInstance from "@/utils/axios.js";;
 import TestExecutionTable from "@/components/TestExecutionTable.vue";
 import TestExecutionModal from "@/components/TestExecutionModal.vue";
 
@@ -101,7 +101,7 @@ export default {
         await this.fetchExecutedTests();
         
         // Then fetch test cases
-        const response = await axios.get("/test-cases/");
+        const response = await axiosInstance.get("uat/test-cases/");
         
         // Process test cases to ensure proper data format
         let testCases = Array.isArray(response.data) 
@@ -140,7 +140,7 @@ export default {
       
       // First try test-history endpoint
       try {
-        const historyResponse = await axios.get("/test-history/");
+        const historyResponse = await axiosInstance.get("uat/test-history/");
         console.log("Test history response:", historyResponse.data);
         
         if (Array.isArray(historyResponse.data) && historyResponse.data.length > 0) {
@@ -154,7 +154,7 @@ export default {
       
       // Then try test-executions endpoint
       try {
-        const executionsResponse = await axios.get("/test-executions/");
+        const executionsResponse = await axiosInstance.get("uat/test-executions/");
         console.log("Test executions response:", executionsResponse.data);
         
         if (Array.isArray(executionsResponse.data) && executionsResponse.data.length > 0) {
@@ -168,7 +168,7 @@ export default {
       
       // Finally try test-executions/executions/ endpoint
       try {
-        const executionsAltResponse = await axios.get("/test-executions/executions/");
+        const executionsAltResponse = await axiosInstance.get("uat/test-executions/executions/");
         console.log("Test executions/executions response:", executionsAltResponse.data);
         
         if (Array.isArray(executionsAltResponse.data) && executionsAltResponse.data.length > 0) {
@@ -277,7 +277,7 @@ export default {
         console.log("Submitting execution with payload:", payload);
         
         // Submit the execution
-        const response = await axios.post(`/test-executions/`, payload);
+        const response = await axiosInstance.post(`uat/test-executions/`, payload);
         console.log("Execution submitted successfully:", response.data);
         
         // Update local state immediately

@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import axios from "@/utils/axios";
+import axiosInstance from "@/utils/axios.js";
 import AddTestStepModal from "@/components/AddStepModal.vue";
 
 export default {
@@ -96,7 +96,7 @@ export default {
       if (!this.testCase?.id) return;
       try {
         // Fetch the test case with its steps
-        const response = await axios.get(`/test-cases/${this.testCase.id}/`);
+        const response = await axiosInstance.get(`uat/test-cases/${this.testCase.id}/`);
         // Update the testCase prop with the fetched data
         this.$emit("update:testCase", response.data);
       } catch (error) {
@@ -107,7 +107,7 @@ export default {
     async deleteStep(stepId) {
       if (confirm("Are you sure you want to delete this step?")) {
         try {
-          await axios.delete(`/test-steps/${stepId}/`);
+          await axiosInstance.delete(`uat/test-steps/${stepId}/uat`);
           this.fetchTestSteps(); // Refresh the list of steps after deletion
         } catch (error) {
           console.error("Error deleting test step:", error);

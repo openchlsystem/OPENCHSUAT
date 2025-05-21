@@ -28,7 +28,7 @@
 import DashboardCard from '@/components/Admin/DashboardCard.vue';
 import DashboardChart from '@/components/Admin/DashboardChart.vue';
 import RecentActivityTable from '@/components/Admin/RecentActivityTable.vue';
-import axios from "@/utils/axios.js";
+import axiosInstance from "@/utils/axios.js";
 
 export default {
   name: 'AdminDashboard',
@@ -42,7 +42,7 @@ export default {
 async created() {
   console.log("Dashboard component created"); // Debugging
   try {
-    const response = await axios.get('/dashboard/');
+    const response = await axiosInstance.get('uat/dashboard/');
     console.log("Fetched stats:", response.data.stats); // Debugging
     this.stats = response.data.stats;
   } catch (error) {
