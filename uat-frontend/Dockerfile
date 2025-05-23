@@ -17,7 +17,7 @@ COPY nginx.conf /etc/nginx/nginx.conf
 
 
 
-EXPOSE 5100
+EXPOSE 80
 # Start Nginx server
 
 CMD ["nginx", "-g", "daemon off;"]
