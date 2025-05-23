@@ -36,7 +36,7 @@
 </template>
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import api from "@/utils/axios.js";
+import axiosInstance from "@/utils/axios.js";
 import SystemTable from "@/components/SystemTable.vue";
 import SystemModal from "@/components/SystemModal.vue";
 
@@ -80,7 +80,7 @@ const filteredSystems = computed(() => {
 const fetchSystems = async () => {
   try {
     // Fetch all systems regardless of filter - we'll filter client-side
-    const response = await api.get("/systems/");
+    const response = await axiosInstance.get("uat/systems/");
     systems.value = response.data;
     console.log(`Fetched ${systems.value.length} systems`);
   } catch (error) {
@@ -95,7 +95,7 @@ const fetchSystems = async () => {
 // Fetch Organizations
 const fetchOrganizations = async () => {
   try {
-    const response = await api.get("/organizations/");
+    const response = await axiosInstance.get("uat/organizations/");
     organizations.value = response.data;
     
     // If organization filter is active, get the organization name
@@ -122,7 +122,7 @@ const fetchOrgName = async () => {
   if (!orgId.value) return;
   
   try {
-    const response = await api.get(`/organizations/${orgId.value}/`);
+    const response = await axiosInstance.get(`uat/organizations/${orgId.value}/`);
     if (response.data) {
       orgName.value = response.data.name;
       console.log(`Fetched organization name: ${orgName.value}`);
@@ -174,9 +174,9 @@ const closeModal = () => {
 const saveSystem = async (data) => {
   try {
     if (data.id) {
-      await api.put(`/systems/${data.id}/`, data);
+      await axiosInstance.put(`uat/systems/${data.id}/`, data);
     } else {
-      await api.post("/systems/", data);
+      await axiosInstance.post("uat/systems/", data);
     }
     fetchSystems();
     closeModal();
@@ -189,7 +189,7 @@ const saveSystem = async (data) => {
 const deleteSystem = async (id) => {
   if (confirm("Are you sure you want to delete this system?")) {
     try {
-      await api.delete(`/systems/${id}/`);
+      await axiosInstance.deletuate(`/systems/${id}/`);
       fetchSystems();
     } catch (error) {
       console.error("Error deleting system:", error);

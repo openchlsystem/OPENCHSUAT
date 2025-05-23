@@ -24,7 +24,7 @@ export const useAuthStore = defineStore('auth', {
      */
     async registerUser(whatsapp_number, name, password) {
       try {
-        const response = await axiosInstance.post('/auth/register/', {
+        const response = await axiosInstance.post('uat/auth/register/', {
           whatsapp_number,
           name,
           password,
@@ -45,7 +45,7 @@ export const useAuthStore = defineStore('auth', {
       console.log('Sending OTP to:', whatsapp_number);
 
       try {
-        const response = await axiosInstance.post('/auth/request-otp/', { whatsapp_number });
+        const response = await axiosInstance.post('uat/auth/request-otp/', { whatsapp_number });
         console.log('OTP sent successfully:', response.data);
         return response.data;
       } catch (error) {
@@ -61,7 +61,7 @@ export const useAuthStore = defineStore('auth', {
       console.log('Verifying OTP...');
 
       try {
-        const response = await axiosInstance.post('/auth/verify-otp/', {
+        const response = await axiosInstance.post('uat/auth/verify-otp/', {
           whatsapp_number: whatsappNumber,
           otp: enteredOTP,
         });
