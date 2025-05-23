@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import axios from "@/utils/axios.js";
+import axiosInstance from "@/utils/axios.js";;
 import DefectForm from "@/components/DefectForm.vue";
 import DefectTable from "@/components/DefectTable.vue";
 
@@ -76,9 +76,9 @@ export default {
       try {
         // Get all required data in parallel
         const [testCasesResponse, defectsResponse, optionsResponse] = await Promise.all([
-          axios.get("/test-cases/"),
-          axios.get("/defects/"),
-          axios.get("/defect-options/")
+          axiosInstance.get("uat/test-cases/"),
+          axiosInstance.get("uat/defects/"),
+          axiosInstance.get("uat/defect-options/")
         ]);
         
         // Process the responses

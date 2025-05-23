@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import axios from "@/utils/axios";
+import axiosInstance from "@/utils/axios.js";
 
 export default {
   props: {
@@ -121,14 +121,14 @@ export default {
 
         if (this.stepToEdit) {
           // Update existing step
-          await axios.put(`/test-steps/${this.stepToEdit.id}/`, formData, {
+          await axiosInstance.put(`uat/test-steps/${this.stepToEdit.id}/uat`, formData, {
             headers: {
               "Content-Type": "multipart/form-data"
             }
           });
         } else {
           // Create new step
-          await axios.post("/test-steps/", formData, {
+          await axiosInstance.post("uat/test-steps/", formData, {
             headers: {
               "Content-Type": "multipart/form-data"
             }

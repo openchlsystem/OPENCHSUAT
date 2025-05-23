@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import axios from "@/utils/axios.js";
+import axiosInstance from "@/utils/axios.js";
 import UserTable from "@/components/UserTable.vue";
 import UserModal from "@/components/UserModal.vue";
 import { useRouter } from "vue-router";
@@ -33,7 +33,7 @@ export default {
   methods: {
     async fetchUsers() {
       try {
-        const response = await axios.get("/users/");
+        const response = await axiosInstance.get("uat/users/");
         this.users = response.data;
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -50,9 +50,9 @@ export default {
     async saveUser(userData) {
       try {
         if (userData.id) {
-          await axios.put(`/users/${userData.id}/`, userData);
+          await axiosInstance.put(`uat/users/${userData.id}/`, userData);
         } else {
-          await axios.post("/users/", { ...userData, created_by_admin: true });
+          await axiosInstance.post("uat/users/", { ...userData, created_by_admin: true });
         }
         this.closeUserModal();
       } catch (error) {
@@ -61,7 +61,7 @@ export default {
     },
     async toggleStatus(user) {
       try {
-        await axios.put(`/users/${user.id}/`, { ...user, is_active: !user.is_active });
+        await axiosInstance.put(`uat/users/${user.id}/`, { ...user, is_active: !user.is_active });
         this.fetchUsers();
       } catch (error) {
         console.error("Error updating status:", error);

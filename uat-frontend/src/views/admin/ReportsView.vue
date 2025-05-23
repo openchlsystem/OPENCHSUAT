@@ -16,7 +16,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import axios from '@/utils/axios'
+import axiosInstance from "@/utils/axios.js";
 import ReportTable from '@/components/ReportTable.vue'
 import ReportModal from '@/components/ReportModal.vue'
 
@@ -27,7 +27,7 @@ const showModal = ref(false)
 onMounted(async () => {
   try {
     // Fetch test executions - now with proper test case data from backend
-    const res = await axios.get('/test-executions/')
+    const res = await axiosInstance.get('uat/test-executions/')
     executions.value = res.data
     
     // Log for debugging

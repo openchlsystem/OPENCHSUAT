@@ -49,7 +49,7 @@
   </template>
   
   <script>
-  import axios from "@/utils/axios.js";
+  import axiosInstance from "@/utils/axios.js";
   import TestExecutionModal from "@/components/TestExecutionModal.vue";
   
   export default {
@@ -67,7 +67,7 @@
     async created() {
       const testId = this.$route.params.id;
       try {
-        const response = await axios.get(`/test-cases/${testId}`);
+        const response = await axiosInstance.get(`uat/test-cases/${testId}`);
         this.testData = response.data;
       } catch (error) {
         console.error("Error fetching test details:", error);
@@ -83,7 +83,7 @@
       },
       async submitExecution({ executionId, steps }) {
         try {
-          await axios.post(`/test-executions/${executionId}/execute/`, { steps });
+          await axiosInstance.post(`uat/test-executions/${executionId}/execute/`, { steps });
           this.closeModal();
         } catch (error) {
           console.error("Error submitting execution:", error);

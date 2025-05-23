@@ -20,7 +20,7 @@
 
 <script>
 import TestHistoryTable from "@/components/TestHistoryTable.vue";
-import axios from "@/utils/axios";
+import axiosInstance from "@/utils/axios.js";
 
 export default {
   components: { TestHistoryTable },
@@ -41,11 +41,11 @@ export default {
         // Try to fetch from test-history endpoint first
         let response;
         try {
-          response = await axios.get("/test-history/");
+          response = await axiosInstance.get("uat/test-history/");
         } catch (historyError) {
           console.log("History endpoint not available, fetching from test-executions");
           // If that fails, fall back to test-executions endpoint
-          response = await axios.get("/test-executions/");
+          response = await axiosInstance.get("uat/test-executions/");
         }
         
         this.executions = response.data;
@@ -53,7 +53,7 @@ export default {
         // If the response is empty, try the executions endpoint
         if (!this.executions || this.executions.length === 0) {
           try {
-            const executionsResponse = await axios.get("/test-executions/executions/");
+            const executionsResponse = await axiosInstance.get("uat/test-executions/executions/");
             this.executions = executionsResponse.data;
           } catch (executionsError) {
             console.error("Error fetching from executions endpoint:", executionsError);

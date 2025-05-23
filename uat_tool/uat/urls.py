@@ -1,7 +1,7 @@
+# In your uat/urls.py
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
-
 from .views import (
     OrganizationViewSet, SystemViewSet,
     FunctionalityViewSet, TestCaseViewSet, TestStepViewSet,
@@ -41,14 +41,14 @@ urlpatterns = [
     path('status-choices/', StatusChoicesView.as_view(), name='status-choices'),
     path('defect-options/', DefectOptionsView.as_view(), name='defect-options'),
     path('roles/', RolesView.as_view(), name='roles'),
-
-    # Authentication endpoints
+    
+    # Authentication endpoints (these might be duplicated with the project-level URLs)
     path('auth/register/', RegisterUserView.as_view(), name='register'),
     path('auth/request-otp/', RequestOTPView.as_view(), name='request-otp'),
     path('auth/verify-otp/', VerifyOTPView.as_view(), name='verify-otp'),
     path('auth/staff-token/', StaffAuthView.as_view(), name='staff-token'),
-
-    # JWT token endpoints
+    
+    # JWT token endpoints (might be duplicated with the project-level URLs)
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 

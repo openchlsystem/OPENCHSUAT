@@ -44,8 +44,7 @@
 import DashboardCard from '@/components/Admin/DashboardCard.vue';
 import DashboardChart from '@/components/Admin/DashboardChart.vue';
 import RecentActivityTable from '@/components/Admin/RecentActivityTable.vue';
-import axios from '@/utils/axios.js';
-
+import axiosInstance from "@/utils/axios.js";
 export default {
   name: 'TesterDashboardView',
   components: { DashboardCard, DashboardChart, RecentActivityTable },
@@ -78,7 +77,7 @@ export default {
       
       try {
         console.log('Fetching tester dashboard data...');
-        const response = await axios.get('/tester-dashboard/');
+        const response = await axiosInstance.get('uat/tester-dashboard/');
         console.log('Dashboard data received:', response.data);
         
         // Update stats

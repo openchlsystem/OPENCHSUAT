@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import axios from "@/utils/axios";
+import axiosInstance from "@/utils/axios.js";
 import TestCaseTable from "@/components/TestCaseTable.vue";
 import TestCaseModal from "@/components/TestCaseModal.vue";
 import TestCaseAssignmentModal from "@/components/AssignTesterModal.vue";
@@ -167,7 +167,7 @@ export default {
     
     async fetchTestCases() {
       try {
-        const response = await axios.get("/test-cases/");
+        const response = await axiosInstance.get("uat/test-cases/");
         this.testCases = response.data;
         console.log(`Fetched ${this.testCases.length} test cases`);
       } catch (error) {
@@ -177,7 +177,7 @@ export default {
     
     async fetchFunctionalities() {
       try {
-        const response = await axios.get("/functionalities/");
+        const response = await axiosInstance.get("uat/functionalities/");
         this.functionalities = response.data;
         
         // If we have a functionality filter but no name, try to get it
@@ -240,7 +240,7 @@ export default {
     
     async assignUser({ testCaseId, userId }) {
       try {
-        await axios.post(`/test-cases/${testCaseId}/assign/`, { userId: userId });
+        await axiosInstance.post(`uat/test-cases/${testCaseId}/assign/`, { userId: userId });
         this.closeAssignModal();
         this.fetchTestCases();
         toast.success("User assigned successfully!");
@@ -256,7 +256,7 @@ export default {
     
     async deleteTestCase(id) {
       if (confirm("Are you sure you want to delete this test case?")) {
-        await axios.delete(`/test-cases/${id}/`);
+        await axiosInstance.delete(`uat/test-cases/${id}/`);
         this.fetchTestCases();
       }
     },
@@ -264,9 +264,9 @@ export default {
     async saveTestCase(testCase) {
       try {
         if (testCase.id) {
-          await axios.put(`/test-cases/${testCase.id}/`, testCase);
+          await axiosInstance.put(`uat/test-cases/${testCase.id}/`, testCase);
         } else {
-          await axios.post("/test-cases/", testCase);
+          await axiosInstance.post("uat/test-cases/", testCase);
         }
         this.closeModal();
       } catch (error) {

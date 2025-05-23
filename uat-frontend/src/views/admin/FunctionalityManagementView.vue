@@ -1,4 +1,4 @@
-<!-- FunctionalityManagementView.vue - Updated to match your style -->
+<!-- FunctionalityManagementView.vue - Updated to use axiosInstance -->
 <template>
   <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import axios from "@/utils/axios.js";
+import axiosInstance from "@/utils/axios.js";
 import FunctionalityTable from "@/components/FunctionalityTable.vue";
 import FunctionalityModal from "@/components/FunctionalityModal.vue";
 
@@ -104,7 +104,7 @@ export default {
     
     async fetchFunctionalities() {
       try {
-        const response = await axios.get("/functionalities/");
+        const response = await axiosInstance.get("uat/functionalities/");
         this.functionalities = response.data;
         console.log(`Fetched ${this.functionalities.length} functionalities`);
       } catch (error) {
@@ -114,7 +114,7 @@ export default {
     
     async fetchSystems() {
       try {
-        const response = await axios.get("/systems/");
+        const response = await axiosInstance.get("uat/systems/");
         this.systems = response.data;
         
         // If we have a system filter but no name, try to get it
@@ -151,7 +151,7 @@ export default {
     async deleteFunctionality(id) {
       if (confirm("Are you sure you want to delete this functionality?")) {
         try {
-          await axios.delete(`/functionalities/${id}/`);
+          await axiosInstance.delete(`uat/functionalities/${id}/`);
           this.functionalities = this.functionalities.filter((f) => f.id !== id);
         } catch (error) {
           console.error("Error deleting functionality:", error);
@@ -162,9 +162,9 @@ export default {
     async saveFunctionality(newFunctionality) {
       try {
         if (newFunctionality.id) {
-          await axios.put(`/functionalities/${newFunctionality.id}/`, newFunctionality);
+          await axiosInstance.put(`uat/functionalities/${newFunctionality.id}/`, newFunctionality);
         } else {
-          await axios.post("/functionalities/", newFunctionality);
+          await axiosInstance.post("uat/functionalities/", newFunctionality);
         }
         this.fetchFunctionalities();
         this.closeModal();

@@ -105,7 +105,7 @@
 
 <script>
 import { ref, onMounted, watch } from "vue";
-import axios from "@/utils/axios.js";
+import axiosInstance from "@/utils/axios.js";
 import { useToast } from 'vue-toastification';
 
 const toast = useToast();
@@ -132,7 +132,7 @@ export default {
 
     const fetchOrganizations = async () => {
       try {
-        const response = await axios.get("/organizations/");
+        const response = await axiosInstance.get("uat/organizations/");
         organizations.value = response.data;
         filteredOrganizations.value = [...response.data];
       } catch (error) {
@@ -142,7 +142,7 @@ export default {
 
     const fetchRoles = async () => {
       try {
-        const response = await axios.get("/roles/");
+        const response = await axiosInstance.get("uat/roles/");
         roles.value = response.data;
       } catch (error) {
         console.error("Failed to fetch roles:", error);
@@ -226,10 +226,10 @@ export default {
 
     console.log("Sending payload:", payload);
 
-    const url = props.user ? `/users/${props.user.id}/` : "/users/";
+    const url = props.user ? `uat/users/${props.user.id}/` : "uat/users/";
     const method = props.user ? "put" : "post";
 
-    const response = await axios({
+    const response = await axiosInstance({
       method,
       url,
       data: payload,
