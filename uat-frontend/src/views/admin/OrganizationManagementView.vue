@@ -57,9 +57,9 @@ const closeModal = () => {
 const saveOrganization = async (data) => {
   try {
     if (data.id) {
-      await axiosInstance.put(`/organizations/${data.id}/`, data);
+      await axiosInstance.put(`uat/organizations/${data.id}/`, data);
     } else {
-      await axiosInstance.post("/organizations/", data);
+      await axiosInstance.post("uat/organizations/", data);
     }
     fetchOrganizations(); // Refresh list
     closeModal();
@@ -71,7 +71,7 @@ const saveOrganization = async (data) => {
 const deleteOrganization = async (id) => {
   if (confirm("Are you sure you want to delete this organization?")) {
     try {
-      await axiosInstance.delete(`/organizations/${id}/`);
+      await axiosInstance.delete(`uat/organizations/${id}/`);
       fetchOrganizations(); // Refresh list
     } catch (error) {
       console.error("Error deleting organization:", error);
