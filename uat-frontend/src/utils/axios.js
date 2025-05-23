@@ -1,9 +1,9 @@
 import axios from 'axios';
 
 // Define the base URL for your backend API
-// const baseURL = 'http://127.0.0.1:8000/api'; // Replace with your actual backend API URL
-const baseURL = 'https://uat.bitz-itc.com/api'; // Replace with your actual backend API URL
-
+const baseURL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+  ? 'http://127.0.0.1:8000/api'
+  : 'https://uat.bitz-itc.com/api';
 // Create an axios instance
 const axiosInstance = axios.create({
   baseURL: baseURL,
