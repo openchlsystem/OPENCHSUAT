@@ -20,7 +20,7 @@ services:
   frontend:
     build: ./uat-frontend
     ports:
-      - "5100:5100"
+      - "5100:80"
     depends_on:
       - backend
     environment:
