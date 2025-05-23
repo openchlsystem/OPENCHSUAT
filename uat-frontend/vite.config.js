@@ -18,6 +18,7 @@ export default defineConfig({
     host: '0.0.0.0',  // Add this for dev server
     port: 5173
   },
+  
   preview: {
     host: '0.0.0.0',  // Explicit host binding
     port: 5100,       // Match your Docker port

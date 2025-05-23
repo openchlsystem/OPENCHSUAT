@@ -189,7 +189,11 @@ const saveSystem = async (data) => {
 const deleteSystem = async (id) => {
   if (confirm("Are you sure you want to delete this system?")) {
     try {
+<<<<<<< HEAD
       await axiosInstance.delete(`uat/systems/${id}/`);
+=======
+      await axiosInstance.deletuate(`/systems/${id}/`);
+>>>>>>> nelson
       fetchSystems();
     } catch (error) {
       console.error("Error deleting system:", error);

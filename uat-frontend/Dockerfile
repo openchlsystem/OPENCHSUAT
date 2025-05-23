@@ -6,12 +6,16 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# Runtime stage - using Node to run Vite preview
-FROM node:20-alpine
-WORKDIR /app
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/package*.json ./
-# Install only production dependencies including vite
-RUN npm install --omit=dev
-EXPOSE 5100
-CMD ["npx", "vite", "preview", "--host", "0.0.0.0", "--port", "5100"]
+# Runtime stage - serve with Nginx
+FROM nginx:stable-alpine
+# Copy built files from builder stage
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# (Optional) Replace default nginx.conf with SPA-friendly config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
