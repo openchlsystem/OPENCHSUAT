@@ -475,6 +475,56 @@ class TestExecutionViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(executions, many=True)
         return Response(serializer.data)
 
+    @action(detail=True, methods=['post'])
+    def execute(self, request, pk=None):
+        """
+        Execute a test with step results
+        """
+        execution = self.get_object()
+        steps = request.data.get('steps', [])
+        
+        if not steps:
+            return Response(
+                {'error': 'steps data is required'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            # Update execution status based on step results
+            all_passed = all(step.get('status') == 'passed' for step in steps)
+            any_failed = any(step.get('status') == 'failed' for step in steps)
+            
+            if all_passed:
+                execution.status = 'passed'
+            elif any_failed:
+                execution.status = 'failed'
+            else:
+                execution.status = 'in_progress'
+            
+            execution.completed_at = now()
+            execution.save()
+            
+            # Log the step results for debugging
+            print(f"Execution {execution.id} completed with status: {execution.status}")
+            print(f"Steps processed: {len(steps)}")
+            
+            return Response(
+                {
+                    'message': 'Test execution completed successfully', 
+                    'status': execution.status,
+                    'execution_id': execution.id,
+                    'completed_at': execution.completed_at
+                }, 
+                status=status.HTTP_200_OK
+            )
+            
+        except Exception as e:
+            print(f"Error in execute method: {str(e)}")
+            return Response(
+                {'error': str(e)}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
 # class DefectViewSet(viewsets.ModelViewSet):
 #     queryset = Defect.objects.all().order_by("-created_at")
 #     serializer_class = DefectSerializer

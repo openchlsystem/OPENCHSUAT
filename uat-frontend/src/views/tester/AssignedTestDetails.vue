@@ -67,7 +67,7 @@
     async created() {
       const testId = this.$route.params.id;
       try {
-        const response = await axiosInstance.get(`uat/test-cases/${testId}`);
+        const response = await axiosInstance.get(`uat/test-cases/${testId}/`);
         this.testData = response.data;
       } catch (error) {
         console.error("Error fetching test details:", error);
