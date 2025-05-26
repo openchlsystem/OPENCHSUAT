@@ -14,28 +14,28 @@ from .views import (
 urlpatterns = [
     # API endpoints
     path('organizations/', OrganizationViewSet.as_view({'get': 'list', 'post': 'create'}), name='organization-list'),
-    path('organizations/<int:pk>/', OrganizationViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='organization-detail'),
+    path('organizations/<uuid:pk>/', OrganizationViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='organization-detail'),
     
     path('systems/', SystemViewSet.as_view({'get': 'list', 'post': 'create'}), name='system-list'),
-    path('systems/<int:pk>/', SystemViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='system-detail'),
+    path('systems/<uuid:pk>/', SystemViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='system-detail'),
     
     path('functionalities/', FunctionalityViewSet.as_view({'get': 'list', 'post': 'create'}), name='functionality-list'),
-    path('functionalities/<int:pk>/', FunctionalityViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='functionality-detail'),
+    path('functionalities/<uuid:pk>/', FunctionalityViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='functionality-detail'),
     
     path('test-cases/', TestCaseViewSet.as_view({'get': 'list', 'post': 'create'}), name='testcase-list'),
-    path('test-cases/<int:pk>/', TestCaseViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='testcase-detail'),
+    path('test-cases/<uuid:pk>/', TestCaseViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='testcase-detail'),
     
     path('test-steps/', TestStepViewSet.as_view({'get': 'list', 'post': 'create'}), name='teststep-list'),
-    path('test-steps/<int:pk>/', TestStepViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='teststep-detail'),
+    path('test-steps/<uuid:pk>/', TestStepViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='teststep-detail'),
     
     path('test-executions/', TestExecutionViewSet.as_view({'get': 'list', 'post': 'create'}), name='testexecution-list'),
-    path('test-executions/<int:pk>/', TestExecutionViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='testexecution-detail'),
+    path('test-executions/<uuid:pk>/', TestExecutionViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='testexecution-detail'),
     
     path('defects/', DefectViewSet.as_view({'get': 'list', 'post': 'create'}), name='defect-list'),
-    path('defects/<int:pk>/', DefectViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='defect-detail'),
+    path('defects/<uuid:pk>/', DefectViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='defect-detail'),
     
     path('users/', UserViewSet.as_view({'get': 'list', 'post': 'create'}), name='user-list'),
-    path('users/<int:pk>/', UserViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='user-detail'),
+    path('users/<uuid:pk>/', UserViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='user-detail'),
 
     # Choices endpoints
     path('status-choices/', StatusChoicesView.as_view(), name='status-choices'),
