@@ -121,7 +121,7 @@ export default {
 
         if (this.stepToEdit) {
           // Update existing step
-          await axiosInstance.put(`uat/test-steps/${this.stepToEdit.id}/uat`, formData, {
+          await axiosInstance.put(`uat/test-steps/${this.stepToEdit.id}/`, formData, {
             headers: {
               "Content-Type": "multipart/form-data"
             }

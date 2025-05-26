@@ -107,7 +107,7 @@ export default {
     async deleteStep(stepId) {
       if (confirm("Are you sure you want to delete this step?")) {
         try {
-          await axiosInstance.delete(`uat/test-steps/${stepId}/uat`);
+          await axiosInstance.delete(`uat/test-steps/${stepId}/`);
           this.fetchTestSteps(); // Refresh the list of steps after deletion
         } catch (error) {
           console.error("Error deleting test step:", error);
