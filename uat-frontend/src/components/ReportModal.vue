@@ -1,4 +1,4 @@
-// ReportModal.vue - Complete Updated File
+// ReportModal.vue - Fixed Version
 <template>
   <div class="modal fade show d-block" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
@@ -10,7 +10,7 @@
         <div class="modal-body">
           <p><strong>Test Case:</strong> {{ getTestCaseTitle(execution) }}</p>
           <p><strong>Description:</strong> {{ getTestCaseDescription(execution) }}</p>
-          <p><strong>Tester:</strong> {{ execution.tester?.first_name || 'N/A' }}</p>
+          <p><strong>Tester:</strong> {{ getTesterName(execution) }}</p>
           <p><strong>Status:</strong> <span :class="statusClass(execution.status)">{{ formatStatus(execution.status) }}</span></p>
           <p><strong>Notes:</strong> {{ execution.notes || 'N/A' }}</p>
           <p><strong>Started:</strong> {{ formatDate(execution.started_at) }}</p>
@@ -18,7 +18,7 @@
 
           <h6 class="mt-4 mb-3">Test Steps:</h6>
           <div v-if="hasTestSteps" class="test-steps">
-            <div v-for="step in execution.test_case.steps" :key="step.id" class="test-step card mb-2">
+            <div v-for="step in getTestSteps(execution)" :key="step.id" class="test-step card mb-2">
               <div class="card-body p-3">
                 <h6 class="step-number">Step {{ step.step_number }}</h6>
                 <div class="step-description mb-1">{{ step.description }}</div>
@@ -44,43 +44,91 @@ import { computed } from 'vue'
 const props = defineProps(['execution'])
 defineEmits(['close'])
 
-// Check if test steps exist
-const hasTestSteps = computed(() => {
-  return props.execution?.test_case?.steps?.length > 0
-})
-
 /**
- * Get test case title with fallback handling
+ * Get test case title with improved fallback handling
  */
 const getTestCaseTitle = (execution) => {
-  // Normal case - test_case is a full object with title
+  console.log('Getting test case title for:', execution); // Debug log
+  
+  // Try multiple data structures
   if (execution.test_case?.title) {
     return execution.test_case.title
   }
   
-  // Fallback 1: If we only have an ID
+  if (execution.test_case_title) {
+    return execution.test_case_title
+  }
+  
+  if (execution.test_case_details?.title) {
+    return execution.test_case_details.title
+  }
+  
+  // Fallback to ID if available
   if (execution.test_case?.id) {
     return `Test Case ${execution.test_case.id}`
   }
   
-  // Fallback 2: If test_case is just an ID number
   if (typeof execution.test_case === 'number') {
     return `Test Case ${execution.test_case}`
   }
   
-  // Final fallback
   return `Test Case ${execution.id || 'Unknown'}`
 }
 
 /**
- * Get test case description with fallback
+ * Get test case description with improved fallback
  */
 const getTestCaseDescription = (execution) => {
+  if (execution.test_case_details?.description) {
+    return execution.test_case_details.description
+  }
+  
+  if (execution.test_case_description) {
+    return execution.test_case_description
+  }
+  
   if (execution.test_case?.description) {
     return execution.test_case.description
   }
+  
   return 'No description available'
 }
+
+/**
+ * Get tester name with fallback handling
+ */
+const getTesterName = (execution) => {
+  if (execution.tester_name) {
+    return execution.tester_name
+  }
+  
+  if (execution.tester?.first_name) {
+    return execution.tester.first_name
+  }
+  
+  return 'N/A'
+}
+
+/**
+ * Get test steps from multiple possible data structures
+ */
+const getTestSteps = (execution) => {
+  if (execution.test_case_details?.steps) {
+    return execution.test_case_details.steps
+  }
+  
+  if (execution.test_case?.steps) {
+    return execution.test_case.steps
+  }
+  
+  return []
+}
+
+// Check if test steps exist
+const hasTestSteps = computed(() => {
+  const steps = getTestSteps(props.execution)
+  return steps && steps.length > 0
+})
 
 /**
  * Get appropriate CSS class for status display

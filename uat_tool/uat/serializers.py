@@ -211,15 +211,89 @@ class TestCaseSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
     
+# Add this to your serializers.py
+
 class TestExecutionSerializer(serializers.ModelSerializer):
-    test_case = serializers.PrimaryKeyRelatedField(queryset=TestCase.objects.all()) # Serialize test_case as an object
-    tester = UserSerializer(read_only=True)  # Serialize tester as an object
+    # Include full test case details
+    test_case_details = serializers.SerializerMethodField()
+    test_case_title = serializers.CharField(source='test_case.title', read_only=True)
+    test_case_description = serializers.CharField(source='test_case.description', read_only=True)
+    
+    # Include full tester details
+    tester_name = serializers.CharField(source='tester.first_name', read_only=True)
+    tester = UserSerializer(read_only=True)
+    
+    # Keep test_case as PrimaryKeyRelatedField for write operations
+    test_case = serializers.PrimaryKeyRelatedField(queryset=TestCase.objects.all())
 
     class Meta:
         model = TestExecution
-        fields = ['id', 'test_case', 'tester', 'status', 'notes', 'started_at', 'completed_at']
+        fields = [
+            'id', 'test_case', 'test_case_details', 'test_case_title', 'test_case_description',
+            'tester', 'tester_name', 'status', 'notes', 'started_at', 'completed_at'
+        ]
 
+    def get_test_case_details(self, obj):
+        """
+        Return full test case details including steps
+        """
+        if not obj.test_case:
+            return None
+            
+        # Get test steps
+        steps = []
+        if hasattr(obj.test_case, 'steps'):
+            steps = [
+                {
+                    'id': step.id,
+                    'step_number': step.step_number,
+                    'description': step.description,
+                    'expected_result': step.expected_result
+                }
+                for step in obj.test_case.steps.all().order_by('step_number')
+            ]
+        
+        return {
+            'id': obj.test_case.id,
+            'title': obj.test_case.title,
+            'description': obj.test_case.description,
+            'expected_result': getattr(obj.test_case, 'expected_result', ''),
+            'functionality': {
+                'id': obj.test_case.functionality.id if obj.test_case.functionality else None,
+                'name': obj.test_case.functionality.name if obj.test_case.functionality else None,
+            } if obj.test_case.functionality else None,
+            'steps': steps
+        }
 
+    def to_representation(self, instance):
+        """
+        Override to include full test case object in the response
+        """
+        representation = super().to_representation(instance)
+        
+        # Replace the test_case ID with full test case details for read operations
+        if instance.test_case:
+            representation['test_case'] = {
+                'id': instance.test_case.id,
+                'title': instance.test_case.title,
+                'description': instance.test_case.description,
+                'expected_result': getattr(instance.test_case, 'expected_result', ''),
+                'functionality': {
+                    'id': instance.test_case.functionality.id if instance.test_case.functionality else None,
+                    'name': instance.test_case.functionality.name if instance.test_case.functionality else None,
+                } if instance.test_case.functionality else None,
+                'steps': [
+                    {
+                        'id': step.id,
+                        'step_number': step.step_number,
+                        'description': step.description,
+                        'expected_result': step.expected_result
+                    }
+                    for step in instance.test_case.steps.all().order_by('step_number')
+                ] if hasattr(instance.test_case, 'steps') else []
+            }
+        
+        return representation
 class DefectSerializer(serializers.ModelSerializer):
     execution = TestExecutionSerializer(read_only=True)
     execution_id = serializers.PrimaryKeyRelatedField(

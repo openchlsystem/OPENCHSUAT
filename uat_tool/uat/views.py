@@ -457,10 +457,23 @@ class TestStepViewSet(viewsets.ModelViewSet):
     queryset = TestStep.objects.all()
     serializer_class = TestStepSerializer
 
+# Replace your TestExecutionViewSet in views.py with this:
+
 class TestExecutionViewSet(viewsets.ModelViewSet):
-    queryset = TestExecution.objects.all()
     serializer_class = TestExecutionSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        """
+        Optimize queryset with select_related and prefetch_related
+        """
+        return TestExecution.objects.select_related(
+            'test_case',
+            'test_case__functionality',
+            'tester'
+        ).prefetch_related(
+            'test_case__steps'
+        ).all()
 
     def perform_create(self, serializer):
         serializer.save(tester=self.request.user)
