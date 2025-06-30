@@ -29,7 +29,7 @@
       </thead>
       <tbody>
         <tr v-for="execution in filteredExecutions" :key="execution.id">
-          <td>{{ getTestCaseTitle(execution) }}</td>
+          <td>{{ execution.test_case_title || 'Unknown Test' }}</td>
           <td>{{ formatDate(execution.started_at || execution.completed_at) }}</td>
           <td>{{ execution.notes || "No comments" }}</td>
           <td>
