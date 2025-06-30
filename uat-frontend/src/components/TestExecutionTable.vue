@@ -26,7 +26,12 @@
         </tr>
 
         <!-- Data Rows -->
-        <tr v-for="(test, index) in testExecutions" :key="test.id">
+        <tr 
+          v-for="(test, index) in testExecutions" 
+          :key="test.id"
+          :class="{ 'highlighted-row': isHighlighted(test.id) }"
+          :ref="isHighlighted(test.id) ? 'highlightedRow' : null"
+        >
           <td>{{ index + 1 }}</td>
           <td>{{ getTestCaseTitle(test) }}</td>
           <td>{{ getFunctionalityName(test) }}</td>
@@ -59,6 +64,10 @@ export default {
     loading: {
       type: Boolean,
       default: false,
+    },
+    highlightTestId: {
+      type: [Number, String],
+      default: null,
     },
   },
   methods: {
@@ -201,7 +210,50 @@ export default {
           return "badge badge-secondary";
       }
     },
+    
+    isHighlighted(testId) {
+      return this.highlightTestId && 
+             (testId == this.highlightTestId || testId === parseInt(this.highlightTestId));
+    },
   },
+  
+  mounted() {
+    // Scroll to highlighted row after component is mounted
+    this.$nextTick(() => {
+      if (this.highlightTestId && this.$refs.highlightedRow) {
+        const element = Array.isArray(this.$refs.highlightedRow) 
+          ? this.$refs.highlightedRow[0] 
+          : this.$refs.highlightedRow;
+        
+        if (element) {
+          element.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+          });
+        }
+      }
+    });
+  },
+  
+  watch: {
+    highlightTestId() {
+      // Scroll to highlighted row when highlightTestId changes
+      this.$nextTick(() => {
+        if (this.highlightTestId && this.$refs.highlightedRow) {
+          const element = Array.isArray(this.$refs.highlightedRow) 
+            ? this.$refs.highlightedRow[0] 
+            : this.$refs.highlightedRow;
+          
+          if (element) {
+            element.scrollIntoView({ 
+              behavior: 'smooth', 
+              block: 'center' 
+            });
+          }
+        }
+      });
+    }
+  }
 };
 </script>
 
@@ -265,6 +317,28 @@ export default {
   border-right-color: transparent;
   border-radius: 50%;
   animation: spinner-border 0.75s linear infinite;
+}
+
+/* Highlighting styles */
+.highlighted-row {
+  background-color: #fff3cd !important;
+  border: 2px solid #ffc107;
+  animation: highlight-pulse 2s ease-in-out;
+}
+
+@keyframes highlight-pulse {
+  0% {
+    background-color: #fff3cd;
+    box-shadow: 0 0 10px rgba(255, 193, 7, 0.8);
+  }
+  50% {
+    background-color: #ffeaa7;
+    box-shadow: 0 0 20px rgba(255, 193, 7, 0.6);
+  }
+  100% {
+    background-color: #fff3cd;
+    box-shadow: 0 0 10px rgba(255, 193, 7, 0.8);
+  }
 }
 
 @keyframes spinner-border {

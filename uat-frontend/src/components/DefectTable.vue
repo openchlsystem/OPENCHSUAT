@@ -17,7 +17,7 @@
       <tbody>
         <tr v-for="defect in defects" :key="defect.id">
           <td>{{ defect.title }}</td>
-          <td>{{ defect.test_case?.title || "N/A" }}</td>
+          <td>{{ defect.test_case_title || "N/A" }}</td>
           <td>
             <span :class="severityClass(defect.severity)">
               {{ defect.severity }}
@@ -27,8 +27,8 @@
             <span class="badge bg-warning">{{ defect.status || "Pending" }}</span>
           </td>
           <td>
-            <a v-if="defect.evidence" :href="defect.evidence" target="_blank" class="btn btn-link">
-              📎 View
+            <a v-if="defect.attachment" :href="defect.attachment" target="_blank" class="btn btn-link">
+              View
             </a>
             <span v-else>No Evidence</span>
           </td>
