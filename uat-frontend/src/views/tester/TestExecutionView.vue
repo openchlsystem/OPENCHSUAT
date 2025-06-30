@@ -12,6 +12,7 @@
       <TestExecutionTable 
         :testExecutions="testExecutions"
         :loading="loading"
+        :highlightTestId="highlightTestId"
         @execute="openExecutionModal"
       />
     </div>
@@ -43,11 +44,27 @@ export default {
       showModal: false,
       loading: false,
       executedTestIds: new Set(),  // Track which tests have been executed
-      statusMap: {}  // Map test IDs to their execution status
+      statusMap: {},  // Map test IDs to their execution status
+      highlightTestId: null, // ID of test case to highlight
     };
   },
   mounted() {
     this.fetchTestExecutions();
+    
+    // Check if there's a test case to highlight from query params
+    if (this.$route.query.highlight) {
+      this.highlightTestId = this.$route.query.highlight;
+    }
+  },
+  watch: {
+    // Watch for route changes to update highlight
+    '$route'(to, from) {
+      if (to.query.highlight) {
+        this.highlightTestId = to.query.highlight;
+      } else {
+        this.highlightTestId = null;
+      }
+    }
   },
   methods: {
     // Helper method to parse test cases from various formats

@@ -9,6 +9,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import Count
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiTypes
 from django.utils.timezone import now
+from django.utils import timezone
 from .models import (
     Organization,
     System,
@@ -546,67 +547,92 @@ class DefectViewSet(viewsets.ModelViewSet):
     serializer_class = DefectSerializer
     permission_classes = [IsAuthenticated]
 
-    def perform_create(self, serializer):
-        """
-        Set the current authenticated user as the reporter when creating a defect.
-        """
-        serializer.save(reported_by=self.request.user)
-
     def create(self, request, *args, **kwargs):
         """
-        Custom create method that handles test_case_id and converts it to execution_id.
+        Handle defect creation - convert test_case_id to execution_id
         """
-        data = request.data.copy()
+        print("=== DEFECT CREATE METHOD CALLED ===")
+        print(f"Raw request.data: {dict(request.data)}")
+        print(f"User: {request.user}")
         
-        # Check if test_case_id is provided but execution_id is not
-        if 'test_case_id' in data and 'execution_id' not in data:
+        # Step 1: Fix multipart form data (convert lists to single values)
+        processed_data = {}
+        for key, value in request.data.items():
+            if isinstance(value, list) and len(value) > 0:
+                processed_data[key] = value[0]
+                print(f"Fixed {key}: {value} -> {value[0]}")
+            else:
+                processed_data[key] = value
+        
+        print(f"After fixing multipart data: {processed_data}")
+        
+        # Step 2: Handle test_case_id -> execution_id conversion (required by your model)
+        if 'test_case_id' in processed_data:
             try:
-                # Get the test case ID
-                test_case_id = data.pop('test_case_id')
-                test_case = TestCase.objects.get(id=test_case_id)
+                test_case_id = int(processed_data.pop('test_case_id'))
+                print(f"Converting test_case_id {test_case_id} to execution_id")
                 
-                # Find the most recent execution for this test case, or create a new one
+                # Get the test case
+                test_case = TestCase.objects.get(id=test_case_id)
+                print(f"Found test case: {test_case.title}")
+                
+                # Find existing execution or create new one
                 execution = TestExecution.objects.filter(
-                    test_case=test_case
+                    test_case=test_case,
+                    tester=request.user
                 ).order_by('-started_at').first()
                 
                 if not execution:
-                    # Create a new execution if none exists
+                    print("No existing execution found, creating new one")
                     execution = TestExecution.objects.create(
                         test_case=test_case,
                         tester=request.user,
                         status='in_progress',
-                        started_at=now()
+                        started_at=timezone.now()
                     )
+                    print(f"Created new execution: {execution.id}")
+                else:
+                    print(f"Using existing execution: {execution.id}")
                 
-                # Add the execution_id to the request data
-                data['execution_id'] = execution.id
+                # Add execution_id to the data (required by your model)
+                processed_data['execution_id'] = execution.id
                 
             except TestCase.DoesNotExist:
-                return Response(
-                    {"test_case_id": ["Invalid test case ID."]},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
+                print(f"Test case {test_case_id} not found")
+                return Response({
+                    'error': f'Test case with ID {test_case_id} does not exist'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            except ValueError as e:
+                print(f"Invalid test_case_id: {e}")
+                return Response({
+                    'error': 'Invalid test_case_id format'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as e:
+                print(f"Unexpected error: {e}")
+                return Response({
+                    'error': f'Error processing request: {str(e)}'
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
-        # Continue with standard create process using the modified data
-        serializer = self.get_serializer(data=data)
+        print(f"Final data for serializer: {processed_data}")
         
-        if not serializer.is_valid():
-            print(f"Defect validation errors: {serializer.errors}")
+        # Step 3: Create the defect using your existing serializer
+        serializer = self.get_serializer(data=processed_data)
+        
+        if serializer.is_valid():
+            print("Serializer is valid, creating defect...")
+            defect = serializer.save(reported_by=request.user)
+            print(f"✅ Defect created successfully: ID {defect.id}")
+            
+            # Return the created defect data
+            response_data = self.get_serializer(defect).data
+            return Response(response_data, status=status.HTTP_201_CREATED)
+        else:
+            print(f"❌ Serializer validation failed: {serializer.errors}")
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-        self.perform_create(serializer)
-        
-        headers = self.get_success_headers(serializer.data)
-        return Response(
-            serializer.data,
-            status=status.HTTP_201_CREATED,
-            headers=headers
-        )
-    
+
     def get_queryset(self):
         """
-        Basic queryset filtering without strict permissions
+        Basic queryset - can be enhanced later for role-based filtering
         """
         return super().get_queryset()
 

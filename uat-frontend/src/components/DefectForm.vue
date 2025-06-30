@@ -1,5 +1,3 @@
-// Final DefectForm.vue - Simplified with test_case_id only
-
 <template>
   <div class="modal-overlay">
     <div class="modal-content">
@@ -127,8 +125,8 @@ export default {
           console.log(`${key}: ${value}`);
         }
         
-        // Send the request
-        const response = await axios.post("/defects/", formData, {
+        // Send the request to the correct endpoint
+        const response = await axios.post("uat/defects/", formData, {
           headers: { "Content-Type": "multipart/form-data" }
         });
         
@@ -262,6 +260,19 @@ textarea {
   resize: vertical;
 }
 
+/* Alert */
+.alert {
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
 /* Buttons */
 .form-buttons {
   display: flex;
@@ -278,12 +289,17 @@ textarea {
   transition: 0.3s;
 }
 
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .btn-orange {
   background: #ff6600;
   color: white;
 }
 
-.btn-orange:hover {
+.btn-orange:hover:not(:disabled) {
   background: #e65c00;
 }
 
@@ -294,5 +310,39 @@ textarea {
 
 .btn-secondary:hover {
   background: #5a6268;
+}
+
+/* Spinner */
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.15em;
+}
+
+.spinner-border {
+  display: inline-block;
+  vertical-align: text-bottom;
+  border: 0.25em solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spinner-border 0.75s linear infinite;
+}
+
+@keyframes spinner-border {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.mt-3 {
+  margin-top: 1rem;
+}
+
+.mt-4 {
+  margin-top: 1.5rem;
+}
+
+.me-1 {
+  margin-right: 0.25rem;
 }
 </style>

@@ -212,13 +212,24 @@ class TestCaseSerializer(serializers.ModelSerializer):
         return instance
     
 class TestExecutionSerializer(serializers.ModelSerializer):
-    test_case = serializers.PrimaryKeyRelatedField(queryset=TestCase.objects.all()) # Serialize test_case as an object
-    tester = UserSerializer(read_only=True)  # Serialize tester as an object
+    test_case = serializers.PrimaryKeyRelatedField(queryset=TestCase.objects.all())  # Still include ID
+    tester = UserSerializer(read_only=True)
+    test_case_title = serializers.CharField(source='test_case.title', read_only=True)  # NEW LINE
 
     class Meta:
         model = TestExecution
-        fields = ['id', 'test_case', 'tester', 'status', 'notes', 'started_at', 'completed_at']
-
+        fields = [
+            'id',
+            'test_case',
+            'test_case_title',  # NEW FIELD added to output
+            'tester',
+            'status',
+            'notes',
+            'started_at',
+            'completed_at'
+        ]
+# serializers.py - Update your existing DefectSerializer
+# Replace your current DefectSerializer with this version:
 
 class DefectSerializer(serializers.ModelSerializer):
     execution = TestExecutionSerializer(read_only=True)
@@ -226,21 +237,21 @@ class DefectSerializer(serializers.ModelSerializer):
         queryset=TestExecution.objects.all(),
         source='execution',
         write_only=True,
-        required=True
+        required=True  # This is required by your model
     )
     reported_by = UserSerializer(read_only=True)
-    reported_by_id = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.all(),
-        source='reported_by',
-        write_only=True,
-        required=True
-    )
+    
+    # Add display fields for better frontend experience
+    test_case_title = serializers.CharField(source='execution.test_case.title', read_only=True)
+    test_case_id = serializers.IntegerField(source='execution.test_case.id', read_only=True)
 
     class Meta:
         model = Defect
         fields = [
             'id', 'title', 'description', 'severity', 'status',
             'resolved', 'resolution_notes', 'attachment',
-            'execution', 'execution_id', 'reported_by', 'reported_by_id',
+            'execution', 'execution_id', 'reported_by',
+            'test_case_title', 'test_case_id',  # For frontend display
             'created_at', 'updated_at'
         ]
+        read_only_fields = ['id', 'reported_by', 'created_at', 'updated_at']

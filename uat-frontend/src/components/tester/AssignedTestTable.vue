@@ -5,8 +5,7 @@
         <tr>
           <th>#</th>
           <th>Test Case Title</th>
-          <th>Priority</th>
-          <th>Status</th>
+          <th>Functionality</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -14,23 +13,14 @@
         <tr v-for="(test, index) in testCases" :key="test.id">
           <td>{{ index + 1 }}</td>
           <td class="test-title">{{ test.title }}</td>
+          <td>{{ getFunctionalityName(test) }}</td>
           <td>
-            <span class="badge" :class="getPriorityClass(test.priority)">
-              {{ test.priority }}
-            </span>
-          </td>
-          <td>
-            <span class="badge" :class="getStatusClass(test.status)">
-              {{ test.status }}
-            </span>
-          </td>
-          <td>
-            <router-link :to="'/tester/assigned-tests/' + test.id">
-  <button class="btn btn-primary btn-sm">
-    <i class="fas fa-eye"></i> View
-  </button>
-</router-link>
-
+            <button 
+              class="btn btn-primary btn-sm"
+              @click="navigateToTestExecution(test.id)"
+            >
+              <i class="fas fa-eye"></i> View
+            </button>
           </td>
         </tr>
       </tbody>
@@ -44,20 +34,38 @@ export default {
     testCases: Array,
   },
   methods: {
-    getPriorityClass(priority) {
-      return {
-        "badge-danger": priority === "High",
-        "badge-warning": priority === "Medium",
-        "badge-success": priority === "Low",
-      };
+    getFunctionalityName(test) {
+      if (!test) return 'N/A';
+      
+      // Check for functionality property
+      if (test.functionality) {
+        if (typeof test.functionality === 'string') return test.functionality;
+        if (typeof test.functionality === 'object' && test.functionality.name) {
+          return test.functionality.name;
+        }
+      }
+      
+      // Check for description property
+      if (test.description) return test.description;
+      
+      // Check for system property
+      if (test.system) {
+        if (typeof test.system === 'string') return test.system;
+        if (typeof test.system === 'object' && test.system.name) {
+          return test.system.name;
+        }
+      }
+      
+      return 'N/A';
     },
-    getStatusClass(status) {
-      return {
-        "badge-success": status === "Passed",
-        "badge-warning": status === "Pending",
-        "badge-danger": status === "Failed",
-      };
-    },
+    
+    navigateToTestExecution(testId) {
+      // Navigate to test execution page with the test case ID as a query parameter
+      this.$router.push({
+        path: '/tester/test-execution',
+        query: { highlight: testId }
+      });
+    }
   },
 };
 </script>
@@ -80,27 +88,6 @@ export default {
   font-weight: 500;
 }
 
-.badge {
-  padding: 6px 12px;
-  font-size: 13px;
-  border-radius: 12px;
-}
-
-.badge-danger {
-  background-color: #dc3545;
-  color: white;
-}
-
-.badge-warning {
-  background-color: #ffc107;
-  color: black;
-}
-
-.badge-success {
-  background-color: #28a745;
-  color: white;
-}
-
 .btn-primary {
   background-color: #007bff;
   border: none;
@@ -108,6 +95,7 @@ export default {
   font-size: 14px;
   border-radius: 6px;
   transition: 0.3s;
+  cursor: pointer;
 }
 
 .btn-primary:hover {
